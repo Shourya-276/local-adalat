@@ -3,7 +3,9 @@
  * @description Frontend REST API Client connecting Admin Panel and Public Website to Express + MySQL backend.
  */
 
-const API_BASE_URL = 'http://localhost:5050/api';
+const API_BASE_URL = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL)
+  ? `${import.meta.env.VITE_API_URL.replace(/\/$/, '')}/api`
+  : 'http://localhost:5050/api';
 
 /**
  * Helper method for HTTP requests with authorization header injection.
