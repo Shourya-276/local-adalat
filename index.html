@@ -1,0 +1,1632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
+  <title>Lokal Adalat - India's Independent Legal News Platform</title>
+  <meta name="description" content="Real-time coverage from courts across India, landmark verdicts, expert legal analysis, and video briefings.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Noto+Serif+Devanagari:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/src/style.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Top Header -->
+    <header class="site-header">
+      <div class="container header-content">
+        <div class="logo-container">
+          <a href="#" class="brand-logo" id="mainBrandLogo">
+            <span class="hindi-logo">लोकल</span>
+            <span class="english-logo">ADALAT</span>
+          </a>
+        </div>
+        <button class="menu-toggle" aria-label="Toggle navigation menu" id="menuToggleBtn">
+          <span class="menu-bar menu-bar-top"></span>
+          <span class="menu-bar menu-bar-middle"></span>
+          <span class="menu-bar menu-bar-bottom"></span>
+        </button>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="container search-wrapper">
+        <div class="search-box">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="searchInput" placeholder="Search judgments, courts, laws, articles..." />
+        </div>
+      </div>
+    </header>
+
+    <!-- Breaking News Ticker Bar -->
+    <section class="ticker-section">
+      <div class="container ticker-container">
+        <span class="breaking-badge">BREAKING</span>
+        <span class="ticker-dot">•</span>
+        <div class="ticker-text-wrapper">
+          <p class="ticker-text" id="tickerText">Sessions Court Delivers Landmark Verdict in Corporate Fraud Matter</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- VIEW 1: HOME PAGE VIEW -->
+    <div id="homeView" class="page-view">
+      <main class="main-content">
+        
+        <!-- Section 1: Top Stories -->
+        <section class="section top-stories-section container" id="top-stories-sec">
+          <div class="section-header-row">
+            <div class="header-titles">
+              <h2 class="section-title">Top Stories</h2>
+              <p class="section-subtitle">The most important legal developments shaping India today.</p>
+            </div>
+            <div class="section-divider-line"></div>
+          </div>
+
+          <div class="top-stories-grid">
+            <!-- Left Column (Stacked 2 cards) -->
+            <div class="grid-col left-col">
+              <article class="news-card card-compact article-link">
+                <div class="card-image-wrapper">
+                  <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80" alt="Delhi High Court" loading="lazy">
+                  <span class="court-tag tag-high-court">HIGH COURT</span>
+                </div>
+                <div class="card-body">
+                  <h3 class="card-title"><a href="#" class="blog-click">Delhi HC Directs Government to File Response on Electoral Bonds Case</a></h3>
+                  <p class="card-meta">17 July 2025 · 5 min read</p>
+                </div>
+              </article>
+
+              <article class="news-card card-compact article-link">
+                <div class="card-image-wrapper">
+                  <img src="/images/supreme-court.jpg" alt="Supreme Court of India" loading="lazy">
+                  <span class="court-tag tag-supreme-court">SUPREME COURT</span>
+                </div>
+                <div class="card-body">
+                  <h3 class="card-title"><a href="#" class="blog-click">Constitution Bench to Examine Scope of Fundamental Rights Online</a></h3>
+                  <p class="card-meta">16 July 2025 · 6 min read</p>
+                </div>
+              </article>
+            </div>
+
+            <!-- Middle Column (Hero tall card) -->
+            <div class="grid-col middle-col">
+              <article class="news-card card-hero article-link">
+                <div class="hero-image-wrapper">
+                  <img src="/images/supreme-court.jpg" alt="Supreme Court Landmark Hearing" loading="lazy">
+                  <div class="hero-overlay"></div>
+                  <span class="court-tag tag-supreme-court hero-tag">SUPREME COURT</span>
+                  <div class="hero-content">
+                    <h3 class="hero-title"><a href="#" class="blog-click">Supreme Court Begins Hearing on Landmark Digital Privacy Framework</a></h3>
+                    <p class="hero-meta">17 July 2025 · 8 min read</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+
+            <!-- Right Column (Stacked 2 cards) -->
+            <div class="grid-col right-col">
+              <article class="news-card card-compact article-link">
+                <div class="card-image-wrapper">
+                  <img src="https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=800&q=80" alt="Sessions Court" loading="lazy">
+                  <span class="court-tag tag-sessions-court">SESSIONS COURT</span>
+                </div>
+                <div class="card-body">
+                  <h3 class="card-title"><a href="#" class="blog-click">Sessions Court Acquits Three in High-Profile Corporate Fraud Case</a></h3>
+                  <p class="card-meta">16 July 2025 · 4 min read</p>
+                </div>
+              </article>
+
+              <article class="news-card card-compact article-link">
+                <div class="card-image-wrapper">
+                  <img src="/images/courtroom.jpg" alt="Bombay High Court" loading="lazy">
+                  <span class="court-tag tag-high-court">HIGH COURT</span>
+                </div>
+                <div class="card-body">
+                  <h3 class="card-title"><a href="#" class="blog-click">Bombay HC Stays Order on Media Regulation Guidelines</a></h3>
+                  <p class="card-meta">15 July 2025 · 3 min read</p>
+                </div>
+              </article>
+            </div>
+          </div>
+
+          <!-- Mobile Top Stories Swipeable Slider (Visible ONLY on mobile screens <= 768px) -->
+          <div class="mobile-top-stories-slider" id="mobileTopStoriesSlider">
+            <div class="mobile-slider-track" id="mobileSliderTrack">
+              <div class="mobile-slider-card blog-click" data-id="103">
+                <div class="mobile-card-bg-wrap">
+                  <img src="/images/supreme-court.jpg" alt="Supreme Court Hearing" loading="lazy">
+                  <div class="mobile-card-overlay"></div>
+                  <span class="court-tag tag-supreme-court">SUPREME COURT</span>
+                  <span class="mobile-slide-counter">01 / 06</span>
+                  <div class="mobile-card-content">
+                    <h3 class="mobile-card-title">Supreme Court Begins Hearing on Landmark Digital Privacy Framework</h3>
+                    <p class="mobile-card-meta">17 July 2025 · 8 min read</p>
+                    <p class="mobile-card-excerpt">A nine-judge Constitution Bench has assembled to examine whether the Digital Personal Data Protection Act, 2023 adequately safeguards fundamental rights under Article 21.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mobile-slider-card blog-click" data-id="101">
+                <div class="mobile-card-bg-wrap">
+                  <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80" alt="Delhi High Court" loading="lazy">
+                  <div class="mobile-card-overlay"></div>
+                  <span class="court-tag tag-high-court">HIGH COURT</span>
+                  <span class="mobile-slide-counter">02 / 06</span>
+                  <div class="mobile-card-content">
+                    <h3 class="mobile-card-title">Delhi HC Directs Government to File Response on Electoral Bonds Case</h3>
+                    <p class="mobile-card-meta">17 July 2025 · 5 min read</p>
+                    <p class="mobile-card-excerpt">The Delhi High Court has sought the Centre's reply to a petition challenging the electoral bonds scheme, citing concerns about transparency in political funding.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mobile-slider-card blog-click" data-id="102">
+                <div class="mobile-card-bg-wrap">
+                  <img src="/images/supreme-court.jpg" alt="Supreme Court" loading="lazy">
+                  <div class="mobile-card-overlay"></div>
+                  <span class="court-tag tag-supreme-court">SUPREME COURT</span>
+                  <span class="mobile-slide-counter">03 / 06</span>
+                  <div class="mobile-card-content">
+                    <h3 class="mobile-card-title">Constitution Bench to Examine Scope of Fundamental Rights Online</h3>
+                    <p class="mobile-card-meta">16 July 2025 · 6 min read</p>
+                    <p class="mobile-card-excerpt">A five-judge bench will determine whether freedom of speech extends to algorithmic content moderation and platform liability under IT Amendment Rules.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mobile-slider-card blog-click" data-id="104">
+                <div class="mobile-card-bg-wrap">
+                  <img src="https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=800&q=80" alt="Sessions Court" loading="lazy">
+                  <div class="mobile-card-overlay"></div>
+                  <span class="court-tag tag-sessions-court">SESSIONS COURT</span>
+                  <span class="mobile-slide-counter">04 / 06</span>
+                  <div class="mobile-card-content">
+                    <h3 class="mobile-card-title">Sessions Court Acquits Three in High-Profile Corporate Fraud Case</h3>
+                    <p class="mobile-card-meta">16 July 2025 · 4 min read</p>
+                    <p class="mobile-card-excerpt">Special judge holds prosecution failed to establish financial misrepresentation beyond reasonable doubt in ten-year-old proceedings.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mobile-slider-card blog-click" data-id="105">
+                <div class="mobile-card-bg-wrap">
+                  <img src="/images/courtroom.jpg" alt="Bombay High Court" loading="lazy">
+                  <div class="mobile-card-overlay"></div>
+                  <span class="court-tag tag-high-court">HIGH COURT</span>
+                  <span class="mobile-slide-counter">05 / 06</span>
+                  <div class="mobile-card-content">
+                    <h3 class="mobile-card-title">Bombay HC Stays Order on Media Regulation Guidelines</h3>
+                    <p class="mobile-card-meta">15 July 2025 · 3 min read</p>
+                    <p class="mobile-card-excerpt">Division bench issues interim stay observing proposed digital broadcast guidelines may infringe constitutional freedom of press.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mobile-slider-card blog-click" data-id="106">
+                <div class="mobile-card-bg-wrap">
+                  <img src="/images/courtroom.jpg" alt="Supreme Court Rules" loading="lazy">
+                  <div class="mobile-card-overlay"></div>
+                  <span class="court-tag tag-supreme-court">SUPREME COURT</span>
+                  <span class="mobile-slide-counter">06 / 06</span>
+                  <div class="mobile-card-content">
+                    <h3 class="mobile-card-title">Supreme Court Rules on Foreign Arbitration Award Enforcement Standards</h3>
+                    <p class="mobile-card-meta">14 July 2025 · 7 min read</p>
+                    <p class="mobile-card-excerpt">A landmark ruling clarifies that Indian courts may not re-examine merits of foreign arbitral awards under Section 48 of the Arbitration and Conciliation Act.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dots Indicator -->
+            <div class="mobile-slider-dots" id="mobileSliderDots">
+              <span class="dot active" data-index="0"></span>
+              <span class="dot" data-index="1"></span>
+              <span class="dot" data-index="2"></span>
+              <span class="dot" data-index="3"></span>
+              <span class="dot" data-index="4"></span>
+              <span class="dot" data-index="5"></span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Section Divider Emblem -->
+        <div class="container section-divider-container">
+          <div class="divider-line"></div>
+          <div class="divider-emblem">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M12 3v18M5 8h14M3 14l4-6 4 6H3zm10 0l4-6 4 6h-8zM7 21h10"></path>
+            </svg>
+          </div>
+          <div class="divider-line"></div>
+        </div>
+
+        <!-- Section 2: Latest News -->
+        <section class="section latest-news-section container" id="latest-news-sec">
+          <div class="latest-news-header text-center">
+            <h2 class="section-title text-center">Latest News</h2>
+            <p class="section-subtitle text-center">Real-time coverage from courts across India.</p>
+          </div>
+
+          <!-- Filter Pill Tabs -->
+          <div class="filter-tabs-wrapper">
+            <div class="filter-tabs">
+              <button class="tab-btn active" data-court="supreme-court">SUPREME COURT</button>
+              <button class="tab-btn" data-court="high-court">HIGH COURT</button>
+              <button class="tab-btn" data-court="sessions-court">SESSIONS COURT</button>
+            </div>
+          </div>
+
+          <!-- 3-Column Masonry Grid Container -->
+          <div id="latestNewsGrid">
+            <!-- Cards rendered via JS from data.js -->
+          </div>
+        </section>
+
+        <!-- Section 3: Video Corner -->
+        <section class="section video-corner-section container" id="video-corner-sec">
+          <div class="section-header-row">
+            <div class="header-titles">
+              <h2 class="section-title">Video Corner</h2>
+              <p class="section-subtitle">Legal developments explained through expert video analysis.</p>
+            </div>
+            <div class="section-divider-line"></div>
+          </div>
+
+          <div class="video-corner-grid">
+            <!-- Left Main Featured Video -->
+            <div class="video-featured-wrapper" id="videoFeaturedWrapper">
+              <div class="featured-video-player" id="featuredVideoCard">
+                <video id="mainVideoPlayer" class="video-element-large" playsinline muted preload="metadata"></video>
+                <div class="featured-video-overlay" id="featuredVideoOverlay"></div>
+                <button class="play-button-large" id="mainVideoPlayBtn" aria-label="Play featured video">
+                  <svg viewBox="0 0 24 24" fill="currentColor" id="mainVideoPlayIcon"><path d="M8 5v14l11-7z"/></svg>
+                </button>
+                <button class="floating-video-close-btn" id="floatingVideoCloseBtn" aria-label="Close floating video">&times;</button>
+                <span class="court-tag tag-supreme-court video-featured-tag" id="mainVideoCourtTag">SUPREME COURT</span>
+                <div class="featured-video-overlay-info">
+                  <h3 class="featured-video-overlay-title" id="mainVideoMobileTitle">Loading video...</h3>
+                  <p class="featured-video-overlay-meta" id="mainVideoMobileMeta"></p>
+                </div>
+              </div>
+              <div class="featured-video-info desktop-only-info">
+                <h3 class="featured-video-title" id="mainVideoDesktopTitle">Loading video briefing...</h3>
+                <div class="video-tags">
+                  <span class="video-tag" id="mainVideoDurationTag"></span>
+                  <span class="dot-sep">•</span>
+                  <span class="video-tag" id="mainVideoDateTag"></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Right Video Playlist Stack (Horizontally Scrollable on Mobile) -->
+            <div class="video-playlist" id="mobileVideoPlaylist">
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 4: Newsletter Box -->
+        <section class="section newsletter-section container">
+          <div class="newsletter-card">
+            <div class="newsletter-left">
+              <span class="newsletter-badge">NEWSLETTER</span>
+              <h2 class="newsletter-title">Never Miss a Judgment That Matters</h2>
+              <p class="newsletter-desc">Receive daily legal briefings, courtroom updates, expert analysis, and breaking legal news directly in your inbox.</p>
+
+              <form class="newsletter-form" id="newsletterForm">
+                <input type="email" placeholder="Enter your email" required class="newsletter-input" />
+                <button type="submit" class="btn-primary">Subscribe</button>
+              </form>
+              <p class="newsletter-disclaimer">No spam. Unsubscribe anytime.</p>
+            </div>
+            <div class="newsletter-right">
+              <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80" alt="Scales of Justice" class="newsletter-bg-image">
+            </div>
+          </div>
+        </section>
+
+        <!-- Section 5: Articles to Read -->
+        <section class="section articles-section container" id="articles-to-read-sec">
+          <div class="section-header-row">
+            <div class="header-titles">
+              <h2 class="section-title">Articles to Read</h2>
+              <p class="section-subtitle">Expert analysis beyond the headlines.</p>
+            </div>
+            <div class="section-divider-line"></div>
+          </div>
+
+          <div class="articles-grid">
+            <article class="article-card blog-click">
+              <div class="article-thumb">
+                <img src="https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=800&q=80" alt="Article image">
+              </div>
+              <div class="article-body">
+                <h3 class="article-title"><a href="#" class="blog-click">Understanding India's New Digital Personal Data Protection Framework</a></h3>
+                <p class="article-excerpt">A practical breakdown of compliance obligations, risks, and opportunities for businesses operating in India's evolving data landscape.</p>
+                <div class="article-meta">
+                  <span>Editorial Desk</span>
+                  <span>12 min read</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="article-card blog-click">
+              <div class="article-thumb">
+                <img src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80" alt="Article image">
+              </div>
+              <div class="article-body">
+                <h3 class="article-title"><a href="#" class="blog-click">The Evolution of Constitutional Privacy Rights</a></h3>
+                <p class="article-excerpt">How recent judgments continue to redefine the relationship between citizens and the State, and what it means for civil liberties.</p>
+                <div class="article-meta">
+                  <span>Editorial Desk</span>
+                  <span>10 min read</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="article-card blog-click">
+              <div class="article-thumb">
+                <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80" alt="Article image">
+              </div>
+              <div class="article-body">
+                <h3 class="article-title"><a href="#" class="blog-click">Understanding India's New Digital Personal Data Protection Framework</a></h3>
+                <p class="article-excerpt">A practical breakdown of compliance obligations, risks, and opportunities for businesses operating in India's evolving data landscape.</p>
+                <div class="article-meta">
+                  <span>Editorial Desk</span>
+                  <span>12 min read</span>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- VIEW 2: SEARCH RESULTS VIEW -->
+    <div id="searchResultsView" class="page-view search-results-page" style="display: none;">
+      <div class="container search-results-container">
+        
+        <div class="back-home-wrapper">
+          <button class="btn-back generic-back-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Home
+          </button>
+        </div>
+
+        <div class="search-results-info">
+          <p id="searchResultsCountText">Showing 8 results for <strong id="searchQueryHighlight">"article 23"</strong></p>
+        </div>
+
+        <div class="search-results-grid" id="searchResultsGrid">
+          <!-- Dynamically populated search cards -->
+        </div>
+
+        <div class="pagination-wrapper text-center">
+          <div class="pagination">
+            <button class="page-arrow prev-page" aria-label="Previous page">‹</button>
+            <button class="page-num active">1</button>
+            <button class="page-num">2</button>
+            <button class="page-num">3</button>
+            <button class="page-num">4</button>
+            <span class="page-dots">...</span>
+            <button class="page-num">10</button>
+            <button class="page-arrow next-page" aria-label="Next page">›</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VIEW 3: CATEGORY LISTING / VIEW MORE UPDATES VIEW -->
+    <div id="categoryListingView" class="page-view category-listing-page" style="display: none;">
+      <!-- Desktop Listing Container (Untouched for Desktop Screen) -->
+      <div class="container category-listing-container">
+        
+        <div class="back-home-wrapper">
+          <button class="btn-back generic-back-btn">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7"/>
+            </svg>
+            Back to Home
+          </button>
+        </div>
+
+        <div class="category-header-wrap">
+          <div class="cat-header-line"></div>
+          <h1 class="category-title" id="categoryTitleText">Supreme Court</h1>
+          <div class="cat-header-line"></div>
+        </div>
+        <p class="category-subtitle text-center" id="categorySubtitleText">
+          The most important legal developments in the Supreme Court shaping India today.
+        </p>
+
+        <div class="category-grid" id="categoryGrid">
+          <!-- Dynamically populated 9 cards -->
+        </div>
+
+        <div class="pagination-wrapper text-center">
+          <div class="pagination">
+            <button class="page-arrow prev-page" aria-label="Previous page">‹</button>
+            <button class="page-num active">1</button>
+            <button class="page-num">2</button>
+            <button class="page-num">3</button>
+            <button class="page-num">4</button>
+            <span class="page-dots">...</span>
+            <button class="page-num">10</button>
+            <button class="page-arrow next-page" aria-label="Next page">›</button>
+          </div>
+        </div>
+
+        <div class="newsletter-card category-newsletter">
+          <div class="newsletter-left">
+            <span class="newsletter-badge">NEWSLETTER</span>
+            <h2 class="newsletter-title">Never Miss a Judgment That Matters</h2>
+            <p class="newsletter-desc">Receive daily legal briefings, courtroom updates, expert analysis, and breaking legal news directly in your inbox.</p>
+            <form class="newsletter-form">
+              <input type="email" placeholder="Enter your email" required class="newsletter-input" />
+              <button type="submit" class="btn-primary">Subscribe</button>
+            </form>
+            <p class="newsletter-disclaimer">No spam. Unsubscribe anytime.</p>
+          </div>
+          <div class="newsletter-right">
+            <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&w=800&q=80" alt="Scales of Justice" class="newsletter-bg-image">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Mobile Category Container (Visible ONLY on Small Mobile Screens <= 768px - Reference Images Match) -->
+      <div class="mobile-category-wrapper" id="mobileCategoryWrapper">
+        <!-- Top Court Filter Pills -->
+        <div class="mobile-cat-filter-bar" id="mobileCatFilterBar">
+          <button class="mobile-cat-pill active" data-court="Supreme Court">Supreme Court</button>
+          <button class="mobile-cat-pill" data-court="High Court">High Court</button>
+          <button class="mobile-cat-pill" data-court="Sessions Court">Sessions Court</button>
+        </div>
+
+        <!-- Vertical Snap Cards Container -->
+        <div class="mobile-vertical-feed" id="mobileVerticalFeed">
+          <div class="mobile-feed-track" id="mobileFeedTrack">
+            <!-- Dynamically populated cards & footer slide -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 5: VIDEO REELS VIEW (MOBILE INSTAGRAM REEL STYLE) -->
+    <div id="videoReelsView" class="page-view video-reels-page" style="display: none;">
+      <div class="mobile-video-reels-wrapper" id="mobileVideoReelsWrapper">
+        <div class="mobile-reels-vertical-container" id="mobileReelsContainer">
+          <div class="mobile-reels-track" id="mobileReelsTrack">
+            <!-- Dynamically populated video reel slides -->
+          </div>
+        </div>
+      </div>
+      
+      <!-- Interactive Share Drawer Popup -->
+      <div class="reel-share-overlay" id="reelShareOverlay" style="display: none;">
+        <div class="reel-share-drawer">
+          <div class="reel-share-header">
+            <span>Share Briefing</span>
+            <button class="btn-close-share" id="btnCloseShare">&times;</button>
+          </div>
+          <div class="reel-share-items">
+            <div class="share-circle-item share-wa">
+              <div class="share-icon-circle">W</div>
+              <span>WhatsApp</span>
+            </div>
+            <div class="share-circle-item share-li">
+              <div class="share-icon-circle">in</div>
+              <span>LinkedIn</span>
+            </div>
+            <div class="share-circle-item share-x">
+              <div class="share-icon-circle">X</div>
+              <span>X</span>
+            </div>
+            <div class="share-circle-item share-fb">
+              <div class="share-icon-circle">f</div>
+              <span>Facebook</span>
+            </div>
+            <div class="share-circle-item share-copy" id="btnCopyReelLink">
+              <div class="share-icon-circle">🔗</div>
+              <span>Copy Link</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- View More Bottom Sheet Modal (Reference Image Match) -->
+      <div class="reel-details-sheet-overlay" id="reelDetailsSheetOverlay" style="display: none;">
+        <div class="reel-details-bottom-sheet" id="reelDetailsBottomSheet">
+          <div class="sheet-drag-handle-bar">
+            <span class="sheet-drag-handle"></span>
+          </div>
+          <div class="sheet-header">
+            <span class="court-tag tag-supreme-court" id="sheetCourtTag">SUPREME COURT</span>
+            <button class="btn-close-sheet" id="btnCloseSheet" aria-label="Close details">✕</button>
+          </div>
+          <div class="sheet-content">
+            <h2 class="sheet-title" id="sheetTitle">CJI Issues Key Observations During Constitutional Bench Hearing on Electoral Bonds</h2>
+            <p class="sheet-meta" id="sheetMeta">Published on 16 July 2026 · 1 min 48 sec</p>
+            <div class="sheet-body-paragraphs" id="sheetBodyParagraphs">
+              <p>The Chief Justice of India made pointed observations during the ongoing Constitutional Bench hearing examining the Electoral Bonds Scheme, questioning whether anonymous political funding is compatible with the constitutional principles of transparency and accountability in democratic governance.</p>
+              <p>The bench is examining multiple petitions challenging the scheme, which allowed unlimited anonymous donations to political parties. The matter is being heard by a five-judge Constitution Bench.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 6: MOBILE ARTICLES TO READ VIEW (MATCHING REFERENCE IMAGES 1 & 2) -->
+    <div id="mobileArticlesView" class="page-view mobile-articles-page" style="display: none;">
+      <div class="container mobile-articles-container">
+        
+        <div class="section-header-row">
+          <div class="header-titles">
+            <h2 class="section-title">Articles to Read</h2>
+            <p class="section-subtitle">Expert analysis beyond the headlines.</p>
+          </div>
+          <div class="section-divider-line"></div>
+        </div>
+
+        <div class="mobile-articles-list" id="mobileArticlesList">
+          <!-- Dynamically populated article cards matching images 1 & 2 -->
+        </div>
+
+        <!-- Pagination Controls matching Image 2 -->
+        <div class="pagination-wrapper text-center">
+          <div class="pagination">
+            <button class="page-arrow prev-page" aria-label="Previous page">‹</button>
+            <button class="page-num active">1</button>
+            <button class="page-num">2</button>
+            <button class="page-num">3</button>
+            <button class="page-num">4</button>
+            <span class="page-dots">...</span>
+            <button class="page-num">10</button>
+            <button class="page-arrow next-page" aria-label="Next page">›</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VIEW 4: ARTICLE / BLOG DETAIL VIEW -->
+    <div id="articleView" class="page-view article-view-page" style="display: none;">
+      
+      <div class="container back-home-wrapper">
+        <button class="btn-back generic-back-btn" id="backToHomeBtn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Back to Home
+        </button>
+      </div>
+
+      <div class="container hero-article-outer">
+        <button class="nav-arrow arrow-left" id="prevArticleBtn" aria-label="Previous Article">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        
+        <div class="hero-article-card">
+          <div class="hero-article-left">
+            <div class="hero-tag-row">
+              <span class="court-tag tag-supreme-court">SUPREME COURT</span>
+              <span class="hero-article-date">18 July 2025</span>
+            </div>
+            
+            <h1 class="hero-article-title">Supreme Court Begins Hearing on Landmark Digital Privacy Framework</h1>
+            
+            <p class="hero-article-subtitle">
+              The Constitution Bench has begun hearing one of India's most significant privacy law cases, examining the balance between individual digital rights and state regulatory powers.
+            </p>
+
+            <div class="hero-article-divider"></div>
+
+            <div class="hero-article-meta-row">
+              <span class="meta-item">8 min read</span>
+              <span class="dot-sep">•</span>
+              <span class="meta-item">Updated 2 hours ago</span>
+            </div>
+
+            <div class="hero-share-row">
+              <span class="share-label">SHARE</span>
+              <div class="share-buttons">
+                <button class="share-btn" aria-label="LinkedIn">in</button>
+                <button class="share-btn" aria-label="X">𝕏</button>
+                <button class="share-btn" aria-label="Facebook">f</button>
+                <button class="share-btn" aria-label="Comment">💬</button>
+                <button class="share-btn" aria-label="Copy Link">🔗</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero-article-right">
+            <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1000&q=80" alt="Lady Justice with law books" class="hero-article-img">
+          </div>
+        </div>
+
+        <button class="nav-arrow arrow-right" id="nextArticleBtn" aria-label="Next Article">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+      </div>
+
+      <div class="container article-body-container">
+        
+        <aside class="article-sidebar">
+          <div class="toc-widget">
+            <div class="toc-header">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 6h16M4 12h16M4 18h7"/>
+              </svg>
+              <span>IN THIS ARTICLE</span>
+            </div>
+            <ul class="toc-list" id="tocList">
+              <li class="toc-item active" data-target="sec-intro">
+                <span class="toc-num">01</span> Introduction
+              </li>
+              <li class="toc-item" data-target="sec-bg">
+                <span class="toc-num">02</span> Background of the Case
+              </li>
+              <li class="toc-item" data-target="sec-questions">
+                <span class="toc-num">03</span> Constitutional Questions
+              </li>
+              <li class="toc-item" data-target="sec-arguments">
+                <span class="toc-num">04</span> Key Arguments Presented
+              </li>
+              <li class="toc-item" data-target="sec-observations">
+                <span class="toc-num">05</span> Key Observations
+              </li>
+              <li class="toc-item" data-target="sec-implications">
+                <span class="toc-num">06</span> Implications for Digital Rights
+              </li>
+              <li class="toc-item" data-target="sec-next">
+                <span class="toc-num">07</span> What Happens Next?
+              </li>
+            </ul>
+            <div class="toc-footer">1 / 7 sections</div>
+          </div>
+
+          <div class="sidebar-newsletter-box">
+            <div class="sidebar-news-icon">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
+                <path d="M12 3v18M5 8h14M3 14l4-6 4 6H3zm10 0l4-6 4 6h-8zM7 21h10"></path>
+              </svg>
+            </div>
+            <h4 class="sidebar-news-title">Stay Updated</h4>
+            <p class="sidebar-news-desc">Get daily legal briefings, court updates, and expert analysis delivered to your inbox.</p>
+            <form class="sidebar-news-form">
+              <input type="email" placeholder="Enter your email" required class="sidebar-news-input">
+              <button type="submit" class="btn-primary sidebar-news-btn">Subscribe</button>
+            </form>
+            <p class="sidebar-news-sub">No spam. Unsubscribe anytime.</p>
+          </div>
+        </aside>
+
+        <article class="article-content-main">
+          
+          <section id="sec-intro" class="article-section">
+            <p class="lead-paragraph">
+              In a watershed moment for India's evolving jurisprudence on digital rights, the Supreme Court's five-judge Constitution Bench convened this week to commence substantive hearings on the Digital Personal Data Protection Act, 2023, questioning whether the statute adequately guards the fundamental right to privacy as articulated in the landmark <em>Puttaswamy</em> judgment.
+            </p>
+          </section>
+
+          <section id="sec-bg" class="article-section">
+            <h2 class="article-heading">Background of the Case</h2>
+            <p>
+              The Digital Personal Data Protection Act emerged from a fraught seven-year legislative journey following the Supreme Court's unanimous 2017 ruling in <em>Justice K.S. Puttaswamy (Retd.) v. Union of India</em>, which elevated privacy to the status of a fundamental right under the Indian Constitution. Parliament passed the legislation in August 2023 after several failed earlier drafts, but critics argue that the final statute incorporated significant dilutions to please government and industry stakeholders.
+            </p>
+
+            <figure class="article-body-figure">
+              <img src="https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1000&q=80" alt="Gavel on law book" class="article-body-img">
+              <figcaption class="figure-caption">
+                The Constitution Bench during hearings on the Digital Privacy Framework case. <span class="photo-credit">Photo: Supreme Court of India / PTI</span>
+              </figcaption>
+            </figure>
+          </section>
+
+          <section id="sec-questions" class="article-section">
+            <h2 class="article-heading">Constitutional Questions Before the Bench</h2>
+
+            <div class="legal-question-box">
+              <span class="legal-question-badge">KEY LEGAL QUESTION</span>
+              <p class="legal-question-text">
+                Can the State mandate broad digital data collection without violating Article 21 privacy protections established in <em>Puttaswamy</em>? And does the Data Protection Board possess the structural independence to adjudicate complaints against the state impartially?
+              </p>
+            </div>
+
+            <p>
+              The Bench has framed seven precise constitutional questions for determination, which counsel agreed will structure the entire course of arguments. These questions address whether the right to informational self-determination constitutes an integral facet of Article 21, whether uncanalised state exemptions satisfy the proportionality standard, and whether the Data Protection Board's design is constitutionally sound.
+            </p>
+
+            <blockquote class="article-pull-quote">
+              <div class="quote-symbol">“</div>
+              <p class="quote-text">
+                The outcome of this case could redefine digital privacy rights for over a billion Indians, setting a precedent that will echo through the digital landscape for decades.
+              </p>
+              <cite class="quote-author">— Senior Advocate Dushyant Dave, Petitioners' Counsel</cite>
+            </blockquote>
+          </section>
+
+          <section id="sec-arguments" class="article-section">
+            <h2 class="article-heading">Key Arguments Presented</h2>
+            <p>
+              The petitioners, led by a constellation of senior advocates, have advanced several distinct lines of argument before the Bench:
+            </p>
+
+            <ol class="arguments-list">
+              <li>
+                <span class="list-num">1</span>
+                <div class="list-text">
+                  The government exemptions under Section 17 are unconstitutionally broad and fail the proportionality test — they do not specify the legitimate aim pursued, are not necessary in a democratic society, and provide no procedural safeguards against abuse.
+                </div>
+              </li>
+              <li>
+                <span class="list-num">2</span>
+                <div class="list-text">
+                  The Data Protection Board's composition violates the doctrine of separation of powers by making an adjudicatory body entirely dependent on the executive for appointments and continuance.
+                </div>
+              </li>
+              <li>
+                <span class="list-num">3</span>
+                <div class="list-text">
+                  The Act's consent framework is illusory: Section 7 permits processing on vague 'legitimate uses' grounds that effectively swallow the consent requirement wherever the state invokes them.
+                </div>
+              </li>
+            </ol>
+          </section>
+
+          <section id="sec-observations" class="article-section">
+            <h2 class="article-heading">Key Observations from the Bench</h2>
+            <p>
+              The Bench has been notably active in its questioning of both sides, with several pointed observations signalling the contours of its thinking:
+            </p>
+
+            <div class="judge-quote-box">
+              <span class="judge-title">CHIEF JUSTICE CHANDRACHUD</span>
+              <p class="judge-quote">
+                "If national security can be invoked to exempt the entire state apparatus from data protection obligations, does the right to privacy under Puttaswamy retain any meaningful content against state action?"
+              </p>
+            </div>
+
+            <div class="judge-quote-box">
+              <span class="judge-title">JUSTICE SANJIV KHANNA</span>
+              <p class="judge-quote">
+                "We must distinguish between processing of data that is incidental to a legitimate state function, and surveillance-grade data collection conducted under the guise of governance."
+              </p>
+            </div>
+          </section>
+
+          <section id="sec-implications" class="article-section">
+            <h2 class="article-heading">Conclusion</h2>
+            <p>
+              Lokal Adalat will continue to provide comprehensive coverage of every hearing day, with live-blogged arguments, analysis from constitutional law experts, and plain-language explainers of the technical legal issues at stake. Subscribe to our Digital Rights Tracker newsletter for real-time updates.
+            </p>
+
+            <div class="author-bio-card">
+              <div class="author-avatar">ED</div>
+              <div class="author-info">
+                <h4 class="author-name">Lokal Adalat Editorial Desk</h4>
+                <p class="author-desc">Our editorial team covers constitutional law, Supreme Court proceedings, and legislative developments across India's legal landscape.</p>
+              </div>
+            </div>
+          </section>
+
+        </article>
+      </div>
+
+      <section class="section articles-section container">
+        <div class="section-header-row">
+          <div class="header-titles">
+            <h2 class="section-title">Articles to Read</h2>
+            <p class="section-subtitle">Expert analysis beyond the headlines.</p>
+          </div>
+          <div class="section-divider-line"></div>
+        </div>
+
+        <div class="articles-grid">
+          <article class="article-card blog-click">
+            <div class="article-thumb">
+              <img src="https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=800&q=80" alt="Article image">
+            </div>
+            <div class="article-body">
+              <h3 class="article-title"><a href="#" class="blog-click">Understanding India's New Digital Personal Data Protection Framework</a></h3>
+              <p class="article-excerpt">A practical breakdown of compliance obligations, risks, and opportunities for businesses operating in India's evolving data landscape.</p>
+              <div class="article-meta">
+                <span>Editorial Desk</span>
+                <span>12 min read</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="article-card blog-click">
+            <div class="article-thumb">
+              <img src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80" alt="Article image">
+            </div>
+            <div class="article-body">
+              <h3 class="article-title"><a href="#" class="blog-click">The Evolution of Constitutional Privacy Rights</a></h3>
+              <p class="article-excerpt">How recent judgments continue to redefine the relationship between citizens and the State, and what it means for civil liberties.</p>
+              <div class="article-meta">
+                <span>Editorial Desk</span>
+                <span>10 min read</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="article-card blog-click">
+            <div class="article-thumb">
+              <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80" alt="Article image">
+            </div>
+            <div class="article-body">
+              <h3 class="article-title"><a href="#" class="blog-click">Understanding India's New Digital Personal Data Protection Framework</a></h3>
+              <p class="article-excerpt">A practical breakdown of compliance obligations, risks, and opportunities for businesses operating in India's evolving data landscape.</p>
+              <div class="article-meta">
+                <span>Editorial Desk</span>
+                <span>12 min read</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </section>
+    </div>
+
+    <!-- VIEW 7: ADMIN LOGIN VIEW -->
+    <div id="adminLoginView" class="page-view admin-login-page" style="display: none;">
+      <div class="admin-login-container">
+        <div class="admin-login-card">
+          <div class="admin-login-header">
+            <div class="brand-logo">
+              <span class="hindi-logo">लोकल</span>
+              <span class="english-logo">ADALAT</span>
+            </div>
+            <div class="admin-badge">ADMIN CYBER PORTAL</div>
+            <p class="admin-login-sub">Secure authentication required to access CMS and security engine.</p>
+          </div>
+
+          <div id="adminLockoutBanner" class="admin-alert-banner alert-danger" style="display: none;">
+            <span class="alert-icon">🔒</span>
+            <span>Security Lockout Active! Try again in <strong id="lockoutSecondsSpan">30</strong> seconds.</span>
+          </div>
+
+          <form id="adminLoginForm" class="admin-login-form">
+            <div class="form-group">
+              <label for="adminEmailInput" class="form-label">Admin Email Address</label>
+              <input type="email" id="adminEmailInput" class="form-control" placeholder="admin@gmail.com" value="admin@gmail.com" required autocomplete="username">
+            </div>
+
+            <div class="form-group">
+              <label for="adminPasswordInput" class="form-label">Password</label>
+              <div class="input-password-wrap">
+                <input type="password" id="adminPasswordInput" class="form-control" placeholder="Enter password" value="123" required autocomplete="current-password">
+                <button type="button" id="btnTogglePassword" class="btn-toggle-pass" aria-label="Toggle password visibility">👁️</button>
+              </div>
+            </div>
+
+            <div class="form-security-note">
+              <span>🛡️ Protected by 3-attempt rate limiter & XSS input sanitization.</span>
+            </div>
+
+            <button type="submit" class="btn-admin-primary btn-block">Sign In to Dashboard</button>
+          </form>
+
+          <div class="admin-login-footer text-center">
+            <button class="generic-back-btn btn-link-back">← Back to Lokal Adalat Portal</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 8: ADMIN DASHBOARD CMS & SECURITY ENGINE -->
+    <div id="adminDashboardView" class="page-view admin-dashboard-page" style="display: none;">
+      <div class="admin-layout">
+        
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="admin-sidebar">
+          <div class="admin-sidebar-header">
+            <a href="#" class="brand-logo">
+              <span class="hindi-logo">लोकल</span>
+              <span class="english-logo">ADALAT</span>
+            </a>
+            <span class="admin-badge-sm">CMS v2.0</span>
+          </div>
+
+          <nav class="admin-sidebar-nav">
+            <button class="admin-sidebar-nav-item active" data-tab="overview">
+              <span class="nav-icon">📊</span> Overview
+            </button>
+            <button class="admin-sidebar-nav-item" data-tab="articles">
+              <span class="nav-icon">📝</span> Articles & Blogs
+            </button>
+            <button class="admin-sidebar-nav-item" data-tab="videos">
+              <span class="nav-icon">🎥</span> Videos & Reels
+            </button>
+            <button class="admin-sidebar-nav-item" data-tab="news">
+              <span class="nav-icon">📰</span> Top & Breaking News
+            </button>
+            <button class="admin-sidebar-nav-item" data-tab="media">
+              <span class="nav-icon">🖼️</span> Media Library
+            </button>
+            <button class="admin-sidebar-nav-item" data-tab="audit">
+              <span class="nav-icon">🛡️</span> Security Audit Logs
+            </button>
+            <button class="admin-sidebar-nav-item" data-tab="settings">
+              <span class="nav-icon">⚙️</span> System Settings
+            </button>
+          </nav>
+
+          <div class="admin-sidebar-footer">
+            <button class="generic-back-btn btn-admin-outline w-100 mb-2">🌐 View Live Website</button>
+            <button id="adminLogoutBtn" class="btn-admin-danger w-100">🚪 Sign Out</button>
+          </div>
+        </aside>
+
+        <!-- MAIN DASHBOARD CONTENT AREA -->
+        <main class="admin-main">
+          
+          <!-- TOP NAVBAR -->
+          <header class="admin-topbar">
+            <div class="topbar-title">
+              <h2>Administrator Console</h2>
+              <span class="topbar-subtitle">System Status: <strong class="text-success" id="kpiSecurityStatus">SECURE</strong></span>
+            </div>
+            <div class="topbar-user">
+              <div class="user-avatar">AD</div>
+              <div class="user-info">
+                <span class="user-name">Chief Administrator</span>
+                <span class="user-role">admin@gmail.com</span>
+              </div>
+            </div>
+          </header>
+
+          <div class="admin-content-container">
+
+            <!-- TAB 1: OVERVIEW -->
+            <div id="adminTab_overview" class="admin-tab-content active">
+              <div class="kpi-grid">
+                <div class="kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-title">Total Articles</span>
+                    <span class="kpi-icon">📝</span>
+                  </div>
+                  <div class="kpi-value" id="kpiTotalArticles">0</div>
+                  <div class="kpi-sub">Articles to Read & Categories</div>
+                </div>
+
+                <div class="kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-title">Published Articles</span>
+                    <span class="kpi-icon">✅</span>
+                  </div>
+                  <div class="kpi-value text-success" id="kpiPublishedArticles">0</div>
+                  <div class="kpi-sub">Live on public portal</div>
+                </div>
+
+                <div class="kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-title">Drafts</span>
+                    <span class="kpi-icon">📌</span>
+                  </div>
+                  <div class="kpi-value text-warning" id="kpiDraftArticles">0</div>
+                  <div class="kpi-sub">Work in progress</div>
+                </div>
+
+                <div class="kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-title">Active Videos</span>
+                    <span class="kpi-icon">🎥</span>
+                  </div>
+                  <div class="kpi-value" id="kpiActiveVideos">0</div>
+                  <div class="kpi-sub">Video corner & Instagram Reels</div>
+                </div>
+
+                <div class="kpi-card">
+                  <div class="kpi-header">
+                    <span class="kpi-title">Media Assets</span>
+                    <span class="kpi-icon">🖼️</span>
+                  </div>
+                  <div class="kpi-value" id="kpiMediaAssets">0</div>
+                  <div class="kpi-sub">Uploaded images & videos</div>
+                </div>
+              </div>
+
+              <div class="admin-section-card mt-4">
+                <div class="card-header">
+                  <h3>Recent Security Activity Feed</h3>
+                </div>
+                <div class="card-body">
+                  <div id="overviewRecentActivityList" class="activity-feed"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 2: ARTICLES CMS -->
+            <div id="adminTab_articles" class="admin-tab-content" style="display: none;">
+              <div class="admin-section-card">
+                <div class="card-header flex-header">
+                  <div>
+                    <h3>Articles & Blogs Manager</h3>
+                    <p class="text-muted">Create, edit, search, filter, and publish articles.</p>
+                  </div>
+                  <button id="btnAddArticleModal" class="btn-admin-primary" onclick="if(window.openArticleModal) window.openArticleModal(null)">+ Add New Article</button>
+                </div>
+
+                <div class="card-body">
+                  <div class="table-filters-row">
+                    <input type="text" id="articleCMSFilterSearch" class="form-control filter-search" placeholder="Search by title, author, or excerpt...">
+                    
+                    <select id="articleCMSFilterCourt" class="form-control filter-select">
+                      <option value="ALL">All Courts</option>
+                      <option value="SUPREME COURT">Supreme Court</option>
+                      <option value="HIGH COURT">High Court</option>
+                      <option value="SESSIONS COURT">Sessions Court</option>
+                    </select>
+
+                    <select id="articleCMSFilterStatus" class="form-control filter-select">
+                      <option value="ALL">All Status</option>
+                      <option value="published">Published</option>
+                      <option value="draft">Draft</option>
+                      <option value="archived">Archived</option>
+                    </select>
+                  </div>
+
+                  <div class="table-responsive">
+                    <table class="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Article Title</th>
+                          <th>Court</th>
+                          <th>Status</th>
+                          <th>Date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="articlesCMSTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 3: VIDEOS CMS -->
+            <div id="adminTab_videos" class="admin-tab-content" style="display: none;">
+              <div class="admin-section-card">
+                <div class="card-header flex-header">
+                  <div>
+                    <h3>Video Corner & Mobile Reels Manager</h3>
+                    <p class="text-muted">Manage video briefings, Reel excerpts, and full story paragraphs.</p>
+                  </div>
+                  <button id="btnAddVideoModal" class="btn-admin-primary">+ Add New Video Reel</button>
+                </div>
+
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Video Title</th>
+                          <th>Court Tag</th>
+                          <th>Duration</th>
+                          <th>Status</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody id="videosCMSTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 4: TOP & BREAKING NEWS MANAGER -->
+            <div id="adminTab_news" class="admin-tab-content" style="display: none;">
+              <div class="admin-section-card">
+                <div class="card-header">
+                  <h3>Top Hero Story & Breaking News Manager</h3>
+                  <p class="text-muted">Update main hero story headline and court parameters.</p>
+                </div>
+                <div class="card-body">
+                  <form id="newsManagerForm" class="admin-form">
+                    <div class="form-group">
+                      <label class="form-label">Hero Story Title</label>
+                      <input type="text" id="heroStoryTitleInput" class="form-control" required>
+                    </div>
+                    <div class="form-row">
+                      <div class="form-group col-6">
+                        <label class="form-label">Court Tag</label>
+                        <select id="heroStoryCourtSelect" class="form-control">
+                          <option value="SUPREME COURT">Supreme Court</option>
+                          <option value="HIGH COURT">High Court</option>
+                          <option value="SESSIONS COURT">Sessions Court</option>
+                        </select>
+                      </div>
+                      <div class="form-group col-6">
+                        <label class="form-label">Read Time</label>
+                        <input type="text" id="heroStoryReadTimeInput" class="form-control" value="8 min read">
+                      </div>
+                    </div>
+                    <button type="submit" class="btn-admin-primary">Save Hero Story</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 5: MEDIA LIBRARY -->
+            <div id="adminTab_media" class="admin-tab-content" style="display: none;">
+              <div class="admin-section-card">
+                <div class="card-header flex-header">
+                  <div>
+                    <h3>Media Asset Manager</h3>
+                    <p class="text-muted">Upload and manage images and videos with security validation.</p>
+                  </div>
+                  <div class="btn-group">
+                    <button id="btnMediaGridMode" class="btn-admin-outline active">Grid View</button>
+                    <button id="btnMediaListMode" class="btn-admin-outline">List View</button>
+                  </div>
+                </div>
+
+                <div class="card-body">
+                  <div class="media-dropzone" id="mediaDropzone">
+                    <div class="dropzone-icon">📁</div>
+                    <p>Drag & drop image or video files here, or click to upload</p>
+                    <span class="text-muted">Max file size: 15MB. Executables strictly blocked by Security Inspector.</span>
+                    <input type="file" id="mediaFileInput" accept="image/*,video/*" multiple style="display: none;">
+                    <button type="button" id="btnUploadMedia" class="btn-admin-secondary mt-3">Select Files</button>
+                  </div>
+
+                  <div id="mediaGalleryContainer" class="media-gallery-grid mt-4"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 6: SECURITY AUDIT LOGS -->
+            <div id="adminTab_audit" class="admin-tab-content" style="display: none;">
+              <div class="admin-section-card">
+                <div class="card-header flex-header">
+                  <div>
+                    <h3>Cyber Security Audit Logs</h3>
+                    <p class="text-muted">Real-time inspection of logins, lockouts, file validations, and system events.</p>
+                  </div>
+                  <div class="btn-group">
+                    <button id="btnExportAuditLogsBtn" class="btn-admin-outline">Export JSON</button>
+                    <button id="btnClearAuditLogsBtn" class="btn-admin-danger">Clear Logs</button>
+                  </div>
+                </div>
+
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="admin-table">
+                      <thead>
+                        <tr>
+                          <th>Timestamp</th>
+                          <th>Event</th>
+                          <th>Resource</th>
+                          <th>Status</th>
+                          <th>Details</th>
+                        </tr>
+                      </thead>
+                      <tbody id="auditLogsTableBody"></tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- TAB 7: SYSTEM SETTINGS -->
+            <div id="adminTab_settings" class="admin-tab-content" style="display: none;">
+              <div class="admin-section-card">
+                <div class="card-header">
+                  <h3>System Settings & Baseline Data Reset</h3>
+                </div>
+                <div class="card-body">
+                  <p class="text-muted">Restore default baseline demo data models or inspect current storage footprint.</p>
+                  <button id="btnResetSystemData" class="btn-admin-danger">↺ Reset Data to Defaults</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </main>
+      </div>
+    </div>
+
+    <!-- ARTICLE MODAL (CREATE / EDIT) -->
+    <div id="articleFormModal" class="admin-modal-overlay" style="display: none;">
+      <div class="admin-modal-card modal-lg">
+        <div class="admin-modal-header">
+          <h3 id="articleModalHeaderTitle">Create New Article</h3>
+          <button id="btnCloseArticleModal" class="btn-close-modal">✕</button>
+        </div>
+        <form id="articleModalForm" class="admin-form">
+          <div class="admin-modal-body">
+            <input type="hidden" id="artEditId">
+            
+            <div class="form-group">
+              <label class="form-label">Article Title *</label>
+              <input type="text" id="artTitleInput" class="form-control" required placeholder="Enter article title">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-4">
+                <label class="form-label">Target Website Section *</label>
+                <select id="artTargetSectionSelect" class="form-control">
+                  <option value="articles-to-read-sec">Articles to Read</option>
+                  <option value="top-stories-sec">Top Stories (Hero)</option>
+                  <option value="latest-news-sec">Latest News</option>
+                  <option value="video-corner-sec">Video Corner</option>
+                </select>
+              </div>
+              <div class="form-group col-4">
+                <label class="form-label">URL Slug</label>
+                <input type="text" id="artSlugInput" class="form-control" placeholder="article-url-slug">
+              </div>
+              <div class="form-group col-4" id="artCourtGroup">
+                <label class="form-label">Court Tag *</label>
+                <select id="artCourtSelect" class="form-control">
+                  <option value="SUPREME COURT">Supreme Court</option>
+                  <option value="HIGH COURT">High Court</option>
+                  <option value="SESSIONS COURT">Sessions Court</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-4">
+                <label class="form-label">Category</label>
+                <input type="text" id="artCategoryInput" class="form-control" value="Legal Analysis">
+              </div>
+              <div class="form-group col-4">
+                <label class="form-label">Author</label>
+                <input type="text" id="artAuthorInput" class="form-control" value="Editorial Desk">
+              </div>
+              <div class="form-group col-4">
+                <label class="form-label">Read Time</label>
+                <input type="text" id="artReadTimeInput" class="form-control" value="5 min read">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label class="form-label">Publish Status</label>
+                <select id="artStatusSelect" class="form-control">
+                  <option value="published">Published</option>
+                  <option value="draft">Draft</option>
+                  <option value="archived">Archived</option>
+                </select>
+              </div>
+              <div class="form-group col-6">
+                <label class="form-label">Publish Date</label>
+                <input type="date" id="artPublishDateInput" class="form-control">
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Featured Cover Image (URL or Upload)</label>
+              <div class="input-group">
+                <input type="text" id="artImageInput" class="form-control" placeholder="https://images.unsplash.com/...">
+                <input type="file" id="artImageFileInput" accept="image/*" style="display: none;">
+                <button type="button" class="btn-admin-secondary" onclick="document.getElementById('artImageFileInput').click()">Upload File</button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Short Excerpt *</label>
+              <textarea id="artExcerptInput" class="form-control" rows="2" required placeholder="Short summary for card listing..."></textarea>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px;">
+              <label class="form-label" style="display: flex; justify-content: space-between; align-items: center; font-size: 14px; font-weight: 700; color: #111;">
+                <span>Article Sections & Table of Contents (TOC) Manager</span>
+                <button type="button" id="btnAddArticleSection" class="btn-admin-secondary" style="font-size: 12px; padding: 5px 12px; background: #f3e8d3; color: #7a633a; border-radius: 6px; font-weight: 700;">➕ Add Section</button>
+              </label>
+              <p style="font-size: 12px; color: #7a633a; margin-top: 2px; margin-bottom: 14px;">
+                Add unique title and paragraph text for each section. These populate both the "IN THIS ARTICLE" Table of Contents and the reading view sections.
+              </p>
+              
+              <div id="articleSectionsContainer" style="display: flex; flex-direction: column; gap: 14px;">
+                <!-- Dynamically populated section items -->
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">SEO Title</label>
+              <input type="text" id="artSeoTitleInput" class="form-control" placeholder="SEO title for search engines">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">SEO Description</label>
+              <input type="text" id="artSeoDescInput" class="form-control" placeholder="SEO meta description">
+            </div>
+
+          </div>
+          <div class="admin-modal-footer">
+            <button type="button" id="btnCancelArticleModal" class="btn-admin-secondary">Cancel</button>
+            <button type="submit" class="btn-admin-primary">Save Article</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- VIDEO MODAL (CREATE / EDIT) -->
+    <div id="videoFormModal" class="admin-modal-overlay" style="display: none;">
+      <div class="admin-modal-card modal-lg">
+        <div class="admin-modal-header">
+          <h3>Manage Video Briefing / Reel</h3>
+          <button id="btnCloseVideoModal" class="btn-close-modal">✕</button>
+        </div>
+        <form id="videoModalForm" class="admin-form">
+          <div class="admin-modal-body">
+            <input type="hidden" id="vidEditId">
+
+            <div class="form-group">
+              <label class="form-label">Video Title *</label>
+              <input type="text" id="vidTitleInput" class="form-control" required placeholder="Enter video title">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label class="form-label">Court Tag *</label>
+                <select id="vidCourtSelect" class="form-control">
+                  <option value="SUPREME COURT">Supreme Court</option>
+                  <option value="HIGH COURT">High Court</option>
+                  <option value="SESSIONS COURT">Sessions Court</option>
+                </select>
+              </div>
+              <div class="form-group col-6">
+                <label class="form-label">Duration</label>
+                <input type="text" id="vidDurationInput" class="form-control" value="1 min 48 sec">
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group col-6">
+                <label class="form-label">Video File (URL or Upload) *</label>
+                <input type="text" id="vidUrlInput" class="form-control" required placeholder="https://commondatastorage.googleapis.com/...">
+                <div class="mt-2">
+                  <input type="file" id="vidVideoFileInput" accept="video/mp4,video/webm,video/ogg" style="display: none;">
+                  <button type="button" class="btn-admin-outline" onclick="document.getElementById('vidVideoFileInput').click()">📹 Upload Video File</button>
+                </div>
+              </div>
+              <div class="form-group col-6">
+                <label class="form-label">Poster Image (URL or Upload) *</label>
+                <input type="text" id="vidPosterInput" class="form-control" required placeholder="https://images.unsplash.com/...">
+                <div class="mt-2">
+                  <input type="file" id="vidPosterFileInput" accept="image/png,image/jpeg,image/webp,image/gif" style="display: none;">
+                  <button type="button" class="btn-admin-outline" onclick="document.getElementById('vidPosterFileInput').click()">🖼️ Upload Poster Image</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Publish Status</label>
+              <select id="vidStatusSelect" class="form-control">
+                <option value="published">Published</option>
+                <option value="draft">Draft</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Reel Excerpt *</label>
+              <textarea id="vidExcerptInput" class="form-control" rows="2" required placeholder="Brief overlay text..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label">Reel "View More" Full Story Paragraphs (Separate with double line break)</label>
+              <textarea id="vidStoryInput" class="form-control" rows="4" placeholder="Paragraphs shown when user clicks View More in Reel..."></textarea>
+            </div>
+
+          </div>
+          <div class="admin-modal-footer">
+            <button type="button" id="btnCancelVideoModal" class="btn-admin-secondary">Cancel</button>
+            <button type="submit" class="btn-admin-primary">Save Video Reel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- FOOTER DIVIDER EMBLEM -->
+    <div class="container section-divider-container footer-divider">
+      <div class="divider-line"></div>
+      <div class="divider-emblem">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
+          <path d="M12 3v18M5 8h14M3 14l4-6 4 6H3zm10 0l4-6 4 6h-8zM7 21h10"></path>
+        </svg>
+      </div>
+      <div class="divider-line"></div>
+    </div>
+
+    <!-- SITE FOOTER WITH FINE-TUNED SINGLE ROW SCALES WATERMARK IMAGE -->
+    <footer class="site-footer">
+      <div class="footer-watermark-overlay">
+        <svg width="100%" height="260" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="scalesPattern" x="0" y="0" width="284" height="258" patternUnits="userSpaceOnUse">
+              <path transform="scale(0.73)" d="M94.8908 57.1728C83.8094 59.4357 65.4773 57.7728 57.6964 56.6586C60.1589 61.8014 67.1018 65.83 70.2655 67.2014L13.8326 227.401H2.28955C4.59817 235.887 17.1673 269.573 76.4218 269.573C123.825 269.573 143.714 241.459 147.732 227.401H135.933L79.2435 70.03C92.5821 74.35 114.044 70.4586 123.107 67.9728C149.169 60.1557 163.38 74.3157 167.227 82.3728H187.492C189.544 92.8643 184.243 116.23 181.336 126.601C172.922 147.996 182.276 173.744 188.005 183.944C188.005 195.259 190.827 196.287 181.336 227.401C173.743 252.293 181.25 276.001 185.953 284.744C169.946 290.916 174.324 307.887 178.514 315.601C170.562 333.344 134.394 327.173 128.75 325.887C123.107 324.601 91.2996 319.716 88.7344 335.401C86.6823 347.95 94.0357 353.144 97.9689 354.173H285.736C295.587 351.499 295.997 340.544 294.971 335.401C294.372 329.401 285.531 319.099 254.955 325.887C224.379 332.676 209.552 321.859 205.961 315.601C217.863 298.527 207.5 288.601 200.831 285.773C217.247 257.487 207.243 232.03 207.243 227.401C207.243 232.287 196.47 192.173 200.831 183.944C205.191 175.716 215.195 148.716 207.243 126.601C200.882 108.91 200.318 89.7443 200.831 82.3728H221.865C223.917 74.9157 238.282 60.5157 263.676 67.9728C283.992 73.9386 302.239 72.0014 308.823 70.2871L252.646 227.401H240.077C244.096 241.201 264.395 268.956 313.44 269.573C362.485 270.19 382.442 241.716 386.29 227.401H374.49L318.057 67.9728C314.722 69.6014 310.054 71.7786 318.057 67.4586C326.06 63.1386 329.771 58.4586 330.626 56.6586C309.849 60.7729 295.74 56.9157 291.38 56.4014C287.891 55.99 276.587 50.7443 271.372 48.1729C241.616 31.3043 216.221 42.6871 207.243 50.4871C202.113 54.3957 200.66 50.5729 200.574 48.1729C206.115 24.31 198.779 8.22999 194.418 3.17285C177.488 38.6586 189.801 42.2586 188.518 48.1729C187.492 52.9043 183.815 52.2014 182.105 51.2586C147.989 22.7157 108.742 54.3443 94.8908 57.1728Z" stroke="#C98806" stroke-opacity="0.07" stroke-width="3.5" fill="none"/>
+            </pattern>
+          </defs>
+          <rect y="0" width="100%" height="258" fill="url(#scalesPattern)"/>
+        </svg>
+      </div>
+
+      <div class="container footer-content text-center">
+        <div class="footer-logo">
+          <a href="#" class="brand-logo footer-brand">
+            <span class="hindi-logo">लोकल</span>
+            <span class="english-logo">ADALAT</span>
+          </a>
+        </div>
+        <p class="footer-description">
+          Lokal Adalat is India's independent legal news and analysis platform covering courts, legislation, policy, and legal affairs.
+        </p>
+
+        <nav class="footer-nav">
+          <a href="#top-stories-sec" class="footer-link">TOP STORIES</a>
+          <span class="nav-sep">•</span>
+          <a href="#latest-news-sec" class="footer-link">LATEST NEWS</a>
+          <span class="nav-sep">•</span>
+          <a href="#video-corner-sec" class="footer-link">VIDEO CORNER</a>
+          <span class="nav-sep">•</span>
+          <a href="#articles-to-read-sec" class="footer-link">ARTICLES TO READ</a>
+        </nav>
+
+        <div class="social-links">
+          <a href="#" class="social-circle-gold" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.72a1.63 1.63 0 1 0 0 3.26 1.63 1.63 0 0 0 0-3.26Z"/>
+            </svg>
+          </a>
+          <a href="#" class="social-circle-gold" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15">
+              <path d="M21.58 7.19a2.7 2.7 0 0 0-1.9-1.9C18 4.75 12 4.75 12 4.75s-6 0-7.68.54a2.7 2.7 0 0 0-1.9 1.9C2 8.87 2 12 2 12s0 3.13.42 4.81a2.7 2.7 0 0 0 1.9 1.9c1.68.54 7.68.54 7.68.54s6 0 7.68-.54a2.7 2.7 0 0 0 1.9-1.9C22 15.13 22 12 22 12s0-3.13-.42-4.81zM9.75 15.02V8.98L15 12l-5.25 3.02z"/>
+            </svg>
+          </a>
+          <a href="#" class="social-circle-gold" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="15" height="15">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <!-- NAVIGATION MENU DRAWER & OVERLAY -->
+    <div id="menuOverlay" class="menu-overlay"></div>
+
+    <aside id="menuDrawer" class="menu-drawer">
+      <div class="drawer-header">
+        <div class="logo-container">
+          <a href="#" class="brand-logo">
+            <span class="hindi-logo">लोकल</span>
+            <span class="english-logo">ADALAT</span>
+          </a>
+        </div>
+        <button class="close-menu-btn" id="closeMenuBtn" aria-label="Close navigation menu">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="drawer-body">
+        <nav class="drawer-nav">
+          <div class="drawer-nav-item">
+            <a href="#top-stories-sec" class="drawer-nav-link nav-jump-link">Top Stories</a>
+          </div>
+          
+          <div class="drawer-nav-item has-accordion">
+            <div class="accordion-header" id="accordionToggleBtn">
+              <span class="drawer-nav-link">Latest News</span>
+              <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M18 15l-6-6-6 6"/>
+              </svg>
+            </div>
+            
+            <div class="accordion-content open" id="accordionContent">
+              <div class="sub-nav-list">
+                <button class="sub-nav-btn active" data-court="supreme-court">
+                  <span class="sub-dot">•</span> Supreme Court
+                </button>
+                <button class="sub-nav-btn" data-court="high-court">
+                  <span class="sub-dot">•</span> High Courts
+                </button>
+                <button class="sub-nav-btn" data-court="sessions-court">
+                  <span class="sub-dot">•</span> Sessions Courts
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="drawer-nav-item">
+            <a href="#video-corner-sec" class="drawer-nav-link nav-jump-link">Video Corner</a>
+          </div>
+
+          <div class="drawer-nav-item">
+            <a href="#articles-to-read-sec" class="drawer-nav-link nav-jump-link">Articles to Read</a>
+          </div>
+
+          <div class="drawer-nav-item">
+            <a href="#contact" class="drawer-nav-link nav-jump-link" id="contactNavBtn">Contact</a>
+          </div>
+        </nav>
+
+        <!-- Newsletter Widget Inside Drawer -->
+        <div class="drawer-newsletter-card">
+          <span class="drawer-news-badge">NEWSLETTER</span>
+          <h3 class="drawer-news-title">Never Miss a Judgment That Matters</h3>
+          <p class="drawer-news-desc">Receive daily legal briefings, courtroom updates, expert analysis, and breaking legal news directly in your inbox.</p>
+
+          <form class="drawer-news-form">
+            <input type="email" placeholder="Enter your email" required class="drawer-news-input">
+            <button type="submit" class="btn-primary drawer-news-btn">Subscribe</button>
+          </form>
+          <p class="drawer-news-sub">No spam. Unsubscribe anytime.</p>
+        </div>
+      </div>
+
+      <div class="drawer-footer">
+        <span class="drawer-social-label">FOLLOW LOKAL ADALAT</span>
+        <div class="drawer-social-row">
+          <a href="#" class="drawer-social-circle" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+              <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.25V10.9H6.46M7.86 6.72a1.63 1.63 0 1 0 0 3.26 1.63 1.63 0 0 0 0-3.26Z"/>
+            </svg>
+          </a>
+          <a href="#" class="drawer-social-circle" aria-label="YouTube">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+              <path d="M21.58 7.19a2.7 2.7 0 0 0-1.9-1.9C18 4.75 12 4.75 12 4.75s-6 0-7.68.54a2.7 2.7 0 0 0-1.9 1.9C2 8.87 2 12 2 12s0 3.13.42 4.81a2.7 2.7 0 0 0 1.9 1.9c1.68.54 7.68.54 7.68.54s6 0 7.68-.54a2.7 2.7 0 0 0 1.9-1.9C22 15.13 22 12 22 12s0-3.13-.42-4.81zM9.75 15.02V8.98L15 12l-5.25 3.02z"/>
+            </svg>
+          </a>
+          <a href="#" class="drawer-social-circle" aria-label="Instagram">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </aside>
+
+  </div>
+
+  <!-- Mobile Bottom Navigation Bar (Fixed at bottom on mobile screens) -->
+  <nav class="mobile-bottom-bar" id="mobileBottomBar">
+    <button class="mobile-nav-item active" id="mobileNavHome" data-target="top-stories-sec">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+      </svg>
+      <span>Home</span>
+    </button>
+    
+    <button class="mobile-nav-item" id="mobileNavCourts" data-target="latest-news-sec">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 3v18M5 8h14M3 14l4-6 4 6H3zm10 0l4-6 4 6h-8zM7 21h10"></path>
+      </svg>
+      <span>Courts</span>
+    </button>
+    
+    <button class="mobile-nav-item" id="mobileNavVideos" data-target="video-corner-sec">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <polygon points="23 7 16 12 23 17 23 7"></polygon>
+        <rect x="1" y="5" width="15" height="14" rx="2" ry="2"></rect>
+      </svg>
+      <span>Videos</span>
+    </button>
+    
+    <button class="mobile-nav-item" id="mobileNavArticles" data-target="articles-sec">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+        <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+      </svg>
+      <span>Articles</span>
+    </button>
+  </nav>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
