@@ -33,7 +33,10 @@ const dbConfig = {
   database: process.env.DB_NAME,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  ...(process.env.DB_SSL === 'true' || (process.env.DB_HOST && !['127.0.0.1', 'localhost'].includes(process.env.DB_HOST))
+    ? { ssl: { minVersion: 'TLSv1.2', rejectUnauthorized: true } }
+    : {})
 };
 
 import fs from 'fs';
