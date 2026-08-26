@@ -12,6 +12,7 @@ export class VideoController {
       const videos = await VideoRepository.getAll();
       return res.json({ success: true, data: videos });
     } catch (e) {
+      console.error('[VideoController.getAllVideos Error]', e);
       return res.status(500).json({ success: false, message: e.message });
     }
   }

@@ -23,6 +23,23 @@ function toMySQLDatetime(dateInput) {
   }
 }
 
+function safeParseParagraphs(body, excerpt) {
+  if (!body) return excerpt ? [excerpt] : [];
+  if (typeof body === 'string') {
+    const trimmed = body.trim();
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed;
+      } catch (e) {
+        // Ignore parse error and fallback to text split
+      }
+    }
+    return trimmed.split(/\n\s*\n/).filter(Boolean);
+  }
+  return Array.isArray(body) ? body : [];
+}
+
 export class ArticleRepository {
   static async getAll() {
     const sql = 'SELECT * FROM articles ORDER BY created_at DESC';
@@ -33,7 +50,7 @@ export class ArticleRepository {
       slug: r.slug,
       excerpt: r.excerpt,
       body: r.body,
-      paragraphs: r.body ? (r.body.startsWith('[') ? JSON.parse(r.body) : r.body.split('\n\n')) : [],
+      paragraphs: safeParseParagraphs(r.body, r.excerpt),
       author: r.author,
       court: r.court,
       targetSection: r.target_section,
@@ -60,7 +77,7 @@ export class ArticleRepository {
       slug: r.slug,
       excerpt: r.excerpt,
       body: r.body,
-      paragraphs: r.body ? (r.body.startsWith('[') ? JSON.parse(r.body) : r.body.split('\n\n')) : [],
+      paragraphs: safeParseParagraphs(r.body, r.excerpt),
       author: r.author,
       court: r.court,
       targetSection: r.target_section,

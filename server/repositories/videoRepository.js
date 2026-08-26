@@ -23,6 +23,23 @@ function toMySQLDatetime(dateInput) {
   }
 }
 
+function safeParseFullStory(paragraphs) {
+  if (!paragraphs) return [];
+  if (typeof paragraphs === 'string') {
+    const trimmed = paragraphs.trim();
+    if (trimmed.startsWith('[')) {
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed;
+      } catch (e) {
+        // Fallback below
+      }
+    }
+    return [trimmed];
+  }
+  return Array.isArray(paragraphs) ? paragraphs : [];
+}
+
 export class VideoRepository {
   static async getAll() {
     const sql = 'SELECT * FROM videos ORDER BY created_at DESC';
@@ -39,7 +56,7 @@ export class VideoRepository {
       court: r.court,
       status: r.publish_status,
       isFeaturedReel: r.is_featured_reel === 1,
-      fullStoryParagraphs: r.full_story_paragraphs ? (r.full_story_paragraphs.startsWith('[') ? JSON.parse(r.full_story_paragraphs) : [r.full_story_paragraphs]) : [],
+      fullStoryParagraphs: safeParseFullStory(r.full_story_paragraphs),
       publishedDate: r.published_date
     }));
   }
@@ -61,7 +78,7 @@ export class VideoRepository {
       court: r.court,
       status: r.publish_status,
       isFeaturedReel: r.is_featured_reel === 1,
-      fullStoryParagraphs: r.full_story_paragraphs ? (r.full_story_paragraphs.startsWith('[') ? JSON.parse(r.full_story_paragraphs) : [r.full_story_paragraphs]) : [],
+      fullStoryParagraphs: safeParseFullStory(r.full_story_paragraphs),
       publishedDate: r.published_date
     };
   }

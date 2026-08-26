@@ -11,6 +11,13 @@ import { showToast, showConfirmModal } from './toast.js';
 import { showView } from './router.js';
 import { ApiClient, formatMediaUrl } from './apiClient.js';
 
+const eyeIcon = `<svg class="icon-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>`;
+const eyeOffIcon = `<svg class="icon-svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg>`;
+const editIcon = `<svg class="icon-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>`;
+const duplicateIcon = `<svg class="icon-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>`;
+const deleteIcon = `<svg class="icon-svg" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>`;
+const plusIcon = `<svg class="icon-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>`;
+
 let activeTab = 'overview';
 let activeArticleFilterCourt = 'ALL';
 let activeArticleFilterStatus = 'ALL';
@@ -95,10 +102,11 @@ function setupLoginView() {
   const lockoutSecondsSpan = document.getElementById('lockoutSecondsSpan');
 
   if (togglePassBtn && passwordInput) {
+    togglePassBtn.innerHTML = eyeIcon;
     togglePassBtn.addEventListener('click', () => {
       const isPass = passwordInput.type === 'password';
       passwordInput.type = isPass ? 'text' : 'password';
-      togglePassBtn.textContent = isPass ? '🔒' : '👁️';
+      togglePassBtn.innerHTML = isPass ? eyeOffIcon : eyeIcon;
     });
   }
 
@@ -326,9 +334,9 @@ function renderArticlesTable() {
       <td>${escapeHTML(item.publishDate || item.date || '2026-07-22')}</td>
       <td>
         <div class="table-actions">
-          <button class="btn-icon btn-edit-article" data-id="${item.id}" title="Edit Article">✏️</button>
-          <button class="btn-icon btn-duplicate-article" data-id="${item.id}" title="Duplicate">📋</button>
-          <button class="btn-icon btn-delete-article" data-id="${item.id}" title="Delete">🗑️</button>
+          <button class="btn-icon btn-edit-article" data-id="${item.id}" title="Edit Article">${editIcon}</button>
+          <button class="btn-icon btn-duplicate-article" data-id="${item.id}" title="Duplicate">${duplicateIcon}</button>
+          <button class="btn-icon btn-delete-article" data-id="${item.id}" title="Delete">${deleteIcon}</button>
         </div>
       </td>
     </tr>
@@ -374,30 +382,132 @@ function renderArticlesTable() {
 }
 
 /* Article Section Row Builder */
-function renderArticleSectionRow(title = '', content = '') {
+function renderArticleSectionRow(title = '', content = '', imageUrl = '', caption = '') {
   const container = document.getElementById('articleSectionsContainer');
   if (!container) return;
 
   const count = container.children.length + 1;
   const row = document.createElement('div');
   row.className = 'article-section-item';
-  row.style.cssText = 'background: #FAF8F5; border: 1px solid #E2D7C5; border-radius: 8px; padding: 14px;';
+  row.style.cssText = 'background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 16px; margin-bottom: 8px;';
+  
+  const uploadIcon = `<svg class="icon-svg" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>`;
+
   row.innerHTML = `
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-      <span style="font-weight: 700; font-size: 13px; color: #7A633A;" class="sec-badge-label">Section #${count}</span>
-      <button type="button" class="btn-remove-section" style="background: none; border: none; color: #d9534f; cursor: pointer; font-size: 12px; font-weight: 600;">🗑️ Remove Section</button>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+      <span style="font-weight: 700; font-size: 13px; color: #475569;" class="sec-badge-label">Section #${count}</span>
+      <button type="button" class="btn-admin-danger btn-remove-section" style="font-size: 12px; padding: 6px 14px; border-radius: 8px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px;">${deleteIcon} Remove Section</button>
     </div>
-    <div class="form-group" style="margin-bottom: 8px;">
+    <div class="form-group" style="margin-bottom: 10px;">
       <input type="text" class="form-control sec-title-input" placeholder="Section Title (e.g. 01 Introduction or Background of the Case)" value="${sanitizeHTML(title)}">
     </div>
-    <div class="form-group" style="margin-bottom: 0;">
+    <div class="form-group" style="margin-bottom: 10px;">
       <textarea class="form-control sec-content-input" rows="3" placeholder="Enter unique text content for this section...">${sanitizeHTML(content)}</textarea>
+    </div>
+    <div class="form-group" style="margin-bottom: 10px;">
+      <label class="form-label" style="font-size: 12px; font-weight: 600; color: #64748B; margin-bottom: 4px; display: block;">Section Image (Optional)</label>
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <input type="text" class="form-control sec-image-input" placeholder="Image URL or upload file..." value="${sanitizeHTML(imageUrl)}" style="flex: 1;">
+        <input type="file" class="sec-image-file-input" accept="image/*" style="display: none;">
+        <button type="button" class="btn-admin-secondary btn-upload-sec-img" style="white-space: nowrap; font-size: 12px; padding: 8px 14px; border-radius: 8px; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+          ${uploadIcon} Upload Image
+        </button>
+      </div>
+      <div class="sec-image-preview-wrapper" style="margin-top: 8px; ${imageUrl ? 'display: block;' : 'display: none;'}">
+        <div style="position: relative; display: inline-block;">
+          <img class="sec-image-preview" src="${imageUrl}" style="max-height: 100px; max-width: 100%; border-radius: 8px; border: 1px solid #CBD5E1; object-fit: cover; display: block;">
+          <button type="button" class="btn-remove-sec-img" style="position: absolute; top: -6px; right: -6px; background: #DC2626; color: #fff; border: none; border-radius: 50%; width: 22px; height: 22px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;" title="Remove Image">&times;</button>
+        </div>
+      </div>
+    </div>
+    <div class="form-group sec-caption-group" style="margin-bottom: 0; ${imageUrl ? 'display: block;' : 'display: none;'}">
+      <label class="form-label" style="font-size: 12px; font-weight: 600; color: #64748B; margin-bottom: 4px; display: block;">Photo Caption / Credit (Optional)</label>
+      <input type="text" class="form-control sec-caption-input" placeholder="e.g. The Constitution Bench during hearings. Photo: Supreme Court of India / PTI" value="${sanitizeHTML(caption)}">
     </div>
   `;
 
-  row.querySelector('.btn-remove-section').onclick = () => {
-    row.remove();
-    updateSectionBadgeLabels();
+  // Attach section image file upload event listeners
+  const fileInput = row.querySelector('.sec-image-file-input');
+  const uploadBtn = row.querySelector('.btn-upload-sec-img');
+  const imgInput = row.querySelector('.sec-image-input');
+  const previewWrapper = row.querySelector('.sec-image-preview-wrapper');
+  const previewImg = row.querySelector('.sec-image-preview');
+  const removeImgBtn = row.querySelector('.btn-remove-sec-img');
+  const captionGroup = row.querySelector('.sec-caption-group');
+
+  if (uploadBtn && fileInput) {
+    uploadBtn.onclick = () => fileInput.click();
+  }
+
+  const updatePreview = (url) => {
+    if (url) {
+      previewImg.src = url;
+      previewWrapper.style.display = 'block';
+      if (captionGroup) captionGroup.style.display = 'block';
+    } else {
+      previewWrapper.style.display = 'none';
+      if (captionGroup) captionGroup.style.display = 'none';
+      previewImg.src = '';
+    }
+  };
+
+  if (imgInput) {
+    imgInput.oninput = () => updatePreview(imgInput.value.trim());
+  }
+
+  if (fileInput) {
+    fileInput.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const val = validateMediaFile(file);
+      if (!val.valid) {
+        showToast(val.error, 'error');
+        fileInput.value = '';
+        return;
+      }
+
+      showToast('Uploading section image...', 'info');
+      const apiRes = await ApiClient.uploadFile(file);
+      if (apiRes && apiRes.success && apiRes.data && apiRes.data.storage_path) {
+        const fullUrl = formatMediaUrl(apiRes.data.storage_path);
+        imgInput.value = fullUrl;
+        updatePreview(fullUrl);
+        showToast('Section image uploaded successfully!', 'success');
+      } else {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          imgInput.value = evt.target.result;
+          updatePreview(evt.target.result);
+          showToast('Section image uploaded.', 'success');
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+  }
+
+  if (removeImgBtn) {
+    removeImgBtn.onclick = () => {
+      imgInput.value = '';
+      if (fileInput) fileInput.value = '';
+      updatePreview('');
+    };
+  }
+
+  row.querySelector('.btn-remove-section').onclick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    showConfirmModal({
+      title: 'Remove Article Section',
+      message: 'Are you sure you want to remove this section from the article?',
+      confirmText: 'Remove Section',
+      cancelText: 'Cancel',
+      onConfirm: () => {
+        row.remove();
+        updateSectionBadgeLabels();
+        showToast('Article section removed.', 'info');
+      }
+    });
   };
 
   container.appendChild(row);
@@ -485,8 +595,6 @@ function setupArticleModalForm() {
       const targetSection = targetSecElem ? targetSecElem.value : 'articles-to-read-sec';
       const courtElem = document.getElementById('artCourtSelect');
       const court = courtElem ? courtElem.value : 'SUPREME COURT';
-      const catElem = document.getElementById('artCategoryInput');
-      const category = catElem ? sanitizeInput(catElem.value || 'Legal Analysis') : 'Legal Analysis';
       const authElem = document.getElementById('artAuthorInput');
       const author = authElem ? sanitizeInput(authElem.value || 'Editorial Desk') : 'Editorial Desk';
       const readElem = document.getElementById('artReadTimeInput');
@@ -503,14 +611,18 @@ function setupArticleModalForm() {
         return;
       }
 
-      // Collect section objects
+      // Collect section objects with image URLs and photo captions
       const sectionRows = Array.from(document.querySelectorAll('#articleSectionsContainer .article-section-item'));
       const sections = sectionRows.map((row, idx) => {
         const titleIn = row.querySelector('.sec-title-input');
         const contentIn = row.querySelector('.sec-content-input');
+        const imageIn = row.querySelector('.sec-image-input');
+        const captionIn = row.querySelector('.sec-caption-input');
         const titleVal = titleIn ? sanitizeInput(titleIn.value.trim()) : `Section ${idx + 1}`;
         const contentVal = contentIn ? sanitizeInput(contentIn.value.trim()) : '';
-        return { title: titleVal || `Section ${idx + 1}`, content: contentVal };
+        const imageVal = imageIn ? imageIn.value.trim() : '';
+        const captionVal = captionIn ? sanitizeInput(captionIn.value.trim()) : '';
+        return { title: titleVal || `Section ${idx + 1}`, content: contentVal, image: imageVal, caption: captionVal };
       });
 
       const finalSections = sections.length ? sections : [
@@ -527,7 +639,7 @@ function setupArticleModalForm() {
         slug: slugElem ? sanitizeInput(slugElem.value) : '',
         targetSection,
         court,
-        category,
+        category: 'Legal Analysis',
         author,
         readTime,
         status,
@@ -579,7 +691,6 @@ function openArticleModal(item = null) {
   const titleInputElem = document.getElementById('artTitleInput');
   const slugInputElem = document.getElementById('artSlugInput');
   const courtSelectElem = document.getElementById('artCourtSelect');
-  const categoryInputElem = document.getElementById('artCategoryInput');
   const authorInputElem = document.getElementById('artAuthorInput');
   const readTimeInputElem = document.getElementById('artReadTimeInput');
   const statusSelectElem = document.getElementById('artStatusSelect');
@@ -593,7 +704,6 @@ function openArticleModal(item = null) {
   if (titleInputElem) titleInputElem.value = item ? item.title || '' : '';
   if (slugInputElem) slugInputElem.value = item ? item.slug || '' : '';
   if (courtSelectElem) courtSelectElem.value = item ? item.court || 'SUPREME COURT' : 'SUPREME COURT';
-  if (categoryInputElem) categoryInputElem.value = item ? item.category || 'Legal Analysis' : 'Legal Analysis';
   if (authorInputElem) authorInputElem.value = item ? item.author || 'Editorial Desk' : 'Editorial Desk';
   if (readTimeInputElem) readTimeInputElem.value = item ? item.readTime || '5 min read' : '5 min read';
   if (statusSelectElem) statusSelectElem.value = item ? item.status || 'published' : 'published';
@@ -622,10 +732,10 @@ function openArticleModal(item = null) {
       ];
 
       rawSections.forEach((sec, idx) => {
-        if (typeof sec === 'object' && sec !== null && sec.title) {
-          renderArticleSectionRow(sec.title, sec.content || '');
+        if (typeof sec === 'object' && sec !== null) {
+          renderArticleSectionRow(sec.title || defaultTitles[idx] || `Section ${idx + 1}`, sec.content || '', sec.image || sec.imageUrl || '', sec.caption || sec.imageCaption || '');
         } else {
-          renderArticleSectionRow(defaultTitles[idx] || `Section ${idx + 1}`, typeof sec === 'string' ? sec : (sec.content || ''));
+          renderArticleSectionRow(defaultTitles[idx] || `Section ${idx + 1}`, typeof sec === 'string' ? sec : (sec.content || ''), sec.image || sec.imageUrl || '', sec.caption || sec.imageCaption || '');
         }
       });
     } else {
@@ -650,7 +760,7 @@ function openArticleModal(item = null) {
   }
 
   if (title) title.textContent = item ? 'Edit Article' : 'Create New Article';
-  modal.style.cssText = 'display: flex !important; visibility: visible !important; opacity: 1 !important; z-index: 99999 !important;';
+  modal.style.cssText = 'display: flex !important; visibility: visible !important; opacity: 1 !important; z-index: 10000 !important;';
   document.body.classList.add('modal-open');
 }
 
@@ -670,6 +780,7 @@ function setupVideosCMS() {
   if (btnAdd) {
     btnAdd.addEventListener('click', () => openVideoModal(null));
   }
+  setupVideoModalForm();
 }
 
 function getValidImageUrl(url, fallback = 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=400&q=80') {
@@ -710,8 +821,8 @@ function renderVideosTable() {
         <td><span class="status-badge status-${item.status || 'published'}">${escapeHTML(item.status || 'published')}</span></td>
         <td>
           <div class="table-actions">
-            <button class="btn-icon btn-edit-video" data-id="${item.id}" title="Edit Video">✏️</button>
-            <button class="btn-icon btn-delete-video" data-id="${item.id}" title="Delete Video">🗑️</button>
+            <button class="btn-icon btn-edit-video" data-id="${item.id}" title="Edit Video">${editIcon}</button>
+            <button class="btn-icon btn-delete-video" data-id="${item.id}" title="Delete Video">${deleteIcon}</button>
           </div>
         </td>
       </tr>
@@ -749,6 +860,56 @@ function setupVideoModalForm() {
   const form = document.getElementById('videoModalForm');
   const closeX = document.getElementById('btnCloseVideoModal');
   const cancelBtn = document.getElementById('btnCancelVideoModal');
+  const vidVideoFileInput = document.getElementById('vidVideoFileInput');
+  const vidPosterFileInput = document.getElementById('vidPosterFileInput');
+  const vidUrlInput = document.getElementById('vidUrlInput');
+  const vidPosterInput = document.getElementById('vidPosterInput');
+
+  if (vidVideoFileInput) {
+    vidVideoFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      showToast('Uploading video file...', 'info');
+      const apiRes = await ApiClient.uploadFile(file);
+      if (apiRes && apiRes.success && apiRes.data && apiRes.data.storage_path) {
+        if (vidUrlInput) vidUrlInput.value = formatMediaUrl(apiRes.data.storage_path);
+        showToast('Video file uploaded successfully!', 'success');
+      } else {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          if (vidUrlInput) vidUrlInput.value = evt.target.result;
+          showToast('Video file loaded.', 'success');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  if (vidPosterFileInput) {
+    vidPosterFileInput.addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const val = validateMediaFile(file);
+      if (!val.valid) {
+        showToast(val.error, 'error');
+        vidPosterFileInput.value = '';
+        return;
+      }
+      showToast('Uploading poster image...', 'info');
+      const apiRes = await ApiClient.uploadFile(file);
+      if (apiRes && apiRes.success && apiRes.data && apiRes.data.storage_path) {
+        if (vidPosterInput) vidPosterInput.value = formatMediaUrl(apiRes.data.storage_path);
+        showToast('Poster image uploaded successfully!', 'success');
+      } else {
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          if (vidPosterInput) vidPosterInput.value = evt.target.result;
+          showToast('Poster image loaded.', 'success');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
 
   if (form) {
     form.addEventListener('submit', async (e) => {
@@ -823,7 +984,7 @@ export function openVideoModal(item = null) {
   if (vidExcerptInput) vidExcerptInput.value = item ? item.excerpt || '' : '';
   if (vidStoryInput) vidStoryInput.value = item && item.fullStoryParagraphs ? (Array.isArray(item.fullStoryParagraphs) ? item.fullStoryParagraphs.join('\n\n') : String(item.fullStoryParagraphs)) : '';
 
-  modal.style.cssText = 'display: flex !important; visibility: visible !important; opacity: 1 !important; z-index: 99999 !important;';
+  modal.style.cssText = 'display: flex !important; visibility: visible !important; opacity: 1 !important; z-index: 10000 !important;';
   document.body.classList.add('modal-open');
 }
 
@@ -839,39 +1000,66 @@ export function closeVideoModal() {
    6. NEWS MANAGER
    ========================================================================== */
 function setupNewsCMS() {
-  const form = document.getElementById('newsManagerForm');
+  const form = document.getElementById('breakingNewsForm');
   if (form) {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const heroTitle = sanitizeInput(document.getElementById('heroStoryTitleInput').value);
-      const heroCourt = document.getElementById('heroStoryCourtSelect').value;
-      const heroReadTime = sanitizeInput(document.getElementById('heroStoryReadTimeInput').value || '8 min read');
-
-      let topStories = getCollection('topStories');
-      if (topStories.length > 0) {
-        updateItem('topStories', topStories[0].id, {
-          title: heroTitle,
-          court: heroCourt,
-          readTime: heroReadTime
-        });
-        showToast('Hero story updated!', 'success');
+      const titleInput = document.getElementById('breakingNewsTitleInput');
+      const title = sanitizeInput(titleInput ? titleInput.value.trim() : '');
+      if (!title) {
+        showToast('Please enter a headline title.', 'error');
+        return;
       }
+
+      await createItem('news', {
+        title,
+        status: 'published',
+        createdAt: new Date().toISOString()
+      });
+
+      if (titleInput) titleInput.value = '';
+      showToast('Breaking news headline added successfully!', 'success');
+      renderNewsManager();
     });
   }
 }
 
 function renderNewsManager() {
-  const topStories = getCollection('topStories');
-  if (!topStories.length) return;
+  const tbody = document.getElementById('breakingNewsTableBody');
+  if (!tbody) return;
 
-  const hero = topStories[0];
-  const heroTitleInput = document.getElementById('heroStoryTitleInput');
-  const heroCourtSelect = document.getElementById('heroStoryCourtSelect');
-  const heroReadTimeInput = document.getElementById('heroStoryReadTimeInput');
+  const newsList = getCollection('news');
+  if (!newsList || !newsList.length) {
+    tbody.innerHTML = `<tr><td colspan="3" class="text-center py-4 text-muted">No custom breaking news headlines added yet. Published top story article titles cycle automatically in the ticker loop.</td></tr>`;
+    return;
+  }
 
-  if (heroTitleInput) heroTitleInput.value = hero.title || '';
-  if (heroCourtSelect) heroCourtSelect.value = hero.court || 'SUPREME COURT';
-  if (heroReadTimeInput) heroReadTimeInput.value = hero.readTime || '8 min read';
+  tbody.innerHTML = newsList.map(item => `
+    <tr>
+      <td><strong style="color: #0F172A;">${escapeHTML(item.title)}</strong></td>
+      <td>${item.createdAt ? new Date(item.createdAt).toLocaleDateString() : 'Today'}</td>
+      <td style="text-align: right;">
+        <button class="btn-icon btn-delete-news" data-id="${item.id}" title="Delete Headline">${deleteIcon}</button>
+      </td>
+    </tr>
+  `).join('');
+
+  tbody.querySelectorAll('.btn-delete-news').forEach(btn => {
+    btn.onclick = (e) => {
+      e.preventDefault();
+      const id = btn.dataset.id;
+      showConfirmModal({
+        title: 'Delete Breaking Headline',
+        message: 'Are you sure you want to remove this breaking news headline?',
+        confirmText: 'Delete',
+        onConfirm: async () => {
+          await deleteItem('news', id);
+          showToast('Headline removed.', 'info');
+          renderNewsManager();
+        }
+      });
+    };
+  });
 }
 
 /* ==========================================================================
@@ -926,25 +1114,41 @@ function setupMediaLibrary() {
 function handleMediaFiles(files) {
   if (!files || !files.length) return;
 
-  Array.from(files).forEach(file => {
+  Array.from(files).forEach(async (file) => {
     const val = validateMediaFile(file);
     if (!val.valid) {
       showToast(val.error, 'error', 4500);
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (evt) => {
+    showToast(`Uploading asset '${file.name}'...`, 'info');
+    const apiRes = await ApiClient.uploadFile(file);
+    if (apiRes && apiRes.success && apiRes.data && apiRes.data.storage_path) {
+      const fullUrl = formatMediaUrl(apiRes.data.storage_path);
       createItem('mediaLibrary', {
+        id: apiRes.data.id || `med_${Date.now()}`,
         name: file.name,
-        url: evt.target.result,
+        url: fullUrl,
         mimeType: file.type || 'image/jpeg',
         sizeFormatted: `${(file.size / 1024).toFixed(0)} KB`,
         uploadedAt: new Date().toISOString()
       });
-      showToast(`Asset '${file.name}' uploaded to Media Library.`, 'success');
-    };
-    reader.readAsDataURL(file);
+      showToast(`Asset '${file.name}' uploaded to Media Library successfully!`, 'success');
+    } else {
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        createItem('mediaLibrary', {
+          id: `med_${Date.now()}`,
+          name: file.name,
+          url: evt.target.result,
+          mimeType: file.type || 'image/jpeg',
+          sizeFormatted: `${(file.size / 1024).toFixed(0)} KB`,
+          uploadedAt: new Date().toISOString()
+        });
+        showToast(`Asset '${file.name}' uploaded to Media Library.`, 'success');
+      };
+      reader.readAsDataURL(file);
+    }
   });
 }
 
@@ -970,7 +1174,7 @@ function renderMediaLibrary() {
           <span class="media-meta">${item.sizeFormatted}</span>
         </div>
         <div class="media-actions">
-          <button class="btn-sm btn-use-in-article" data-url="${item.url}">➕ Use in Article</button>
+          <button class="btn-sm btn-use-in-article" data-url="${item.url}" style="display: inline-flex; align-items: center; gap: 4px;">${plusIcon} Use in Article</button>
           <button class="btn-sm btn-copy-url" data-url="${item.url}">Copy URL</button>
           <button class="btn-sm btn-delete-media" data-id="${item.id}">Delete</button>
         </div>
@@ -986,7 +1190,7 @@ function renderMediaLibrary() {
           <div class="media-meta">${item.mimeType} · ${item.sizeFormatted}</div>
         </div>
         <div class="media-actions">
-          <button class="btn-sm btn-use-in-article" data-url="${item.url}">➕ Use in Article</button>
+          <button class="btn-sm btn-use-in-article" data-url="${item.url}" style="display: inline-flex; align-items: center; gap: 4px;">${plusIcon} Use in Article</button>
           <button class="btn-sm btn-copy-url" data-url="${item.url}">Copy URL</button>
           <button class="btn-sm btn-delete-media" data-id="${item.id}">Delete</button>
         </div>

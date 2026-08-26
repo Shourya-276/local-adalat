@@ -43,12 +43,13 @@ import fs from 'fs';
 
 let pool = null;
 
-async function autoInitSchemaAndSeed(connection) {
+async function autoInitSchemaAndSeed(connection, targetDb) {
   try {
     const schemaSql = fs.readFileSync(path.join(__dirname, '../database/schema.sql'), 'utf8');
     const seedSql = fs.readFileSync(path.join(__dirname, '../database/seed.sql'), 'utf8');
 
     await connection.query(schemaSql);
+    await connection.query(`USE \`${targetDb}\`;`);
     try {
       await connection.query('ALTER TABLE videos MODIFY video_url LONGTEXT, MODIFY thumbnail LONGTEXT');
       await connection.query('ALTER TABLE articles MODIFY featured_image LONGTEXT');
@@ -58,7 +59,7 @@ async function autoInitSchemaAndSeed(connection) {
       // Ignore if columns already modified or existing
     }
     await connection.query(seedSql);
-    console.log('[MySQL Database] Auto-initialized schema and seed dataset successfully.');
+    console.log(`[MySQL Database] Auto-initialized schema and seed dataset on '${targetDb}' successfully.`);
   } catch (err) {
     console.warn('[MySQL Schema Auto-Init Notice]', err.message);
   }
@@ -66,12 +67,20 @@ async function autoInitSchemaAndSeed(connection) {
 
 export async function initDatabaseConnection() {
   try {
-    pool = mysql.createPool({ ...dbConfig, multipleStatements: true });
+    const targetDatabase = process.env.DB_NAME || 'lokal_adalat_db';
+    
+    // First run schema setup with an initial connection
+    const { database, ...baseDbConfig } = dbConfig;
+    const tempConn = await mysql.createConnection({ ...baseDbConfig, multipleStatements: true });
+    await autoInitSchemaAndSeed(tempConn, targetDatabase);
+    await tempConn.end();
+
+    // Initialize connection pool directly pointing to target database
+    pool = mysql.createPool({ ...dbConfig, database: targetDatabase, multipleStatements: true });
+    
+    // Verify connection pool
     const connection = await pool.getConnection();
-    console.log(`[MySQL Database] Connected to MySQL pool at ${dbConfig.host}:${dbConfig.port}/${dbConfig.database}`);
-    
-    await autoInitSchemaAndSeed(connection);
-    
+    console.log(`[MySQL Database] Connected to MySQL pool at ${dbConfig.host}:${dbConfig.port}/${targetDatabase}`);
     connection.release();
     return true;
   } catch (err) {

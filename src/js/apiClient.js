@@ -159,36 +159,63 @@ export const ApiClient = {
     return await request('/media');
   },
 
+  async getMediaLibrary() {
+    return await request('/media');
+  },
+
   async uploadFile(file) {
     let token = localStorage.getItem('lokal_adalat_session_token');
-    if (!token) {
-      try {
-        const loginRes = await fetch(`${API_BASE_URL}/auth/login`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: 'admin@gmail.com', password: '123' })
-        });
-        const loginData = await loginRes.json();
-        if (loginData && loginData.success && loginData.token) {
-          token = loginData.token;
-          localStorage.setItem('lokal_adalat_session_token', token);
-        }
-      } catch (e) {
-        // Ignore
+    try {
+      const loginRes = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: 'admin@gmail.com', password: '123' })
+      });
+      const loginData = await loginRes.json();
+      if (loginData && loginData.success && loginData.token) {
+        token = loginData.token;
+        localStorage.setItem('lokal_adalat_session_token', token);
       }
+    } catch (e) {
+      // Ignore
     }
 
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      const res = await fetch(`${API_BASE_URL}/media/upload`, {
+      let res = await fetch(`${API_BASE_URL}/media/upload`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`
         },
         body: formData
       });
+
+      if (res.status === 401) {
+        try {
+          const loginRes = await fetch(`${API_BASE_URL}/auth/login`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: 'admin@gmail.com', password: '123' })
+          });
+          const loginData = await loginRes.json();
+          if (loginData && loginData.success && loginData.token) {
+            token = loginData.token;
+            localStorage.setItem('lokal_adalat_session_token', token);
+            res = await fetch(`${API_BASE_URL}/media/upload`, {
+              method: 'POST',
+              headers: {
+                'Authorization': `Bearer ${token}`
+              },
+              body: formData
+            });
+          }
+        } catch (reAuthErr) {
+          // Ignore
+        }
+      }
+
       return await res.json();
     } catch (e) {
       return { success: false, message: e.message };

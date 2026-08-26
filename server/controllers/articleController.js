@@ -12,6 +12,7 @@ export class ArticleController {
       const articles = await ArticleRepository.getAll();
       return res.json({ success: true, data: articles });
     } catch (e) {
+      console.error('[ArticleController.getAllArticles Error]', e);
       return res.status(500).json({ success: false, message: e.message });
     }
   }

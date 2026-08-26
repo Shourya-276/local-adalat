@@ -22,6 +22,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initDrawer();
   initSearch();
   initAdminUI();
+  initBreakingNewsTicker();
 
   // DOM Elements
   const latestNewsGrid = document.getElementById('latestNewsGrid');
@@ -1009,11 +1010,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function updatePlayBtnIcon(isPlaying) {
-      if (!playIcon) return;
+      const posterLayer = featuredCard.querySelector('.video-poster-layer');
+      const featuredOverlay = document.getElementById('featuredVideoOverlay');
       if (isPlaying) {
-        playIcon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
+        if (playIcon) playIcon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
+        if (posterLayer) posterLayer.style.opacity = '0';
+        if (featuredOverlay) featuredOverlay.style.opacity = '0.35';
       } else {
-        playIcon.innerHTML = `<path d="M8 5v14l11-7z"/>`;
+        if (playIcon) playIcon.innerHTML = `<path d="M8 5v14l11-7z"/>`;
+        if (posterLayer) posterLayer.style.opacity = '1';
+        if (featuredOverlay) featuredOverlay.style.opacity = '1';
       }
     }
 
@@ -1098,16 +1104,29 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     observer.observe(videoSection);
 
-    // Synchronize play/pause state icons with native video events
+    // Synchronize play/pause/ended state icons & poster visibility with native video events
     videoElem.addEventListener('play', () => updatePlayBtnIcon(true));
     videoElem.addEventListener('pause', () => updatePlayBtnIcon(false));
+    videoElem.addEventListener('ended', () => updatePlayBtnIcon(false));
   }
 
   // ==========================================================================
   // DYNAMIC VIDEO CORNER RENDERER (CMS Connected)
   // ==========================================================================
+  function parseYouTubeEmbedUrl(url) {
+    if (!url || typeof url !== 'string') return null;
+    const match = url.match(/^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+    if (match && match[2] && match[2].length === 11) {
+      return `https://www.youtube.com/embed/${match[2]}?autoplay=1&rel=0`;
+    }
+    return null;
+  }
+
   function renderVideoCornerSection() {
     const videoElem = document.getElementById('mainVideoPlayer');
+    const featuredCard = document.getElementById('featuredVideoCard');
+    const playBtn = document.getElementById('mainVideoPlayBtn');
+    const featuredOverlay = document.getElementById('featuredVideoOverlay');
     const desktopTitle = document.getElementById('mainVideoDesktopTitle');
     const mobileTitle = document.getElementById('mainVideoMobileTitle');
     const durationTag = document.getElementById('mainVideoDurationTag');
@@ -1135,17 +1154,58 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const featuredVideo = videoList[0];
 
-    if (videoElem && featuredVideo) {
-      videoElem.innerHTML = '';
+    if (featuredCard && featuredVideo) {
       const formattedPoster = formatMediaUrl(featuredVideo.posterImage || featuredVideo.image);
       const formattedSrc = formatMediaUrl(featuredVideo.videoUrl);
+      const ytEmbed = parseYouTubeEmbedUrl(formattedSrc);
+
+      // Ensure dedicated poster layer element exists inside featuredCard
+      let posterLayer = featuredCard.querySelector('.video-poster-layer');
+      if (!posterLayer) {
+        posterLayer = document.createElement('div');
+        posterLayer.className = 'video-poster-layer';
+        posterLayer.style.cssText = 'position: absolute; inset: 0; background-size: cover; background-position: center; z-index: 2; transition: opacity 0.35s ease; pointer-events: none;';
+        featuredCard.insertBefore(posterLayer, featuredCard.firstChild);
+      }
 
       if (formattedPoster) {
-        videoElem.poster = formattedPoster;
+        posterLayer.style.backgroundImage = `url("${formattedPoster}")`;
+        posterLayer.style.opacity = (videoElem && !videoElem.paused) ? '0' : '1';
       }
-      if (formattedSrc && videoElem.src !== formattedSrc) {
-        videoElem.src = formattedSrc;
-        videoElem.load();
+
+      let iframe = featuredCard.querySelector('.yt-iframe-player');
+
+      if (ytEmbed) {
+        // Render YouTube / Vimeo Embed IFrame
+        if (posterLayer) posterLayer.style.display = 'none';
+        if (videoElem) videoElem.style.display = 'none';
+        if (featuredOverlay) featuredOverlay.style.display = 'none';
+        if (playBtn) playBtn.style.display = 'none';
+
+        if (!iframe) {
+          iframe = document.createElement('iframe');
+          iframe.className = 'yt-iframe-player';
+          iframe.style.cssText = 'width: 100%; height: 100%; border: none; border-radius: 16px; position: absolute; inset: 0; z-index: 5;';
+          iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
+          iframe.allowFullscreen = true;
+          featuredCard.appendChild(iframe);
+        }
+        iframe.src = ytEmbed;
+        iframe.style.display = 'block';
+      } else {
+        // Render Native HTML5 Video Element for MP4 / WebM Uploaded Files
+        if (iframe) iframe.style.display = 'none';
+        if (posterLayer) posterLayer.style.display = 'block';
+        if (videoElem) {
+          videoElem.style.display = 'block';
+          if (formattedPoster) videoElem.poster = formattedPoster;
+          if (formattedSrc && videoElem.src !== formattedSrc) {
+            videoElem.src = formattedSrc;
+            videoElem.load();
+          }
+        }
+        if (featuredOverlay) featuredOverlay.style.display = 'block';
+        if (playBtn) playBtn.style.display = 'flex';
       }
     }
 
@@ -1343,7 +1403,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    // Render Main Article Body (Unique text per section, no fallback loops)
+    // Render Main Article Body (Heading -> Description -> Section Image)
     const bodyContentElem = articleView.querySelector('.article-content-main');
     if (bodyContentElem) {
       bodyContentElem.innerHTML = normalizedSections.map((sec, idx) => {
@@ -1352,15 +1412,27 @@ document.addEventListener('DOMContentLoaded', async () => {
         const headingText = match ? match[2] : titleText;
         const sectionId = `sec-art-${idx + 1}`;
         const pText = sec.content || '';
+        const imgUrl = sec.image || sec.imageUrl || sec.featured_image || (idx === 1 ? 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=1000&q=80' : '');
+        const captionText = sec.caption || sec.imageCaption || (idx === 1 ? 'The Constitution Bench during hearings on the Digital Privacy Framework case. Photo: Supreme Court of India / PTI' : '');
 
         return `
-          <section id="${sectionId}" class="article-section">
+          <section id="${sectionId}" class="article-section" style="margin-bottom: 32px;">
             ${idx === 0 ? `
               <p class="lead-paragraph">${pText}</p>
             ` : `
               <h2 class="article-heading">${headingText}</h2>
               <p>${pText}</p>
             `}
+            ${imgUrl ? `
+              <figure class="article-body-figure" style="margin-top: 20px; margin-bottom: 24px;">
+                <img src="${imgUrl}" alt="${headingText || 'Section image'}" class="article-body-img" style="width: 100%; border-radius: 14px; object-fit: cover; max-height: 480px; display: block; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);">
+                ${captionText ? `
+                  <figcaption class="figure-caption" style="font-size: 12.5px; color: #64748B; margin-top: 10px; line-height: 1.5;">
+                    ${captionText}
+                  </figcaption>
+                ` : ''}
+              </figure>
+            ` : ''}
           </section>
         `;
       }).join('');
@@ -1394,6 +1466,106 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
       });
     }
+  }
+
+  // ==========================================================================
+  // BREAKING NEWS TICKER ROTATOR ENGINE (5-Second Loop)
+  // ==========================================================================
+  function initBreakingNewsTicker() {
+    const tickerTextElem = document.getElementById('tickerText');
+    if (!tickerTextElem) return;
+
+    let tickerIndex = 0;
+    let tickerTimer = null;
+
+    function getTickerHeadlines() {
+      const headlines = [];
+      
+      // 1. Add admin-added custom breaking news titles
+      const newsItems = getCollection('news') || [];
+      newsItems.forEach(n => {
+        if (n && n.title && n.title.trim()) {
+          headlines.push({ title: n.title.trim(), articleId: null });
+        }
+      });
+
+      // 2. Add published article titles strictly belonging to the Top Stories section
+      const articles = getCollection('articles') || [];
+      articles.forEach(a => {
+        if (a && a.title && a.title.trim()) {
+          const isTopStory = a.targetSection === 'top-stories-sec';
+          const isPublished = a.status === 'published' || !a.status;
+          if (isTopStory && isPublished) {
+            headlines.push({ title: a.title.trim(), articleId: a.id });
+          }
+        }
+      });
+
+      // Fallback: If no top story articles are flagged yet, include default top story headlines
+      if (!headlines.length) {
+        headlines.push(
+          { title: "Sessions Court Delivers Landmark Verdict in Corporate Fraud Matter", articleId: null },
+          { title: "Supreme Court Agrees to Hear Plea on Digital Data Protection Rules", articleId: null },
+          { title: "High Court Issues Mandatory Guidelines for Environmental Impact Assessment", articleId: null }
+        );
+      }
+
+      return headlines;
+    }
+
+    function updateTickerDisplay() {
+      const headlines = getTickerHeadlines();
+      if (!headlines.length) return;
+
+      if (tickerIndex >= headlines.length) {
+        tickerIndex = 0;
+      }
+
+      const current = headlines[tickerIndex];
+
+      // Smooth Fade-out & Fade-in Transition
+      tickerTextElem.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+      tickerTextElem.style.opacity = '0';
+      tickerTextElem.style.transform = 'translateY(-6px)';
+
+      setTimeout(() => {
+        tickerTextElem.textContent = current.title;
+        tickerTextElem.style.transform = 'translateY(6px)';
+        if (current.articleId) {
+          tickerTextElem.dataset.id = current.articleId;
+          tickerTextElem.style.cursor = 'pointer';
+        } else {
+          delete tickerTextElem.dataset.id;
+          tickerTextElem.style.cursor = 'default';
+        }
+
+        requestAnimationFrame(() => {
+          tickerTextElem.style.opacity = '1';
+          tickerTextElem.style.transform = 'translateY(0)';
+        });
+      }, 300);
+    }
+
+    // Article click on ticker
+    tickerTextElem.addEventListener('click', () => {
+      const id = tickerTextElem.dataset.id;
+      if (id && typeof openArticleView === 'function') {
+        openArticleView(id);
+      }
+    });
+
+    // Start 5-second interval loop
+    clearInterval(tickerTimer);
+    updateTickerDisplay();
+    tickerTimer = setInterval(() => {
+      tickerIndex++;
+      updateTickerDisplay();
+    }, 5000);
+
+    // Subscribe to data updates so news or article additions instantly refresh ticker
+    subscribeDataChange(() => {
+      updateTickerDisplay();
+    });
   }
 
   window.renderArticleDetail = renderArticleDetail;
