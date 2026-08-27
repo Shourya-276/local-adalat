@@ -15,43 +15,54 @@
 </head>
 <body>
   <div id="app">
-    <!-- Top Header -->
-    <header class="site-header">
-      <div class="container header-content">
-        <div class="logo-container">
-          <a href="#" class="brand-logo" id="mainBrandLogo">
-            <img src="/images/logo.png" alt="लोकल ADALAT" class="site-logo-img" />
-          </a>
-        </div>
-        <button class="menu-toggle" aria-label="Toggle navigation menu" id="menuToggleBtn">
-          <span class="menu-bar menu-bar-top"></span>
-          <span class="menu-bar menu-bar-middle"></span>
-          <span class="menu-bar menu-bar-bottom"></span>
-        </button>
-      </div>
+    <!-- STICKY TOP APP BAR (HEADER + BREAKING NEWS TICKER) -->
+    <div class="sticky-top-container" id="stickyTopContainer">
+      <!-- Top Header -->
+      <header class="site-header">
+        <div class="container header-content">
+          <!-- Left Logo -->
+          <div class="logo-container">
+            <a href="#" class="brand-logo" id="mainBrandLogo">
+              <img src="/images/header-logo.png" alt="लोकल ADALAT" class="site-logo-img header-logo-custom" />
+            </a>
+          </div>
 
-      <!-- Search Bar -->
-      <div class="container search-wrapper">
-        <div class="search-box">
-          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="11" cy="11" r="8"></circle>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-          </svg>
-          <input type="text" id="searchInput" placeholder="Search judgments, courts, laws, articles..." />
-        </div>
-      </div>
-    </header>
+          <!-- Desktop Center Search Bar -->
+          <div class="search-wrapper desktop-search-wrapper">
+            <div class="search-box">
+              <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+              <input type="text" id="searchInput" placeholder="Search judgments, courts, laws, articles..." />
+            </div>
+          </div>
 
-    <!-- Breaking News Ticker Bar -->
-    <section class="ticker-section">
-      <div class="container ticker-container">
-        <span class="breaking-badge">BREAKING</span>
-        <span class="ticker-dot">•</span>
-        <div class="ticker-text-wrapper">
-          <p class="ticker-text" id="tickerText">Sessions Court Delivers Landmark Verdict in Corporate Fraud Matter</p>
+          <!-- Right Header Actions & Menu Button -->
+          <div class="header-right-actions">
+            <button class="menu-toggle" aria-label="Toggle navigation menu" id="menuToggleBtn">
+              <span class="menu-toggle-text">Menu</span>
+              <div class="menu-bars-icon">
+                <span class="menu-bar menu-bar-top"></span>
+                <span class="menu-bar menu-bar-middle"></span>
+                <span class="menu-bar menu-bar-bottom"></span>
+              </div>
+            </button>
+          </div>
         </div>
-      </div>
-    </section>
+      </header>
+
+      <!-- Breaking News Ticker Bar (Sticky together with Header) -->
+      <section class="ticker-section">
+        <div class="container ticker-container">
+          <span class="breaking-badge">BREAKING</span>
+          <span class="ticker-dot">•</span>
+          <div class="ticker-text-wrapper">
+            <p class="ticker-text" id="tickerText">Sessions Court Delivers Landmark Verdict in Corporate Fraud Matter</p>
+          </div>
+        </div>
+      </section>
+    </div>
 
     <!-- VIEW 1: HOME PAGE VIEW -->
     <div id="homeView" class="page-view">
