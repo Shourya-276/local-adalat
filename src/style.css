@@ -508,7 +508,7 @@ button, input {
 
 .filter-tabs {
   display: inline-flex;
-  background-color: #F3E8D3;
+  background-color: #F3E4C6;
   padding: 6px;
   border-radius: 100px;
   gap: 6px;
@@ -529,9 +529,9 @@ button, input {
 }
 
 .tab-btn.active {
-  background-color: #C5A059;
+  background-color: #C98806;
   color: #FFFFFF;
-  box-shadow: 0 4px 14px rgba(197, 160, 89, 0.35);
+  box-shadow: 0 4px 14px rgba(201, 136, 6, 0.35);
 }
 
 .news-masonry-grid {
