@@ -278,6 +278,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     const heroCourt = heroItem.court || 'SUPREME COURT';
     const heroTagClass = heroCourt.toUpperCase().includes('HIGH') ? 'tag-high-court' : (heroCourt.toUpperCase().includes('SESSIONS') ? 'tag-sessions-court' : 'tag-supreme-court');
 
+    if (leftItems.length === 0 && rightItems.length === 0) {
+      gridContainer.style.display = 'flex';
+      gridContainer.style.justifyContent = 'center';
+      gridContainer.innerHTML = `
+        <div class="grid-col middle-col" style="width: 100%; max-width: 680px; margin: 0 auto;">
+          <article class="news-card card-hero blog-click" data-id="${heroItem.id}" style="min-height: 340px; max-height: 400px;">
+            <div class="hero-image-wrapper">
+              <img src="${formatMediaUrl(heroItem.image || heroItem.featured_image || '/images/supreme-court.jpg')}" alt="${heroItem.title}" loading="lazy">
+              <div class="hero-overlay"></div>
+              <span class="court-tag ${heroTagClass} hero-tag">${heroCourt}</span>
+              <div class="hero-content">
+                <h3 class="hero-title"><a href="#" class="blog-click" data-id="${heroItem.id}">${heroItem.title}</a></h3>
+                <p class="hero-meta">${heroItem.publishDate || '17 July 2025'} · ${heroItem.readTime || '8 min read'}</p>
+              </div>
+            </div>
+          </article>
+        </div>
+      `;
+      return;
+    }
+
+    gridContainer.style.display = 'grid';
+    gridContainer.style.justifyContent = '';
     gridContainer.innerHTML = `
       <div class="grid-col left-col">
         ${leftItems.map(item => formatCard(item)).join('')}
