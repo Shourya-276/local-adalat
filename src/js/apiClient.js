@@ -80,7 +80,10 @@ async function request(endpoint, options = {}) {
 export function formatMediaUrl(url) {
   if (!url) return '';
   if (typeof url === 'string' && url.startsWith('/uploads/')) {
-    return `http://localhost:5050${url}`;
+    const baseUrl = (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_API_URL)
+      ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
+      : 'http://localhost:5050';
+    return `${baseUrl}${url}`;
   }
   return url;
 }

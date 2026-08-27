@@ -27,9 +27,12 @@ export function sanitizeHTML(str) {
 /**
  * Generates an HTML card element string.
  * @param {Object} item 
+ * @param {number} colIndex 
+ * @param {number} rowIdx 
+ * @param {boolean} isCategory 
  * @returns {string} HTML string
  */
-export function createNewsCardHTML(item, index = 0) {
+export function createNewsCardHTML(item, colIndex = 0, rowIdx = 0, isCategory = false) {
   const imageSrc = item.image || item.featured_image || DEFAULT_FALLBACK_IMAGE;
   const courtTag = item.court || 'SUPREME COURT';
   const tagClass = courtTag.toLowerCase().includes('high') 
@@ -38,9 +41,15 @@ export function createNewsCardHTML(item, index = 0) {
       ? 'tag-sessions-court' 
       : 'tag-supreme-court';
 
-  // Stagger aspect ratio patterns across columns to match reference layout:
-  // (Square 1:1 vs Landscape 16:10.5)
-  const aspectStyle = (index % 3 === 1) ? 'aspect-ratio: 16 / 10.5;' : (index % 2 === 0 ? 'aspect-ratio: 1 / 1;' : 'aspect-ratio: 16 / 10.5;');
+  let aspectStyle = 'aspect-ratio: 377 / 447;';
+  if (isCategory) {
+    // Exact Figma specifications for View More / Category Listing page: 390x199, border-radius: 15px
+    aspectStyle = 'aspect-ratio: 390 / 199 !important; border-radius: 15px !important;';
+  } else if (colIndex === 1) {
+    aspectStyle = (rowIdx === 1) ? 'aspect-ratio: 377 / 447;' : 'aspect-ratio: 377 / 344;';
+  } else {
+    aspectStyle = (rowIdx === 1) ? 'aspect-ratio: 377 / 344;' : 'aspect-ratio: 377 / 447;';
+  }
 
   return `
     <article class="news-card card-compact ${item.aspectClass || ''} blog-click" data-id="${item.id || ''}">
@@ -50,6 +59,7 @@ export function createNewsCardHTML(item, index = 0) {
           alt="${sanitizeHTML(item.title)}" 
           loading="lazy" 
           onerror="this.onerror=null; this.src='${DEFAULT_FALLBACK_IMAGE}';"
+          style="${isCategory ? 'border-radius: 15px !important;' : ''}"
         >
         <span class="court-tag ${tagClass}">${sanitizeHTML(courtTag)}</span>
       </div>
@@ -57,7 +67,7 @@ export function createNewsCardHTML(item, index = 0) {
         <h3 class="card-title">
           <a href="#" class="blog-click" data-id="${item.id || ''}">${sanitizeHTML(item.title)}</a>
         </h3>
-        <p class="card-meta">${sanitizeHTML(item.date || item.publishDate || '17 July 2025')} · ${sanitizeHTML(item.readTime || '5 min')}</p>
+        <p class="card-meta">${sanitizeHTML(item.date || item.publishDate || '17 July 2025')} · ${sanitizeHTML((item.readTime || '5 min').replace(/\s*read$/i, ''))}</p>
       </div>
     </article>
   `;
@@ -74,7 +84,7 @@ export function renderGridItems(container, items) {
     renderEmptyState(container, '');
     return;
   }
-  container.innerHTML = items.map(item => createNewsCardHTML(item)).join('');
+  container.innerHTML = items.map(item => createNewsCardHTML(item, 0, 0, true)).join('');
 }
 
 /**

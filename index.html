@@ -6,10 +6,10 @@
   <title>Lokal Adalat - India's Independent Legal News Platform</title>
   <meta name="description" content="Real-time coverage from courts across India, landmark verdicts, expert legal analysis, and video briefings.">
   
-  <!-- Fonts -->
+  <!-- Fonts: Playfair Display (Headings) & Inter (Body) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=Noto+Serif+Devanagari:wght@600;700;800&family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Serif+Devanagari:wght@600;700;800&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,600;1,700&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="/src/style.css">
 </head>
@@ -20,8 +20,7 @@
       <div class="container header-content">
         <div class="logo-container">
           <a href="#" class="brand-logo" id="mainBrandLogo">
-            <span class="hindi-logo">लोकल</span>
-            <span class="english-logo">ADALAT</span>
+            <img src="/images/logo.png" alt="लोकल ADALAT" class="site-logo-img" />
           </a>
         </div>
         <button class="menu-toggle" aria-label="Toggle navigation menu" id="menuToggleBtn">
@@ -270,12 +269,15 @@
 
         <!-- Section 3: Video Corner -->
         <section class="section video-corner-section container" id="video-corner-sec">
-          <div class="section-header-row">
-            <div class="header-titles">
+          <div class="video-section-header">
+            <div class="video-header-top-row">
               <h2 class="section-title">Video Corner</h2>
-              <p class="section-subtitle">Legal developments explained through expert video analysis.</p>
+              <div class="section-divider-line video-divider-line"></div>
             </div>
-            <div class="section-divider-line"></div>
+            <div class="video-header-bottom-row">
+              <p class="section-subtitle">Legal developments explained through expert video analysis.</p>
+              <a href="#videos" class="view-all-videos-link" id="viewAllVideosBtn">View All Videos &gt;</a>
+            </div>
           </div>
 
           <div class="video-corner-grid">
@@ -343,7 +345,7 @@
           <div class="articles-grid">
             <article class="article-card blog-click">
               <div class="article-thumb">
-                <img src="https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=800&q=80" alt="Article image">
+                <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80" alt="Article image">
               </div>
               <div class="article-body">
                 <h3 class="article-title"><a href="#" class="blog-click">Understanding India's New Digital Personal Data Protection Framework</a></h3>
@@ -357,7 +359,7 @@
 
             <article class="article-card blog-click">
               <div class="article-thumb">
-                <img src="https://images.unsplash.com/photo-1585829365295-ab7cd400c167?auto=format&fit=crop&w=800&q=80" alt="Article image">
+                <img src="https://images.unsplash.com/photo-1586339949916-3e9457bef6d3?auto=format&fit=crop&w=800&q=80" alt="Article image">
               </div>
               <div class="article-body">
                 <h3 class="article-title"><a href="#" class="blog-click">The Evolution of Constitutional Privacy Rights</a></h3>
@@ -371,7 +373,7 @@
 
             <article class="article-card blog-click">
               <div class="article-thumb">
-                <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80" alt="Article image">
+                <img src="https://images.unsplash.com/photo-1589391886645-d51941baf7fb?auto=format&fit=crop&w=800&q=80" alt="Article image">
               </div>
               <div class="article-body">
                 <h3 class="article-title"><a href="#" class="blog-click">Understanding India's New Digital Personal Data Protection Framework</a></h3>
@@ -382,6 +384,10 @@
                 </div>
               </div>
             </article>
+          </div>
+
+          <div class="view-more-container text-center" style="margin-top: 36px;">
+            <button class="btn-secondary" id="viewMoreArticlesBtn">View More Articles</button>
           </div>
         </section>
 
@@ -501,6 +507,59 @@
       </div>
     </div>
 
+    <!-- VIEW 3B: ALL VIDEOS LISTING VIEW -->
+    <div id="videoListingView" class="page-view video-listing-page" style="display: none;">
+      <div class="container back-home-wrapper">
+        <button class="btn-back generic-back-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
+          </svg>
+          Back to Home
+        </button>
+      </div>
+
+      <div class="container text-center video-listing-header">
+        <h1 class="video-listing-main-title">Video Corner</h1>
+        <p class="video-listing-main-subtitle">The most important legal developments in the Supreme Court shaping India today.</p>
+      </div>
+
+      <div class="container">
+        <!-- 3x3 Video Grid -->
+        <div class="video-listing-grid" id="videoListingGrid">
+          <!-- Dynamically populated video cards -->
+        </div>
+
+        <!-- Pagination -->
+        <div class="video-pagination-row">
+          <button class="page-arrow prev-page-btn" aria-label="Previous Page">&lt;</button>
+          <button class="page-num active">1</button>
+          <button class="page-num">2</button>
+          <button class="page-num">3</button>
+          <button class="page-num">4</button>
+          <span class="page-dots">...</span>
+          <button class="page-num">10</button>
+          <button class="page-arrow next-page-btn" aria-label="Next Page">&gt;</button>
+        </div>
+
+        <!-- Newsletter Section -->
+        <div class="newsletter-card category-newsletter">
+          <div class="newsletter-left">
+            <span class="newsletter-tag">NEWSLETTER</span>
+            <h2 class="newsletter-title">Never Miss a Judgment That Matters</h2>
+            <p class="newsletter-desc">Receive daily legal briefings, courtroom updates, expert analysis, and breaking legal news directly in your inbox.</p>
+            <form class="newsletter-form">
+              <input type="email" placeholder="Enter your email" required />
+              <button type="submit" class="btn-subscribe">Subscribe</button>
+            </form>
+            <p class="newsletter-note">No spam. Unsubscribe anytime.</p>
+          </div>
+          <div class="newsletter-right">
+            <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80" alt="Lady Justice Scales" class="newsletter-img">
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- VIEW 5: VIDEO REELS VIEW (MOBILE INSTAGRAM REEL STYLE) -->
     <div id="videoReelsView" class="page-view video-reels-page" style="display: none;">
       <div class="mobile-video-reels-wrapper" id="mobileVideoReelsWrapper">
@@ -612,7 +671,11 @@
 
       <div class="container hero-article-outer">
         <button class="nav-arrow arrow-left" id="prevArticleBtn" aria-label="Previous Article">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M15 18l-6-6 6-6"/></svg>
+          <div class="nav-arrow-preview left-preview" id="prevArticlePreview">
+            <span class="preview-label">PREVIOUS</span>
+            <span class="preview-title" id="prevArticleTitle">Previous Article</span>
+          </div>
         </button>
         
         <div class="hero-article-card">
@@ -654,9 +717,16 @@
         </div>
 
         <button class="nav-arrow arrow-right" id="nextArticleBtn" aria-label="Next Article">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8"><path d="M9 18l6-6-6-6"/></svg>
+          <div class="nav-arrow-preview right-preview" id="nextArticlePreview">
+            <span class="preview-label">NEXT</span>
+            <span class="preview-title" id="nextArticleTitle">Next Article</span>
+          </div>
         </button>
       </div>
+
+      <!-- Reading Progress Scroll Loader (Desktop Only) -->
+      <div class="article-scroll-progress-bar" id="articleScrollProgressBar"></div>
 
       <div class="container article-body-container">
         
@@ -882,9 +952,8 @@
       <div class="admin-login-container">
         <div class="admin-login-card">
           <div class="admin-login-header">
-            <div class="brand-logo">
-              <span class="hindi-logo">लोकल</span>
-              <span class="english-logo">ADALAT</span>
+            <div class="brand-logo text-center" style="justify-content: center;">
+              <img src="/images/logo.png" alt="लोकल ADALAT" class="site-logo-img admin-logo-img" />
             </div>
             <div class="admin-badge">ADMIN CYBER PORTAL</div>
             <p class="admin-login-sub">Secure authentication required to access CMS and security engine.</p>
@@ -931,8 +1000,7 @@
         <aside class="admin-sidebar">
           <div class="admin-sidebar-header">
             <a href="#" class="brand-logo">
-              <span class="hindi-logo">लोकल</span>
-              <span class="english-logo">ADALAT</span>
+              <img src="/images/logo.png" alt="लोकल ADALAT" class="site-logo-img admin-sidebar-logo-img" />
             </a>
           </div>
 
@@ -1460,9 +1528,8 @@
 
       <div class="container footer-content text-center">
         <div class="footer-logo">
-          <a href="#" class="brand-logo footer-brand">
-            <span class="hindi-logo">लोकल</span>
-            <span class="english-logo">ADALAT</span>
+          <a href="#" class="brand-logo footer-brand" style="justify-content: center;">
+            <img src="/images/logo.png" alt="लोकल ADALAT" class="site-logo-img footer-logo-img" />
           </a>
         </div>
         <p class="footer-description">
@@ -1506,8 +1573,7 @@
       <div class="drawer-header">
         <div class="logo-container">
           <a href="#" class="brand-logo">
-            <span class="hindi-logo">लोकल</span>
-            <span class="english-logo">ADALAT</span>
+            <img src="/images/logo.png" alt="लोकल ADALAT" class="site-logo-img drawer-logo-img" />
           </a>
         </div>
         <button class="close-menu-btn" id="closeMenuBtn" aria-label="Close navigation menu">
@@ -1524,16 +1590,16 @@
           </div>
           
           <div class="drawer-nav-item has-accordion">
-            <div class="accordion-header" id="accordionToggleBtn">
+            <div class="accordion-header collapsed" id="accordionToggleBtn" aria-expanded="false">
               <span class="drawer-nav-link">Latest News</span>
               <svg class="accordion-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
-                <path d="M18 15l-6-6-6 6"/>
+                <path d="M6 9l6 6 6-6"/>
               </svg>
             </div>
             
-            <div class="accordion-content open" id="accordionContent">
+            <div class="accordion-content closed" id="accordionContent">
               <div class="sub-nav-list">
-                <button class="sub-nav-btn active" data-court="supreme-court">
+                <button class="sub-nav-btn" data-court="supreme-court">
                   <span class="sub-dot">•</span> Supreme Court
                 </button>
                 <button class="sub-nav-btn" data-court="high-court">
@@ -1626,6 +1692,31 @@
       <span>Articles</span>
     </button>
   </nav>
+
+  <!-- CINEMATIC VIDEO PLAYBACK MODAL POPUP -->
+  <div id="videoCinemaModal" class="video-cinema-modal" style="display: none;">
+    <div class="video-cinema-backdrop" id="videoCinemaBackdrop"></div>
+    <div class="video-cinema-dialog" role="dialog" aria-modal="true">
+      <button class="video-cinema-close-btn" id="videoCinemaCloseBtn" aria-label="Close video player">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+
+      <div class="video-cinema-player-box">
+        <div id="videoCinemaMediaContainer" class="video-cinema-media-container"></div>
+      </div>
+
+      <div class="video-cinema-details">
+        <div class="video-cinema-tags">
+          <span class="cinema-court-badge" id="videoCinemaCourtBadge">SUPREME COURT</span>
+          <span class="cinema-date" id="videoCinemaDate">17 July 2025 · 5m 28sec</span>
+        </div>
+        <h3 class="video-cinema-title" id="videoCinemaTitle">Delhi HC Directs Government to File Response on Electoral Bonds Case</h3>
+      </div>
+    </div>
+  </div>
 
   <script type="module" src="/src/main.js"></script>
 </body>

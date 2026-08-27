@@ -3,6 +3,7 @@
  * @description Controllers for Media upload and gallery.
  */
 
+import fs from 'fs';
 import { MediaRepository } from '../repositories/mediaRepository.js';
 import { AuditRepository } from '../repositories/auditRepository.js';
 
@@ -23,13 +24,22 @@ export class MediaController {
       }
 
       const file = req.file;
+      let dataUrl = null;
+      try {
+        if (file.size <= 8 * 1024 * 1024) {
+          const buffer = fs.readFileSync(file.path);
+          dataUrl = `data:${file.mimetype};base64,${buffer.toString('base64')}`;
+        }
+      } catch (e) {}
+
       const mediaData = {
         id: `med_${Date.now()}`,
         filename: file.filename,
         original_name: file.originalname,
         mime_type: file.mimetype,
         file_size: file.size,
-        storage_path: `/uploads/${file.filename}`
+        storage_path: `/uploads/${file.filename}`,
+        data_url: dataUrl
       };
 
       await MediaRepository.create(mediaData);

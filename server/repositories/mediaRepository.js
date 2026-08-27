@@ -12,12 +12,12 @@ export class MediaRepository {
   }
 
   static async create(mediaData) {
-    const { id, filename, original_name, mime_type, file_size, storage_path } = mediaData;
+    const { id, filename, original_name, mime_type, file_size, storage_path, data_url } = mediaData;
     const sql = `
-      INSERT INTO media (id, filename, original_name, mime_type, file_size, storage_path)
-      VALUES (?, ?, ?, ?, ?, ?)
+      INSERT INTO media (id, filename, original_name, mime_type, file_size, storage_path, data_url)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
     `;
-    return await executeQuery(sql, [id, filename, original_name, mime_type, file_size, storage_path]);
+    return await executeQuery(sql, [id, filename, original_name, mime_type, file_size, storage_path, data_url || null]);
   }
 
   static async delete(id) {

@@ -3,9 +3,9 @@
  * @description Main application initializer for Lokal Adalat web platform.
  */
 
-import { latestNewsColumns, supremeCourtLatestNewsColumns, highCourtLatestNewsColumns, sessionsCourtLatestNewsColumns, categoryArticlesList, videoCornerList, articlesToReadList } from './js/data.js';
+import { defaultTopStories, defaultLatestNews, defaultVideos, defaultArticlesToRead, categoryArticlesList } from './js/data.js';
 import { createNewsCardHTML } from './js/components.js';
-import { initRouter, openCategoryView, openVideoReelsView, openMobileArticlesView, showView } from './js/router.js';
+import { initRouter, openCategoryView, openVideoListingView, openVideoReelsView, openMobileArticlesView, showView } from './js/router.js';
 import { initDrawer } from './js/drawer.js';
 import { initSearch } from './js/search.js';
 
@@ -23,6 +23,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   initSearch();
   initAdminUI();
   initBreakingNewsTicker();
+  initVideoCinemaModal();
 
   // DOM Elements
   const latestNewsGrid = document.getElementById('latestNewsGrid');
@@ -70,15 +71,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (!filteredDynamic || filteredDynamic.length === 0) {
-      latestNewsGrid.innerHTML = `
-        <div class="empty-state-box text-center p-5 w-100" style="padding: 48px 24px; background: #faf8f5; border-radius: 12px; border: 1px dashed #e2d7c5; margin: 20px 0; text-align: center;">
-          <p style="color: #7a633a; font-size: 15px; font-weight: 500; margin: 0;">No latest news published yet. Add latest news from the Admin Panel to display them here.</p>
-        </div>
-      `;
-      return;
+      filteredDynamic = defaultLatestNews;
+    } else if (filteredDynamic.length < 9) {
+      const currentIds = new Set(filteredDynamic.map(a => a.id));
+      filteredDynamic = [
+        ...filteredDynamic,
+        ...defaultLatestNews.filter(d => !currentIds.has(d.id))
+      ];
     }
 
-    // Limit homepage initial layout to MAX 9 cards (3 columns x 3 rows)
+    // Homepage layout: 9 cards (3 columns x 3 rows)
     const homepageDynamic = filteredDynamic.slice(0, 9);
 
     const col0 = homepageDynamic.filter((_, i) => i % 3 === 0);
@@ -91,15 +93,13 @@ document.addEventListener('DOMContentLoaded', async () => {
       <div class="news-masonry-grid">
         ${finalColumns.map((colItems, colIndex) => `
           <div class="news-masonry-col">
-            ${colItems.map((item, itemIdx) => createNewsCardHTML(item, colIndex + itemIdx * 3)).join('')}
-
-            ${colIndex === 1 ? `
-              <div class="view-more-container text-center">
-                <button class="btn-secondary" id="viewMoreBtn">View More Updates</button>
-              </div>
-            ` : ''}
+            ${colItems.map((item, itemIdx) => createNewsCardHTML(item, colIndex, itemIdx)).join('')}
           </div>
         `).join('')}
+      </div>
+
+      <div class="latest-news-view-more-wrap text-center">
+        <button class="btn-secondary" id="viewMoreBtn">View More Updates</button>
       </div>
     `;
 
@@ -158,15 +158,29 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // Hero Navigation Arrow Controls
+  let activeArticleId = null;
+
+  // Hero Navigation Arrow Controls (Previous / Next Article switcher)
   if (prevArticleBtn) {
-    prevArticleBtn.addEventListener('click', () => {
+    prevArticleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const allArticles = getCollection('articles') || [];
+      if (!allArticles.length) return;
+      const curIdx = allArticles.findIndex(a => String(a.id) === String(activeArticleId));
+      const prevIdx = (curIdx > 0) ? curIdx - 1 : allArticles.length - 1;
+      renderArticleDetail(allArticles[prevIdx].id);
       showView('article', true);
     });
   }
 
   if (nextArticleBtn) {
-    nextArticleBtn.addEventListener('click', () => {
+    nextArticleBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const allArticles = getCollection('articles') || [];
+      if (!allArticles.length) return;
+      const curIdx = allArticles.findIndex(a => String(a.id) === String(activeArticleId));
+      const nextIdx = (curIdx !== -1 && curIdx < allArticles.length - 1) ? curIdx + 1 : 0;
+      renderArticleDetail(allArticles[nextIdx].id);
       showView('article', true);
     });
   }
@@ -188,38 +202,48 @@ document.addEventListener('DOMContentLoaded', async () => {
    * Dynamic renderer for the Articles to Read section on the Home page.
    */
   function renderArticlesToReadSection() {
-    const container = document.querySelector('#articles-to-read-sec .articles-grid');
+    const sectionElem = document.getElementById('articles-to-read-sec');
+    if (!sectionElem) return;
+
+    const container = sectionElem.querySelector('.articles-grid');
     if (!container) return;
 
     const allArticles = getCollection('articles');
-    const publishedArticles = (allArticles || []).filter(a => 
+    let publishedArticles = (allArticles || []).filter(a => 
       a.status === 'published' && (!a.targetSection || a.targetSection === 'articles-to-read-sec')
     );
 
     if (!publishedArticles || publishedArticles.length === 0) {
-      container.innerHTML = `
-        <div class="empty-state-box text-center p-5 w-100" style="grid-column: 1 / -1; padding: 48px 24px; background: #faf8f5; border-radius: 12px; border: 1px dashed #e2d7c5; margin: 20px 0; text-align: center;">
-          <p style="color: #7a633a; font-size: 15px; font-weight: 500; margin: 0;">No articles published yet. Publish articles from the Admin Panel to display them here.</p>
-        </div>
-      `;
-      return;
+      publishedArticles = defaultArticlesToRead;
     }
 
-    container.innerHTML = publishedArticles.map(item => `
+    // Limit to EXACTLY 3 cards on the Home page as requested
+    const homepageArticles = publishedArticles.slice(0, 3);
+
+    container.innerHTML = homepageArticles.map(item => `
       <article class="article-card blog-click" data-id="${item.id}">
         <div class="article-thumb">
-          <img src="${formatMediaUrl(item.image || item.featured_image || 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?auto=format&fit=crop&w=800&q=80')}" alt="${item.title}" loading="lazy">
+          <img src="${formatMediaUrl(item.image || item.featured_image || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&w=800&q=80')}" alt="${item.title}" loading="lazy">
         </div>
         <div class="article-body">
           <h3 class="article-title"><a href="#" class="blog-click" data-id="${item.id}">${item.title}</a></h3>
           <p class="article-excerpt">${item.excerpt || ''}</p>
           <div class="article-meta">
             <span>${item.author || 'Editorial Desk'}</span>
-            <span>${item.readTime || '5 min read'}</span>
+            <span>${item.readTime || '12 min read'}</span>
           </div>
         </div>
       </article>
     `).join('');
+
+    // Wire View More Articles button listener
+    const viewMoreArticlesBtn = document.getElementById('viewMoreArticlesBtn');
+    if (viewMoreArticlesBtn) {
+      viewMoreArticlesBtn.onclick = (e) => {
+        e.preventDefault();
+        openCategoryView('Articles to Read', 'Expert analysis beyond the headlines.');
+      };
+    }
   }
 
   // Initial render & reactive storage listener
@@ -240,17 +264,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (!gridContainer) return;
 
     const allArticles = getCollection('articles');
-    const topStoriesArticles = (allArticles || []).filter(a => 
+    let topStoriesArticles = (allArticles || []).filter(a => 
       a.status === 'published' && a.targetSection === 'top-stories-sec'
     );
 
     if (!topStoriesArticles || topStoriesArticles.length === 0) {
-      gridContainer.innerHTML = `
-        <div class="empty-state-box text-center p-5 w-100" style="grid-column: 1 / -1; padding: 48px 24px; background: #faf8f5; border-radius: 12px; border: 1px dashed #e2d7c5; margin: 20px 0; text-align: center;">
-          <p style="color: #7a633a; font-size: 15px; font-weight: 500; margin: 0;">No top stories published yet. Add top stories from the Admin Panel to display them here.</p>
-        </div>
-      `;
-      return;
+      topStoriesArticles = defaultTopStories;
+    } else if (topStoriesArticles.length < 5) {
+      const currentIds = new Set(topStoriesArticles.map(a => a.id));
+      topStoriesArticles = [
+        ...topStoriesArticles,
+        ...defaultTopStories.filter(d => !currentIds.has(d.id))
+      ];
     }
 
     const items = topStoriesArticles.slice(0, 5);
@@ -1036,15 +1061,43 @@ document.addEventListener('DOMContentLoaded', async () => {
       const posterLayer = featuredCard.querySelector('.video-poster-layer');
       const featuredOverlay = document.getElementById('featuredVideoOverlay');
       if (isPlaying) {
+        featuredCard.classList.add('is-playing');
+        featuredCard.classList.remove('is-paused');
+        if (playBtn) {
+          playBtn.style.opacity = '0';
+          playBtn.style.pointerEvents = 'none';
+          playBtn.style.transform = 'translate(-50%, -50%) scale(0.8)';
+        }
+        if (posterLayer) posterLayer.style.opacity = '0';
+        if (featuredOverlay) featuredOverlay.style.opacity = '0';
+      } else {
+        featuredCard.classList.remove('is-playing');
+        featuredCard.classList.add('is-paused');
+        if (playBtn) {
+          playBtn.style.opacity = '1';
+          playBtn.style.pointerEvents = 'auto';
+          playBtn.style.transform = 'translate(-50%, -50%) scale(1)';
+        }
+        // Show pause button icon when video is paused
         if (playIcon) playIcon.innerHTML = `<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/>`;
         if (posterLayer) posterLayer.style.opacity = '0';
         if (featuredOverlay) featuredOverlay.style.opacity = '0.35';
-      } else {
-        if (playIcon) playIcon.innerHTML = `<path d="M8 5v14l11-7z"/>`;
-        if (posterLayer) posterLayer.style.opacity = '1';
-        if (featuredOverlay) featuredOverlay.style.opacity = '1';
       }
     }
+
+    videoElem.addEventListener('play', () => updatePlayBtnIcon(true));
+    videoElem.addEventListener('pause', () => updatePlayBtnIcon(false));
+    videoElem.addEventListener('ended', () => {
+      featuredCard.classList.remove('is-playing', 'is-paused');
+      if (playBtn) {
+        playBtn.style.opacity = '1';
+        playBtn.style.pointerEvents = 'auto';
+        playBtn.style.transform = 'translate(-50%, -50%) scale(1)';
+      }
+      if (playIcon) playIcon.innerHTML = `<path d="M8 5v14l11-7z"/>`;
+      const posterLayer = featuredCard.querySelector('.video-poster-layer');
+      if (posterLayer) posterLayer.style.opacity = '1';
+    });
 
     if (playBtn) {
       playBtn.addEventListener('click', (e) => {
@@ -1134,6 +1187,94 @@ document.addEventListener('DOMContentLoaded', async () => {
   }
 
   // ==========================================================================
+  // CINEMATIC VIDEO PLAYBACK MODAL POPUP
+  // ==========================================================================
+  function initVideoCinemaModal() {
+    const modal = document.getElementById('videoCinemaModal');
+    const backdrop = document.getElementById('videoCinemaBackdrop');
+    const closeBtn = document.getElementById('videoCinemaCloseBtn');
+
+    function closeModal() {
+      if (!modal) return;
+      modal.classList.remove('active');
+      setTimeout(() => {
+        modal.style.display = 'none';
+        const mediaContainer = document.getElementById('videoCinemaMediaContainer');
+        if (mediaContainer) mediaContainer.innerHTML = '';
+      }, 300);
+    }
+
+    if (backdrop) backdrop.addEventListener('click', closeModal);
+    if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal && modal.classList.contains('active')) {
+        closeModal();
+      }
+    });
+
+    window.closeVideoCinemaModal = closeModal;
+  }
+
+  function playSelectedVideo(videoData, fallbackTitle = '') {
+    const modal = document.getElementById('videoCinemaModal');
+    const mediaContainer = document.getElementById('videoCinemaMediaContainer');
+    const courtBadge = document.getElementById('videoCinemaCourtBadge');
+    const dateTag = document.getElementById('videoCinemaDate');
+    const titleTag = document.getElementById('videoCinemaTitle');
+
+    if (!modal || !mediaContainer) return;
+
+    const url = typeof videoData === 'string' ? videoData : (videoData.url || videoData.videoUrl || videoData.video_url || '');
+    const title = typeof videoData === 'object' ? (videoData.title || fallbackTitle) : (fallbackTitle || '');
+    const court = typeof videoData === 'object' ? (videoData.court || 'SUPREME COURT') : 'SUPREME COURT';
+    const date = typeof videoData === 'object' ? (videoData.date || '17 July 2025') : '17 July 2025';
+    const duration = typeof videoData === 'object' ? (videoData.duration || '5m 28sec') : '5m 28sec';
+    const poster = typeof videoData === 'object' ? (videoData.poster || '') : '';
+
+    if (courtBadge) courtBadge.textContent = court;
+    if (dateTag) dateTag.textContent = `${date} · ${duration}`;
+    if (titleTag) titleTag.textContent = title || 'Delhi HC Directs Government to File Response on Electoral Bonds Case';
+
+    const formattedSrc = formatMediaUrl(url);
+    const ytEmbed = parseYouTubeEmbedUrl(formattedSrc);
+
+    if (ytEmbed) {
+      mediaContainer.innerHTML = `
+        <iframe src="${ytEmbed}" 
+                class="video-cinema-iframe" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+        </iframe>
+      `;
+    } else if (formattedSrc && (formattedSrc.endsWith('.mp4') || formattedSrc.endsWith('.webm') || formattedSrc.includes('/uploads/'))) {
+      mediaContainer.innerHTML = `
+        <video src="${formattedSrc}" 
+               controls 
+               autoplay 
+               poster="${formatMediaUrl(poster)}"
+               class="video-cinema-native-player">
+        </video>
+      `;
+    } else {
+      mediaContainer.innerHTML = `
+        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" 
+                class="video-cinema-iframe" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+        </iframe>
+      `;
+    }
+
+    modal.style.display = 'flex';
+    requestAnimationFrame(() => {
+      modal.classList.add('active');
+    });
+  }
+
+  window.playSelectedVideo = playSelectedVideo;
+
+  // ==========================================================================
   // DYNAMIC VIDEO CORNER RENDERER (CMS Connected)
   // ==========================================================================
   function parseYouTubeEmbedUrl(url) {
@@ -1157,29 +1298,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     const courtTag = document.getElementById('mainVideoCourtTag');
     const playlistContainer = document.getElementById('mobileVideoPlaylist');
 
-    const videoList = getCollection('videos');
+    let videoList = getCollection('videos');
     if (!videoList || !videoList.length) {
-      if (desktopTitle) desktopTitle.textContent = "No Video Briefings Uploaded Yet";
-      if (mobileTitle) mobileTitle.textContent = "No Video Briefings Uploaded Yet";
-      if (videoElem) {
-        videoElem.removeAttribute('src');
-        videoElem.removeAttribute('poster');
-        videoElem.load();
-      }
-      if (durationTag) durationTag.textContent = "";
-      if (dateTag) dateTag.textContent = "";
-      if (courtTag) courtTag.textContent = "LOKAL ADALAT";
-      if (playlistContainer) {
-        playlistContainer.innerHTML = `<p style="padding: 24px; color: #7a633a; font-size: 14px; text-align: center; margin: 0;">No video briefings added yet.</p>`;
-      }
-      return;
+      videoList = defaultVideos;
     }
 
     const featuredVideo = videoList[0];
 
     if (featuredCard && featuredVideo) {
-      const formattedPoster = formatMediaUrl(featuredVideo.posterImage || featuredVideo.image);
-      const formattedSrc = formatMediaUrl(featuredVideo.videoUrl);
+      const formattedPoster = formatMediaUrl(featuredVideo.posterImage || featuredVideo.image || featuredVideo.thumbnail);
+      const formattedSrc = formatMediaUrl(featuredVideo.videoUrl || featuredVideo.video_url);
       const ytEmbed = parseYouTubeEmbedUrl(formattedSrc);
 
       // Ensure dedicated poster layer element exists inside featuredCard
@@ -1244,7 +1372,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       playlistContainer.innerHTML = playlistItems.map(item => `
         <div class="playlist-item" data-id="${item.id}">
           <div class="playlist-thumb">
-            <img src="${formatMediaUrl(item.posterImage || item.image || '/images/courtroom.jpg')}" alt="${item.title}">
+            <img src="${formatMediaUrl(item.posterImage || item.image || item.thumbnail || '/images/courtroom.jpg')}" alt="${item.title}">
             <div class="playlist-card-overlay"></div>
             <button class="play-button-small" aria-label="Play video">
               <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -1264,8 +1392,8 @@ document.addEventListener('DOMContentLoaded', async () => {
           const selected = videoList.find(v => String(v.id) === String(pItem.dataset.id));
           if (selected && videoElem) {
             videoElem.innerHTML = '';
-            const selPoster = formatMediaUrl(selected.posterImage || selected.image);
-            const selSrc = formatMediaUrl(selected.videoUrl);
+            const selPoster = formatMediaUrl(selected.posterImage || selected.image || selected.thumbnail);
+            const selSrc = formatMediaUrl(selected.videoUrl || selected.video_url);
             if (selPoster) videoElem.poster = selPoster;
             if (selSrc) {
               videoElem.src = selSrc;
@@ -1323,6 +1451,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     if (!article) return;
+    activeArticleId = article.id;
 
     // Header Details
     const titleElem = articleView.querySelector('.hero-article-title');
@@ -1354,6 +1483,22 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (imgElem) {
       imgElem.src = formatMediaUrl(article.image || article.featured_image || 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=1000&q=80');
       imgElem.alt = article.title || 'Article Image';
+    }
+
+    // Update Adjacent Prev / Next Article Titles for Arrow Hover Preview
+    const allArticles = getCollection('articles') || [];
+    const curIdx = allArticles.findIndex(a => String(a.id) === String(article.id));
+    const prevIdx = (curIdx > 0) ? curIdx - 1 : allArticles.length - 1;
+    const nextIdx = (curIdx !== -1 && curIdx < allArticles.length - 1) ? curIdx + 1 : 0;
+
+    const prevTitleElem = document.getElementById('prevArticleTitle');
+    const nextTitleElem = document.getElementById('nextArticleTitle');
+
+    if (prevTitleElem && allArticles[prevIdx]) {
+      prevTitleElem.textContent = allArticles[prevIdx].title || 'Previous Article';
+    }
+    if (nextTitleElem && allArticles[nextIdx]) {
+      nextTitleElem.textContent = allArticles[nextIdx].title || 'Next Article';
     }
 
     // Prepare Sections (Title & Content pair)
@@ -1591,5 +1736,31 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   }
 
+  // ==========================================================================
+  // DESKTOP AUTO-SCROLL READING PROGRESS LOADER (Exact Brand Yellow #C98806)
+  // ==========================================================================
+  const scrollProgressBar = document.getElementById('articleScrollProgressBar');
+  function updateReadingProgress() {
+    const articleView = document.getElementById('articleView');
+    if (!articleView || articleView.style.display === 'none' || !scrollProgressBar) {
+      if (scrollProgressBar) scrollProgressBar.style.width = '0%';
+      return;
+    }
+
+    const totalHeight = articleView.scrollHeight - window.innerHeight;
+    if (totalHeight <= 0) {
+      scrollProgressBar.style.width = '100%';
+      return;
+    }
+
+    const currentProgress = (window.scrollY / totalHeight) * 100;
+    const clampedProgress = Math.min(Math.max(currentProgress, 0), 100);
+    scrollProgressBar.style.width = `${clampedProgress}%`;
+  }
+
+  window.addEventListener('scroll', updateReadingProgress, { passive: true });
+  window.addEventListener('resize', updateReadingProgress);
+
   window.renderArticleDetail = renderArticleDetail;
+  window.openVideoListingView = openVideoListingView;
 });

@@ -54,7 +54,8 @@ async function autoInitSchemaAndSeed(connection, targetDb) {
       await connection.query('ALTER TABLE videos MODIFY video_url LONGTEXT, MODIFY thumbnail LONGTEXT');
       await connection.query('ALTER TABLE articles MODIFY featured_image LONGTEXT');
       await connection.query('ALTER TABLE latest_news MODIFY image LONGTEXT');
-      await connection.query("ALTER TABLE articles ADD COLUMN target_section VARCHAR(100) DEFAULT 'articles-to-read-sec'");
+      await connection.query("ALTER TABLE articles ADD COLUMN IF NOT EXISTS target_section VARCHAR(100) DEFAULT 'articles-to-read-sec'");
+      await connection.query('ALTER TABLE media ADD COLUMN IF NOT EXISTS data_url LONGTEXT');
     } catch (alterErr) {
       // Ignore if columns already modified or existing
     }

@@ -43,10 +43,20 @@ export function initDrawer() {
   const accordionContent = document.getElementById('accordionContent');
   if (accordionToggleBtn && accordionContent) {
     accordionToggleBtn.addEventListener('click', () => {
-      accordionToggleBtn.classList.toggle('collapsed');
-      accordionContent.classList.toggle('closed');
-      const isExpanded = !accordionContent.classList.contains('closed');
-      accordionToggleBtn.setAttribute('aria-expanded', isExpanded ? 'true' : 'false');
+      const isCurrentlyClosed = accordionContent.classList.contains('closed');
+      if (isCurrentlyClosed) {
+        accordionContent.classList.remove('closed');
+        accordionContent.classList.add('open');
+        accordionToggleBtn.classList.remove('collapsed');
+        accordionToggleBtn.classList.add('expanded');
+        accordionToggleBtn.setAttribute('aria-expanded', 'true');
+      } else {
+        accordionContent.classList.remove('open');
+        accordionContent.classList.add('closed');
+        accordionToggleBtn.classList.remove('expanded');
+        accordionToggleBtn.classList.add('collapsed');
+        accordionToggleBtn.setAttribute('aria-expanded', 'false');
+      }
     });
   }
 

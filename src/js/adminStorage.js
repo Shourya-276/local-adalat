@@ -4,7 +4,7 @@
  * Manages LocalStorage with fallback defaults, reactive subscriptions, backup/restore, and CRUD helpers.
  */
 
-import { topStories, latestNewsColumns, videoCornerList, articlesToReadList, categoryArticlesList } from './data.js';
+import { topStories, latestNewsColumns, defaultVideos, videoCornerList, articlesToReadList, categoryArticlesList } from './data.js';
 import { logAuditEvent, sanitizeInput } from './security.js';
 import { ApiClient } from './apiClient.js';
 
@@ -13,10 +13,10 @@ let subscribersList = [];
 
 // App State Data Schema
 let appState = {
-  articles: [],
-  videos: [],
-  topStories: [],
-  latestNews: [],
+  articles: [...categoryArticlesList],
+  videos: [...defaultVideos],
+  topStories: [...topStories],
+  latestNews: [...categoryArticlesList],
   mediaLibrary: [],
   categories: ['Supreme Court', 'High Court', 'Sessions Court', 'Commercial Law', 'Constitutional Law'],
   tags: ['Electoral Bonds', 'Privacy Rights', 'Arbitration', 'Insolvency', 'CSR', 'Bail', 'IT Rules'],
@@ -35,7 +35,7 @@ let appState = {
 };
 
 /**
- * Initializes and loads state from MySQL REST API backend or LocalStorage fallback.
+ * Initializes and loads state from LocalStorage and syncs with MySQL REST API backend if available.
  */
 export async function initAdminStorage() {
   try {
@@ -45,25 +45,61 @@ export async function initAdminStorage() {
       appState = { ...appState, ...parsed };
     }
 
-    // Sync from MySQL Backend (Primary Source of Truth)
-    const backendArticles = await ApiClient.getArticles();
-    if (backendArticles && backendArticles.success && Array.isArray(backendArticles.data)) {
-      appState.articles = backendArticles.data;
+    if (!appState.articles || appState.articles.length === 0) {
+      appState.articles = [...categoryArticlesList];
+    }
+    if (!appState.videos || appState.videos.length === 0) {
+      appState.videos = [...defaultVideos];
     }
 
-    const backendVideos = await ApiClient.getVideos();
-    if (backendVideos && backendVideos.success && Array.isArray(backendVideos.data)) {
-      appState.videos = backendVideos.data;
+    // Sync from MySQL Backend (if available), preserving all local custom uploads
+    try {
+      const backendArticles = await ApiClient.getArticles();
+      if (backendArticles && backendArticles.success && Array.isArray(backendArticles.data) && backendArticles.data.length > 0) {
+        const backendIds = new Set(backendArticles.data.map(a => a.id));
+        const localCustom = (appState.articles || []).filter(a => typeof a.id === 'string' && a.id.startsWith('art_'));
+        const localCustomIds = new Set(localCustom.map(a => a.id));
+
+        appState.articles = [
+          ...localCustom,
+          ...backendArticles.data.filter(b => !localCustomIds.has(b.id)),
+          ...categoryArticlesList.filter(d => !backendIds.has(d.id) && !localCustomIds.has(d.id))
+        ];
+      }
+    } catch (apiErr) {
+      // Backend offline, preserve local state
     }
 
-    const backendMedia = await ApiClient.getMediaLibrary();
-    if (backendMedia && backendMedia.success && Array.isArray(backendMedia.data)) {
-      appState.mediaLibrary = backendMedia.data;
+    try {
+      const backendVideos = await ApiClient.getVideos();
+      if (backendVideos && backendVideos.success && Array.isArray(backendVideos.data) && backendVideos.data.length > 0) {
+        const backendIds = new Set(backendVideos.data.map(v => v.id));
+        const localCustom = (appState.videos || []).filter(v => typeof v.id === 'string' && v.id.startsWith('vid_'));
+        const localCustomIds = new Set(localCustom.map(v => v.id));
+
+        appState.videos = [
+          ...localCustom,
+          ...backendVideos.data.filter(b => !localCustomIds.has(b.id)),
+          ...defaultVideos.filter(d => !backendIds.has(d.id) && !localCustomIds.has(d.id))
+        ];
+      }
+    } catch (apiErr) {
+      // Backend offline, preserve local state
     }
 
+    try {
+      const backendMedia = await ApiClient.getMediaLibrary();
+      if (backendMedia && backendMedia.success && Array.isArray(backendMedia.data)) {
+        appState.mediaLibrary = backendMedia.data;
+      }
+    } catch (apiErr) {}
+
+    // Save consolidated state so refresh always keeps user-uploaded items
+    saveStorage();
     notifySubscribers();
   } catch (err) {
-    console.warn('[AdminStorage] Sync with Express backend fallback to LocalStorage', err);
+    console.warn('[AdminStorage] LocalStorage recovery:', err);
+    notifySubscribers();
   }
 }
 
