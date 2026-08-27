@@ -86,7 +86,6 @@ export function refreshCurrentTab() {
   else if (activeTab === 'articles') renderArticlesTable();
   else if (activeTab === 'videos') renderVideosTable();
   else if (activeTab === 'news') renderNewsManager();
-  else if (activeTab === 'media') renderMediaLibrary();
   else if (activeTab === 'audit') renderAuditLogsTable();
 }
 
@@ -197,30 +196,36 @@ function setupSidebarTabs() {
 function renderDashboardKPIs() {
   const articles = getCollection('articles');
   const videos = getCollection('videos');
-  const media = getCollection('mediaLibrary');
+  const news = getCollection('news') || [];
   const logs = getAuditLogs();
 
   const totalArticles = articles.length;
   const publishedArticles = articles.filter(a => a.status === 'published').length;
   const draftArticles = articles.filter(a => a.status === 'draft').length;
   const activeVideos = videos.length;
-  const totalMedia = media.length;
+  const totalNews = news.length;
   const failedLogins = logs.filter(l => l.event === 'LOGIN_FAILURE' || l.event === 'LOCKOUT_TRIGGERED').length;
 
   const elemTotal = document.getElementById('kpiTotalArticles');
   const elemPub = document.getElementById('kpiPublishedArticles');
   const elemDraft = document.getElementById('kpiDraftArticles');
   const elemVideos = document.getElementById('kpiActiveVideos');
-  const elemMedia = document.getElementById('kpiMediaAssets');
+  const elemNews = document.getElementById('kpiBreakingNews');
   const elemSecurity = document.getElementById('kpiSecurityStatus');
 
   if (elemTotal) elemTotal.textContent = totalArticles;
   if (elemPub) elemPub.textContent = publishedArticles;
   if (elemDraft) elemDraft.textContent = draftArticles;
   if (elemVideos) elemVideos.textContent = activeVideos;
-  if (elemMedia) elemMedia.textContent = totalMedia;
+  if (elemNews) elemNews.textContent = totalNews;
   if (elemSecurity) {
-    elemSecurity.textContent = failedLogins > 0 ? `SECURE (${failedLogins} alerts)` : 'SECURE';
+    if (failedLogins > 3) {
+      elemSecurity.textContent = 'WARNING';
+      elemSecurity.className = 'text-danger';
+    } else {
+      elemSecurity.textContent = 'SECURE';
+      elemSecurity.className = 'text-success';
+    }
   }
 }
 

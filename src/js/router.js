@@ -163,6 +163,39 @@ export function showView(viewName = 'home', pushState = true) {
     }
   });
 
+  // Stop sound and pause all video/audio players when navigating views
+  try {
+    // Use global controller if available
+    if (typeof window.pauseAllMedia === 'function') {
+      window.pauseAllMedia();
+    }
+    // Belt-and-suspenders: explicitly pause and mute every video
+    document.querySelectorAll('video').forEach(v => {
+      try { v.pause(); v.muted = true; } catch(e) {}
+    });
+    // Kill YouTube iframes
+    document.querySelectorAll('iframe.yt-iframe-player, iframe.video-cinema-iframe').forEach(f => {
+      try {
+        f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+        f.src = 'about:blank';
+      } catch(e) {}
+    });
+    // Clear cinema modal media entirely
+    const cinemaMedia = document.getElementById('videoCinemaMediaContainer');
+    if (cinemaMedia) {
+      cinemaMedia.querySelectorAll('video').forEach(v => {
+        try { v.pause(); v.muted = true; v.src = ''; v.load(); } catch(e) {}
+      });
+      cinemaMedia.innerHTML = '';
+    }
+    // Close cinema modal if open
+    const cinemaModal = document.getElementById('videoCinemaModal');
+    if (cinemaModal) {
+      cinemaModal.classList.remove('active');
+      cinemaModal.style.display = 'none';
+    }
+  } catch(e) {}
+
   // Toggle active view states on body
   document.body.classList.toggle('view-category-active', viewName === 'category');
   document.body.classList.toggle('view-reels-active', viewName === 'videoReels');
