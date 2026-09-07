@@ -284,8 +284,8 @@
         <div class="container section-divider-container">
           <div class="divider-line"></div>
           <div class="divider-emblem">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8">
-              <path d="M12 3v18M5 8h14M3 14l4-6 4 6H3zm10 0l4-6 4 6h-8zM7 21h10"></path>
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 15 15" fill="none">
+              <path d="M7.42529 0.674805V14.1748M14.1753 2.9248L7.42529 0.674805L0.675293 2.9248M0.675293 14.1748H14.1753M2.17529 5.9248L0.675293 9.6748H3.67529L2.17529 5.9248ZM12.6753 5.9248L11.1753 9.6748H14.1753L12.6753 5.9248Z" stroke="#C98806" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </div>
           <div class="divider-line"></div>
@@ -333,8 +333,8 @@
                 <video id="mainVideoPlayer" class="video-element-large" playsinline preload="metadata"></video>
                 <div class="featured-video-overlay" id="featuredVideoOverlay"></div>
                 <button class="play-button-large" id="mainVideoPlayBtn" aria-label="Play featured video">
-                  <svg viewBox="0 0 24 24" fill="currentColor" id="mainVideoPlayIcon">
-                    <path d="M8 5v14l11-7z" />
+                  <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 15 15" fill="none">
+                    <path d="M7.42529 0.674805V14.1748M14.1753 2.9248L7.42529 0.674805L0.675293 2.9248M0.675293 14.1748H14.1753M2.17529 5.9248L0.675293 9.6748H3.67529L2.17529 5.9248ZM12.6753 5.9248L11.1753 9.6748H14.1753L12.6753 5.9248Z" stroke="#C98806" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round"/>
                   </svg>
                 </button>
                 <button class="floating-video-close-btn" id="floatingVideoCloseBtn"
@@ -385,12 +385,14 @@
 
         <!-- Section 5: Articles to Read -->
         <section class="section articles-section container" id="articles-to-read-sec">
-          <div class="section-header-row">
+          <div class="section-header-row articles-header-row">
             <div class="header-titles">
-              <h2 class="section-title">Articles to Read</h2>
+              <div class="title-with-line">
+                <h2 class="section-title">Articles to Read</h2>
+                <div class="section-divider-line"></div>
+              </div>
               <p class="section-subtitle">Expert analysis beyond the headlines.</p>
             </div>
-            <div class="section-divider-line"></div>
           </div>
 
           <div class="articles-grid">
@@ -405,8 +407,11 @@
                 <p class="article-excerpt">A practical breakdown of compliance obligations, risks, and opportunities for
                   businesses operating in India's evolving data landscape.</p>
                 <div class="article-meta">
-                  <span>Editorial Desk</span>
-                  <span>12 min read</span>
+                  <span class="article-author">Editorial Desk</span>
+                  <div class="article-meta-right">
+                    <span class="article-readtime">12 min read</span>
+                    <span class="article-read-more blog-click">Read More <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+                  </div>
                 </div>
               </div>
             </article>
@@ -422,8 +427,11 @@
                 <p class="article-excerpt">How recent judgments continue to redefine the relationship between citizens
                   and the State, and what it means for civil liberties.</p>
                 <div class="article-meta">
-                  <span>Editorial Desk</span>
-                  <span>10 min read</span>
+                  <span class="article-author">Editorial Desk</span>
+                  <div class="article-meta-right">
+                    <span class="article-readtime">10 min read</span>
+                    <span class="article-read-more blog-click">Read More <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+                  </div>
                 </div>
               </div>
             </article>
@@ -439,8 +447,11 @@
                 <p class="article-excerpt">A practical breakdown of compliance obligations, risks, and opportunities for
                   businesses operating in India's evolving data landscape.</p>
                 <div class="article-meta">
-                  <span>Editorial Desk</span>
-                  <span>12 min read</span>
+                  <span class="article-author">Editorial Desk</span>
+                  <div class="article-meta-right">
+                    <span class="article-readtime">12 min read</span>
+                    <span class="article-read-more blog-click">Read More <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+                  </div>
                 </div>
               </div>
             </article>
@@ -636,41 +647,6 @@
         </div>
       </div>
 
-      <!-- Interactive Share Drawer Popup -->
-      <div class="reel-share-overlay" id="reelShareOverlay" style="display: none;">
-        <div class="reel-share-drawer">
-          <div class="reel-share-header">
-            <span>Share Briefing</span>
-            <button class="btn-close-share" id="btnCloseShare">&times;</button>
-          </div>
-          <div class="reel-share-items">
-            <div class="share-circle-item share-wa">
-              <div class="share-icon-circle">W</div>
-              <span>WhatsApp</span>
-            </div>
-            <div class="share-circle-item share-li">
-              <div class="share-icon-circle">in</div>
-              <span>LinkedIn</span>
-            </div>
-            <div class="share-circle-item share-x">
-              <div class="share-icon-circle">X</div>
-              <span>X</span>
-            </div>
-            <div class="share-circle-item share-fb">
-              <div class="share-icon-circle">f</div>
-              <span>Facebook</span>
-            </div>
-            <div class="share-circle-item share-copy" id="btnCopyReelLink">
-              <div class="share-icon-circle"><svg class="icon-svg" viewBox="0 0 24 24" width="18" height="18"
-                  fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
-                  <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
-                </svg></div>
-              <span>Copy Link</span>
-            </div>
-          </div>
-        </div>
-      </div>
 
       <!-- View More Bottom Sheet Modal (Reference Image Match) -->
       <div class="reel-details-sheet-overlay" id="reelDetailsSheetOverlay" style="display: none;">
@@ -1032,8 +1008,11 @@
               <p class="article-excerpt">A practical breakdown of compliance obligations, risks, and opportunities for
                 businesses operating in India's evolving data landscape.</p>
               <div class="article-meta">
-                <span>Editorial Desk</span>
-                <span>12 min read</span>
+                <span class="article-author">Editorial Desk</span>
+                <div class="article-meta-right">
+                  <span class="article-readtime">12 min read</span>
+                  <span class="article-read-more blog-click">Read More <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+                </div>
               </div>
             </div>
           </article>
@@ -1049,15 +1028,18 @@
               <p class="article-excerpt">How recent judgments continue to redefine the relationship between citizens and
                 the State, and what it means for civil liberties.</p>
               <div class="article-meta">
-                <span>Editorial Desk</span>
-                <span>10 min read</span>
+                <span class="article-author">Editorial Desk</span>
+                <div class="article-meta-right">
+                  <span class="article-readtime">10 min read</span>
+                  <span class="article-read-more blog-click">Read More <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+                </div>
               </div>
             </div>
           </article>
 
           <article class="article-card blog-click">
             <div class="article-thumb">
-              <img src="https://images.unsplash.com/photo-1589829545856-d10d557cf95f?auto=format&fit=crop&w=800&q=80"
+              <img src="https://images.unsplash.com/photo-1589391886645-d51941baf7fb?auto=format&fit=crop&w=800&q=80"
                 alt="Article image">
             </div>
             <div class="article-body">
@@ -1066,8 +1048,11 @@
               <p class="article-excerpt">A practical breakdown of compliance obligations, risks, and opportunities for
                 businesses operating in India's evolving data landscape.</p>
               <div class="article-meta">
-                <span>Editorial Desk</span>
-                <span>12 min read</span>
+                <span class="article-author">Editorial Desk</span>
+                <div class="article-meta-right">
+                  <span class="article-readtime">12 min read</span>
+                  <span class="article-read-more blog-click">Read More <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+                </div>
               </div>
             </div>
           </article>
@@ -1957,6 +1942,42 @@
   </nav>
 
   <!-- CINEMATIC VIDEO PLAYBACK MODAL POPUP -->
+  <!-- Interactive Share Drawer Popup (Global Top-Level Modal) -->
+  <div class="reel-share-overlay" id="reelShareOverlay" style="display: none;">
+    <div class="reel-share-drawer">
+      <div class="reel-share-header">
+        <span>Share Briefing</span>
+        <button class="btn-close-share" id="btnCloseShare">&times;</button>
+      </div>
+      <div class="reel-share-items">
+        <div class="share-circle-item share-wa">
+          <div class="share-icon-circle">W</div>
+          <span>WhatsApp</span>
+        </div>
+        <div class="share-circle-item share-li">
+          <div class="share-icon-circle">in</div>
+          <span>LinkedIn</span>
+        </div>
+        <div class="share-circle-item share-x">
+          <div class="share-icon-circle">X</div>
+          <span>X</span>
+        </div>
+        <div class="share-circle-item share-fb">
+          <div class="share-icon-circle">f</div>
+          <span>Facebook</span>
+        </div>
+        <div class="share-circle-item share-copy" id="btnCopyReelLink">
+          <div class="share-icon-circle"><svg class="icon-svg" viewBox="0 0 24 24" width="18" height="18"
+              fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+              <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+            </svg></div>
+          <span>Copy Link</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <div id="videoCinemaModal" class="video-cinema-modal" style="display: none;">
     <div class="video-cinema-backdrop" id="videoCinemaBackdrop"></div>
     <div class="video-cinema-dialog" role="dialog" aria-modal="true">

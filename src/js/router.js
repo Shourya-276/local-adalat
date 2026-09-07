@@ -48,7 +48,11 @@ export function initRouter() {
         showView('adminLogin', false);
       }
     } else if (hash === 'videos' || hash === 'videolisting') {
-      openVideoListingView();
+      if (window.innerWidth <= 768) {
+        openVideoReelsView();
+      } else {
+        openVideoListingView();
+      }
     } else if (hash && views[hash]) {
       showView(hash, false);
     } else {
@@ -96,6 +100,11 @@ export function initRouter() {
       return;
     }
 
+    // Ignore share buttons and share drawer elements from opening article page
+    if (e.target.closest('.btn-share-icon, .btn-trigger-share, .reel-share-drawer, .reel-share-overlay')) {
+      return;
+    }
+
     // 3. Article / Blog Links
     const blogLink = e.target.closest('.blog-click');
     if (blogLink) {
@@ -124,7 +133,11 @@ export function initRouter() {
     const videoLink = e.target.closest('#viewAllVideosBtn, .view-all-videos-link, a[href="#videos"], a[href="#video-corner-sec"]');
     if (videoLink) {
       e.preventDefault();
-      openVideoListingView();
+      if (window.innerWidth <= 768) {
+        openVideoReelsView();
+      } else {
+        openVideoListingView();
+      }
       return;
     }
 
@@ -213,6 +226,26 @@ export function showView(viewName = 'home', pushState = true) {
   document.body.classList.toggle('view-reels-active', viewName === 'videoReels');
   document.body.classList.toggle('view-mobile-articles-active', viewName === 'mobileArticles');
   document.body.classList.toggle('view-admin-active', viewName === 'adminDashboard' || viewName === 'adminLogin');
+
+  // Update mobile bottom navigation bar active states
+  const mobileNavItems = document.querySelectorAll('.mobile-nav-item');
+  if (mobileNavItems.length) {
+    mobileNavItems.forEach(nav => nav.classList.remove('active'));
+
+    if (viewName === 'category') {
+      const courtsBtn = document.getElementById('mobileNavCourts');
+      if (courtsBtn) courtsBtn.classList.add('active');
+    } else if (viewName === 'videoReels') {
+      const videosBtn = document.getElementById('mobileNavVideos');
+      if (videosBtn) videosBtn.classList.add('active');
+    } else if (viewName === 'article' || viewName === 'mobileArticles') {
+      const articlesBtn = document.getElementById('mobileNavArticles');
+      if (articlesBtn) articlesBtn.classList.add('active');
+    } else if (viewName === 'home' || viewName === 'search') {
+      const homeBtn = document.getElementById('mobileNavHome');
+      if (homeBtn) homeBtn.classList.add('active');
+    }
+  }
 
   if (viewName === 'adminDashboard' || viewName === 'adminLogin') {
     window.scrollTo({ top: 0, behavior: 'auto' });
@@ -348,6 +381,10 @@ export function openMobileArticlesView() {
  * Opens the Full 3x3 Video Listing Page View.
  */
 export function openVideoListingView() {
+  if (window.innerWidth <= 768) {
+    openVideoReelsView();
+    return;
+  }
   showView('videoListing', true);
   const grid = document.getElementById('videoListingGrid');
   if (grid) {

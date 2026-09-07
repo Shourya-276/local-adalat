@@ -93,7 +93,11 @@ export function initDrawer() {
       const targetHash = link.getAttribute('href');
 
       if (targetHash === '#video-corner-sec' || targetHash === '#videos' || targetHash === '#videolisting') {
-        openVideoListingView();
+        if (window.innerWidth <= 768) {
+          openVideoReelsView();
+        } else {
+          openVideoListingView();
+        }
         return;
       }
 

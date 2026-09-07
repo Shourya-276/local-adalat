@@ -54,6 +54,94 @@ document.addEventListener('DOMContentLoaded', async () => {
   initAdminUI();
   initBreakingNewsTicker();
   initVideoCinemaModal();
+  initShareDrawerModal();
+  initMobileBottomNav();
+
+  function initShareDrawerModal() {
+    const globalShareOverlay = document.getElementById('reelShareOverlay');
+    const globalBtnCloseShare = document.getElementById('btnCloseShare');
+    const globalBtnCopyLink = document.getElementById('btnCopyReelLink');
+
+    document.addEventListener('click', (e) => {
+      const shareBtn = e.target.closest('.btn-share-icon, .btn-trigger-share');
+      if (shareBtn) {
+        e.preventDefault();
+        e.stopPropagation();
+        const overlay = document.getElementById('reelShareOverlay');
+        if (overlay) {
+          const isReelShare = shareBtn.classList.contains('btn-trigger-share') || shareBtn.closest('.reel-right-actions, .mobile-reels-track, #videoReelsView');
+          if (isReelShare) {
+            overlay.classList.remove('pop-left-bottom');
+            overlay.classList.add('pop-right-bottom');
+          } else {
+            overlay.classList.remove('pop-right-bottom');
+            overlay.classList.add('pop-left-bottom');
+          }
+          overlay.style.display = 'flex';
+        }
+      }
+    });
+
+    if (globalBtnCloseShare) {
+      globalBtnCloseShare.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const overlay = document.getElementById('reelShareOverlay');
+        if (overlay) overlay.style.display = 'none';
+      });
+    }
+
+    if (globalShareOverlay) {
+      globalShareOverlay.addEventListener('click', (e) => {
+        if (e.target === globalShareOverlay) {
+          globalShareOverlay.style.display = 'none';
+        }
+      });
+
+      const waItem = globalShareOverlay.querySelector('.share-wa');
+      if (waItem) {
+        waItem.onclick = (e) => {
+          e.stopPropagation();
+          window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(window.location.href)}`, '_blank');
+        };
+      }
+      const liItem = globalShareOverlay.querySelector('.share-li');
+      if (liItem) {
+        liItem.onclick = (e) => {
+          e.stopPropagation();
+          window.open(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`, '_blank');
+        };
+      }
+      const xItem = globalShareOverlay.querySelector('.share-x');
+      if (xItem) {
+        xItem.onclick = (e) => {
+          e.stopPropagation();
+          window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}`, '_blank');
+        };
+      }
+      const fbItem = globalShareOverlay.querySelector('.share-fb');
+      if (fbItem) {
+        fbItem.onclick = (e) => {
+          e.stopPropagation();
+          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, '_blank');
+        };
+      }
+    }
+
+    if (globalBtnCopyLink) {
+      globalBtnCopyLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        navigator.clipboard.writeText(window.location.href);
+        const textSpan = globalBtnCopyLink.querySelector('span');
+        if (textSpan) {
+          const orig = textSpan.textContent;
+          textSpan.textContent = 'Copied!';
+          setTimeout(() => textSpan.textContent = orig, 1800);
+        }
+      });
+    }
+  }
 
   // DOM Elements
   const latestNewsGrid = document.getElementById('latestNewsGrid');
@@ -259,8 +347,11 @@ document.addEventListener('DOMContentLoaded', async () => {
           <h3 class="article-title"><a href="#" class="blog-click" data-id="${item.id}">${item.title}</a></h3>
           <p class="article-excerpt">${item.excerpt || ''}</p>
           <div class="article-meta">
-            <span>${item.author || 'Editorial Desk'}</span>
-            <span>${item.readTime || '12 min read'}</span>
+            <span class="article-author">${item.author || 'Editorial Desk'}</span>
+            <div class="article-meta-right">
+              <span class="article-readtime">${item.readTime || '12 min read'}</span>
+              <span class="article-read-more blog-click" data-id="${item.id}">Read More <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></span>
+            </div>
           </div>
         </div>
       </article>
@@ -671,26 +762,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
     });
-
-    // Update active nav item based on scroll position
-    window.addEventListener('scroll', () => {
-      const scrollPos = window.scrollY + 200;
-      const sections = [
-        { id: 'top-stories-sec', btn: document.getElementById('mobileNavHome') },
-        { id: 'latest-news-sec', btn: document.getElementById('mobileNavCourts') },
-        { id: 'video-corner-sec', btn: document.getElementById('mobileNavVideos') },
-        { id: 'articles-sec', btn: document.getElementById('mobileNavArticles') }
-      ];
-
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const secElem = document.getElementById(sections[i].id);
-        if (secElem && secElem.offsetTop <= scrollPos) {
-          mobileNavItems.forEach(n => n.classList.remove('active'));
-          if (sections[i].btn) sections[i].btn.classList.add('active');
-          break;
-        }
-      }
-    }, { passive: true });
   }
 
   // ==========================================================================
@@ -916,39 +987,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
       });
     }
-
-    // Share button popup trigger
-    reelsTrack.querySelectorAll('.btn-trigger-share').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (shareOverlay) shareOverlay.style.display = 'flex';
-      });
-    });
   }
 
-  if (btnCloseShare) {
-    btnCloseShare.addEventListener('click', () => {
-      if (shareOverlay) shareOverlay.style.display = 'none';
-    });
-  }
 
-  if (shareOverlay) {
-    shareOverlay.addEventListener('click', (e) => {
-      if (e.target === shareOverlay) shareOverlay.style.display = 'none';
-    });
-  }
-
-  if (btnCopyReelLink) {
-    btnCopyReelLink.addEventListener('click', () => {
-      navigator.clipboard.writeText(window.location.href);
-      const textSpan = btnCopyReelLink.querySelector('span');
-      if (textSpan) {
-        const orig = textSpan.textContent;
-        textSpan.textContent = 'Copied!';
-        setTimeout(() => textSpan.textContent = orig, 1800);
-      }
-    });
-  }
 
     // Touch events for vertical reel swipe
     reelsContainer.addEventListener('touchstart', (e) => {
@@ -1039,10 +1080,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             <p class="mobile-article-card-excerpt">${item.excerpt}</p>
             <div class="mobile-article-card-footer">
               <span class="mobile-article-author">${item.author || 'Editorial Desk'}</span>
-              <span class="mobile-article-readtime">${item.readTime || '8 min read'}</span>
-              <button class="mobile-article-read-btn blog-click" data-id="${item.id}">
-                Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-              </button>
+              <div class="mobile-article-footer-right">
+                <span class="mobile-article-readtime">${item.readTime || '8 min read'}</span>
+                <button class="mobile-article-read-btn blog-click" data-id="${item.id}">
+                  Read More <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                </button>
+              </div>
             </div>
           </div>
         </article>
