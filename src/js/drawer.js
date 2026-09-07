@@ -3,7 +3,7 @@
  * @description Accessible Navigation Menu Drawer component module with keyboard ESC support.
  */
 
-import { openCategoryView, showView } from './router.js';
+import { openCategoryView, openVideoListingView, openMobileArticlesView, showView } from './router.js';
 
 let menuDrawer = null;
 let menuOverlay = null;
@@ -91,6 +91,20 @@ export function initDrawer() {
       e.preventDefault();
       closeDrawer();
       const targetHash = link.getAttribute('href');
+
+      if (targetHash === '#video-corner-sec' || targetHash === '#videos' || targetHash === '#videolisting') {
+        openVideoListingView();
+        return;
+      }
+
+      if (targetHash === '#articles-to-read-sec' || targetHash === '#articles' || targetHash === '#articles-sec') {
+        if (window.innerWidth <= 768) {
+          openMobileArticlesView();
+        } else {
+          openCategoryView("Articles to Read", "In-depth legal analysis, landmark breakdowns, and editorial deep-dives.");
+        }
+        return;
+      }
 
       showView('home', true);
 

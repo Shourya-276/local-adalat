@@ -120,11 +120,23 @@ export function initRouter() {
       return;
     }
 
-    // 5. View All Videos Links
-    const videoLink = e.target.closest('#viewAllVideosBtn, .view-all-videos-link, a[href="#videos"]');
+    // 5. View All Videos & Video Corner Links
+    const videoLink = e.target.closest('#viewAllVideosBtn, .view-all-videos-link, a[href="#videos"], a[href="#video-corner-sec"]');
     if (videoLink) {
       e.preventDefault();
       openVideoListingView();
+      return;
+    }
+
+    // 6. Articles to Read Links
+    const articlesLink = e.target.closest('a[href="#articles-to-read-sec"], a[href="#articles"]');
+    if (articlesLink) {
+      e.preventDefault();
+      if (window.innerWidth <= 768) {
+        openMobileArticlesView();
+      } else {
+        openCategoryView("Articles to Read", "In-depth legal analysis, landmark breakdowns, and editorial deep-dives.");
+      }
       return;
     }
   });
