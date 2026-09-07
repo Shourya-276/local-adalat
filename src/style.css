@@ -2921,37 +2921,42 @@ button, input {
     position: relative;
     width: 100%;
     max-width: 440px;
+    height: 560px;
     margin: 0 auto;
     margin-top: 12px;
-    overflow: hidden;
+    overflow: visible;
     padding-bottom: 20px;
   }
 
   .mobile-slider-track {
-    display: flex;
-    gap: 0px;
-    transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
-    touch-action: pan-y;
+    position: relative;
     width: 100%;
+    height: 100%;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
   }
 
   .mobile-slider-card {
-    flex: 0 0 100%;
-    min-width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
-    max-width: 440px;
-    height: 580px !important;
+    height: 100% !important;
     border-radius: 22px;
     overflow: hidden;
-    position: relative;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    cursor: pointer;
-    transform: rotate(0deg);
-    opacity: 1;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.16);
+    cursor: grab;
+    transform-origin: 50% 100%;
     padding-top: 12px;
     padding-right: 12px;
     padding-left: 12px;
     box-sizing: border-box;
+    will-change: transform, opacity;
+  }
+
+  .mobile-slider-card:active {
+    cursor: grabbing;
   }
 
   .mobile-card-bg-wrap {
@@ -3631,6 +3636,16 @@ button, input {
   body.view-reels-active .footer-divider,
   body.view-reels-active .site-header {
     display: none !important;
+  }
+
+  /* Prevent window scrolling & eliminate bottom gap when dragging on Courts & Reels view */
+  body.view-category-active,
+  body.view-reels-active {
+    overflow: hidden !important;
+    position: fixed !important;
+    width: 100% !important;
+    height: 100vh !important;
+    height: 100dvh !important;
   }
 
 

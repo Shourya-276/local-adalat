@@ -479,17 +479,52 @@ document.addEventListener('DOMContentLoaded', async () => {
     const dots = document.querySelectorAll('#mobileSliderDots .dot');
     if (!sliderTrack) return;
 
+    let cards = Array.from(sliderTrack.querySelectorAll('.mobile-slider-card'));
+    if (!cards.length) return;
+
     let currentIndex = 0;
-    const cards = sliderTrack.querySelectorAll('.mobile-slider-card');
     const totalCards = cards.length;
 
     let startX = 0;
-    let currentTranslate = 0;
-    let prevTranslate = 0;
+    let startY = 0;
+    let currentX = 0;
+    let currentY = 0;
     let isDragging = false;
+    let isAnimating = false;
 
-    function setSliderPosition() {
-      sliderTrack.style.transform = `translateX(${currentTranslate}px)`;
+    // Helper to position cards in stack (Tinder / Bumble style)
+    function layoutStack() {
+      cards = Array.from(sliderTrack.querySelectorAll('.mobile-slider-card'));
+      cards.forEach((card, idx) => {
+        let offset = (idx - currentIndex + totalCards) % totalCards;
+
+        card.style.transition = 'transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.35s ease';
+        card.style.pointerEvents = offset === 0 ? 'auto' : 'none';
+
+        if (offset === 0) {
+          // Top active card
+          card.style.zIndex = '10';
+          card.style.opacity = '1';
+          card.style.transform = 'translate3d(0, 0, 0) scale(1) rotate(0deg)';
+        } else if (offset === 1) {
+          // Second card in stack
+          card.style.zIndex = '9';
+          card.style.opacity = '0.92';
+          card.style.transform = 'translate3d(0, 14px, 0) scale(0.95) rotate(0deg)';
+        } else if (offset === 2) {
+          // Third card in stack
+          card.style.zIndex = '8';
+          card.style.opacity = '0.75';
+          card.style.transform = 'translate3d(0, 26px, 0) scale(0.90) rotate(0deg)';
+        } else {
+          // Deeper hidden cards
+          card.style.zIndex = '5';
+          card.style.opacity = '0';
+          card.style.transform = 'translate3d(0, 36px, 0) scale(0.85) rotate(0deg)';
+        }
+      });
+
+      updateDots();
     }
 
     function updateDots() {
@@ -498,48 +533,119 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    function goToSlide(index) {
-      if (index < 0) index = 0;
-      if (index >= totalCards) index = totalCards - 1;
-      currentIndex = index;
-      const cardWidth = sliderTrack.parentElement?.clientWidth || window.innerWidth;
-      currentTranslate = -currentIndex * cardWidth;
-      prevTranslate = currentTranslate;
-      sliderTrack.style.transition = 'transform 0.35s cubic-bezier(0.25, 1, 0.5, 1)';
-      setSliderPosition();
-      updateDots();
+    // Touch & Mouse Drag Handlers for Top Card
+    function handleStart(clientX, clientY) {
+      if (isAnimating) return;
+      startX = clientX;
+      startY = clientY;
+      currentX = clientX;
+      currentY = clientY;
+      isDragging = true;
+
+      const topCard = cards[currentIndex];
+      if (topCard) {
+        topCard.style.transition = 'none';
+      }
     }
 
-    // Touch Event Listeners
+    function handleMove(clientX, clientY) {
+      if (!isDragging || isAnimating) return;
+      currentX = clientX;
+      currentY = clientY;
+
+      const diffX = currentX - startX;
+      const diffY = currentY - startY;
+      const rotate = diffX * 0.08; // Tinder-style tilt rotation
+
+      const topCard = cards[currentIndex];
+      if (topCard) {
+        topCard.style.transform = `translate3d(${diffX}px, ${diffY}px, 0) rotate(${rotate}deg)`;
+      }
+
+      // Lift the next card in stack as top card is pulled
+      const nextIndex = (currentIndex + 1) % totalCards;
+      const nextCard = cards[nextIndex];
+      if (nextCard) {
+        const dragProgress = Math.min(Math.abs(diffX) / 180, 1);
+        const nextScale = 0.95 + (0.05 * dragProgress);
+        const nextY = 14 - (14 * dragProgress);
+        nextCard.style.transition = 'none';
+        nextCard.style.transform = `translate3d(0, ${nextY}px, 0) scale(${nextScale}) rotate(0deg)`;
+        nextCard.style.opacity = `${0.92 + (0.08 * dragProgress)}`;
+      }
+    }
+
+    function handleEnd() {
+      if (!isDragging || isAnimating) return;
+      isDragging = false;
+
+      const diffX = currentX - startX;
+      const diffY = currentY - startY;
+      const threshold = 70;
+
+      const topCard = cards[currentIndex];
+
+      if (Math.abs(diffX) > threshold) {
+        // Tinder / Bumble Swipe Out
+        isAnimating = true;
+        const flyX = diffX > 0 ? window.innerWidth * 1.3 : -window.innerWidth * 1.3;
+        const flyRotate = diffX > 0 ? 32 : -32;
+
+        topCard.style.transition = 'transform 0.38s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.35s ease';
+        topCard.style.transform = `translate3d(${flyX}px, ${diffY * 1.4}px, 0) rotate(${flyRotate}deg)`;
+        topCard.style.opacity = '0';
+
+        setTimeout(() => {
+          currentIndex = (currentIndex + 1) % totalCards;
+          layoutStack();
+          isAnimating = false;
+        }, 320);
+      } else {
+        // Snap Back
+        layoutStack();
+      }
+    }
+
+    // Touch events
     sliderTrack.addEventListener('touchstart', (e) => {
-      startX = e.touches[0].clientX;
-      isDragging = true;
-      sliderTrack.style.transition = 'none';
+      handleStart(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
     sliderTrack.addEventListener('touchmove', (e) => {
-      if (!isDragging) return;
-      const currentX = e.touches[0].clientX;
-      const diffX = currentX - startX;
-      currentTranslate = prevTranslate + diffX;
-      setSliderPosition();
+      handleMove(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
-    sliderTrack.addEventListener('touchend', (e) => {
-      if (!isDragging) return;
-      isDragging = false;
-      const movedBy = currentTranslate - prevTranslate;
-      if (movedBy < -50 && currentIndex < totalCards - 1) {
-        currentIndex += 1;
-      } else if (movedBy > 50 && currentIndex > 0) {
-        currentIndex -= 1;
+    sliderTrack.addEventListener('touchend', () => {
+      handleEnd();
+    });
+
+    // Mouse events for desktop/preview testing on mobile screen width
+    sliderTrack.addEventListener('mousedown', (e) => {
+      handleStart(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        handleMove(e.clientX, e.clientY);
       }
-      goToSlide(currentIndex);
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) {
+        handleEnd();
+      }
     });
 
     dots.forEach((dot, idx) => {
-      dot.addEventListener('click', () => goToSlide(idx));
+      dot.addEventListener('click', () => {
+        if (isAnimating) return;
+        currentIndex = idx;
+        layoutStack();
+      });
     });
+
+    // Initial Stack Setup
+    layoutStack();
   }
 
   // ==========================================================================
@@ -655,22 +761,21 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    // Touch Event Listeners for Vertical Drag/Swipe
-    verticalFeedContainer.addEventListener('touchstart', (e) => {
-      startY = e.touches[0].clientY;
+    // Touch & Mouse Drag Listeners for Vertical Drag/Swipe
+    function handleFeedStart(clientY) {
+      startY = clientY;
       isDragging = true;
       feedTrack.style.transition = 'none';
-    }, { passive: true });
+    }
 
-    verticalFeedContainer.addEventListener('touchmove', (e) => {
+    function handleFeedMove(clientY) {
       if (!isDragging) return;
-      const currentY = e.touches[0].clientY;
-      const diffY = currentY - startY;
+      const diffY = clientY - startY;
       currentTranslateY = prevTranslateY + diffY;
       feedTrack.style.transform = `translateY(${currentTranslateY}px)`;
-    }, { passive: true });
+    }
 
-    verticalFeedContainer.addEventListener('touchend', (e) => {
+    function handleFeedEnd() {
       if (!isDragging) return;
       isDragging = false;
       const movedBy = currentTranslateY - prevTranslateY;
@@ -681,6 +786,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentSlideIndex -= 1;
       }
       goToFeedSlide(currentSlideIndex, true);
+    }
+
+    verticalFeedContainer.addEventListener('touchstart', (e) => {
+      handleFeedStart(e.touches[0].clientY);
+    }, { passive: true });
+
+    verticalFeedContainer.addEventListener('touchmove', (e) => {
+      if (isDragging) {
+        if (e.cancelable) e.preventDefault();
+        handleFeedMove(e.touches[0].clientY);
+      }
+    }, { passive: false });
+
+    verticalFeedContainer.addEventListener('touchend', () => {
+      handleFeedEnd();
+    });
+
+    verticalFeedContainer.addEventListener('mousedown', (e) => {
+      handleFeedStart(e.clientY);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        e.preventDefault();
+        handleFeedMove(e.clientY);
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) handleFeedEnd();
+    });
+
+    verticalFeedContainer.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
     });
 
     // Mouse Wheel / Touchpad scroll event lock
@@ -991,22 +1130,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 
 
-    // Touch events for vertical reel swipe
-    reelsContainer.addEventListener('touchstart', (e) => {
-      startY = e.touches[0].clientY;
+    // Touch & Mouse Drag events for vertical reel swipe
+    function handleReelStart(clientY) {
+      startY = clientY;
       isDragging = true;
       reelsTrack.style.transition = 'none';
-    }, { passive: true });
+    }
 
-    reelsContainer.addEventListener('touchmove', (e) => {
+    function handleReelMove(clientY) {
       if (!isDragging) return;
-      const currentY = e.touches[0].clientY;
-      const diffY = currentY - startY;
+      const diffY = clientY - startY;
       currentTranslateY = prevTranslateY + diffY;
       reelsTrack.style.transform = `translateY(${currentTranslateY}px)`;
-    }, { passive: true });
+    }
 
-    reelsContainer.addEventListener('touchend', () => {
+    function handleReelEnd() {
       if (!isDragging) return;
       isDragging = false;
       const movedBy = currentTranslateY - prevTranslateY;
@@ -1017,6 +1155,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         currentReelIndex -= 1;
       }
       goToReelSlide(currentReelIndex, true);
+    }
+
+    reelsContainer.addEventListener('touchstart', (e) => {
+      handleReelStart(e.touches[0].clientY);
+    }, { passive: true });
+
+    reelsContainer.addEventListener('touchmove', (e) => {
+      if (isDragging) {
+        if (e.cancelable) e.preventDefault();
+        handleReelMove(e.touches[0].clientY);
+      }
+    }, { passive: false });
+
+    reelsContainer.addEventListener('touchend', () => {
+      handleReelEnd();
+    });
+
+    reelsContainer.addEventListener('mousedown', (e) => {
+      handleReelStart(e.clientY);
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (isDragging) {
+        e.preventDefault();
+        handleReelMove(e.clientY);
+      }
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (isDragging) handleReelEnd();
+    });
+
+    reelsContainer.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
     });
 
     // Mouse wheel lock for reels

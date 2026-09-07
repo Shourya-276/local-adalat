@@ -238,10 +238,10 @@ export function showView(viewName = 'home', pushState = true) {
     } else if (viewName === 'videoReels') {
       const videosBtn = document.getElementById('mobileNavVideos');
       if (videosBtn) videosBtn.classList.add('active');
-    } else if (viewName === 'article' || viewName === 'mobileArticles') {
+    } else if (viewName === 'mobileArticles') {
       const articlesBtn = document.getElementById('mobileNavArticles');
       if (articlesBtn) articlesBtn.classList.add('active');
-    } else if (viewName === 'home' || viewName === 'search') {
+    } else if (viewName === 'home' || viewName === 'search' || viewName === 'article') {
       const homeBtn = document.getElementById('mobileNavHome');
       if (homeBtn) homeBtn.classList.add('active');
     }
