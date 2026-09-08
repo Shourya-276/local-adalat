@@ -874,16 +874,27 @@ function setupVideoModalForm() {
     vidVideoFileInput.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-      showToast('Uploading video file...', 'info');
+      const val = validateMediaFile(file, true);
+      if (!val.valid) {
+        showToast(val.error, 'error');
+        vidVideoFileInput.value = '';
+        return;
+      }
+      showToast('Uploading video file to server...', 'info');
       const apiRes = await ApiClient.uploadFile(file);
       if (apiRes && apiRes.success && apiRes.data && apiRes.data.storage_path) {
         if (vidUrlInput) vidUrlInput.value = formatMediaUrl(apiRes.data.storage_path);
-        showToast('Video file uploaded successfully!', 'success');
+        showToast('Video file uploaded successfully to server!', 'success');
       } else {
+        const errMsg = (apiRes && apiRes.message) ? apiRes.message : 'Backend server unreachable. Please start backend using "npm run server".';
+        if (file.size > 2 * 1024 * 1024) {
+          showToast(`Upload Failed (${errMsg})`, 'error');
+          return;
+        }
         const reader = new FileReader();
         reader.onload = (evt) => {
           if (vidUrlInput) vidUrlInput.value = evt.target.result;
-          showToast('Video file loaded.', 'success');
+          showToast('Small video file loaded locally.', 'info');
         };
         reader.readAsDataURL(file);
       }

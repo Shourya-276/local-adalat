@@ -50,14 +50,19 @@ async function autoInitSchemaAndSeed(connection, targetDb) {
 
     await connection.query(schemaSql);
     await connection.query(`USE \`${targetDb}\`;`);
-    try {
-      await connection.query('ALTER TABLE videos MODIFY video_url LONGTEXT, MODIFY thumbnail LONGTEXT');
-      await connection.query('ALTER TABLE articles MODIFY featured_image LONGTEXT');
-      await connection.query('ALTER TABLE latest_news MODIFY image LONGTEXT');
-      await connection.query("ALTER TABLE articles ADD COLUMN IF NOT EXISTS target_section VARCHAR(100) DEFAULT 'articles-to-read-sec'");
-      await connection.query('ALTER TABLE media ADD COLUMN IF NOT EXISTS data_url LONGTEXT');
-    } catch (alterErr) {
-      // Ignore if columns already modified or existing
+    const alterQueries = [
+      'ALTER TABLE videos MODIFY video_url LONGTEXT, MODIFY thumbnail LONGTEXT',
+      'ALTER TABLE articles MODIFY featured_image LONGTEXT',
+      'ALTER TABLE latest_news MODIFY image LONGTEXT',
+      "ALTER TABLE articles ADD COLUMN target_section VARCHAR(100) DEFAULT 'articles-to-read-sec'",
+      'ALTER TABLE media ADD COLUMN data_url LONGTEXT'
+    ];
+    for (const q of alterQueries) {
+      try {
+        await connection.query(q);
+      } catch (alterErr) {
+        // Ignore if column already exists or modified
+      }
     }
     await connection.query(seedSql);
     console.log(`[MySQL Database] Auto-initialized schema and seed dataset on '${targetDb}' successfully.`);

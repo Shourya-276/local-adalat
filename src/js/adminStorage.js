@@ -112,6 +112,24 @@ export function saveStorage() {
     notifySubscribers();
   } catch (err) {
     console.error('Failed to save to LocalStorage', err);
+    if (err.name === 'QuotaExceededError' || err.code === 22) {
+      try {
+        // Strip large inline data URLs to save critical app state safely
+        const sanitizedState = JSON.parse(JSON.stringify(appState));
+        if (sanitizedState.videos) {
+          sanitizedState.videos = sanitizedState.videos.map(v => ({
+            ...v,
+            videoUrl: (v.videoUrl && v.videoUrl.startsWith('data:')) ? '' : v.videoUrl,
+            posterImage: (v.posterImage && v.posterImage.startsWith('data:')) ? '' : v.posterImage
+          }));
+        }
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitizedState));
+        notifySubscribers();
+        console.warn('[AdminStorage] App state saved after stripping large base64 payloads to preserve quota.');
+      } catch (stripErr) {
+        console.error('[AdminStorage] Critical storage quota exceeded:', stripErr);
+      }
+    }
   }
 }
 

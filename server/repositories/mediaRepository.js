@@ -13,11 +13,22 @@ export class MediaRepository {
 
   static async create(mediaData) {
     const { id, filename, original_name, mime_type, file_size, storage_path, data_url } = mediaData;
-    const sql = `
-      INSERT INTO media (id, filename, original_name, mime_type, file_size, storage_path, data_url)
-      VALUES (?, ?, ?, ?, ?, ?, ?)
-    `;
-    return await executeQuery(sql, [id, filename, original_name, mime_type, file_size, storage_path, data_url || null]);
+    try {
+      const sql = `
+        INSERT INTO media (id, filename, original_name, mime_type, file_size, storage_path, data_url)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `;
+      return await executeQuery(sql, [id, filename, original_name, mime_type, file_size, storage_path, data_url || null]);
+    } catch (err) {
+      if (err && err.message && (err.message.includes('data_url') || err.message.includes('Unknown column'))) {
+        const sqlFallback = `
+          INSERT INTO media (id, filename, original_name, mime_type, file_size, storage_path)
+          VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        return await executeQuery(sqlFallback, [id, filename, original_name, mime_type, file_size, storage_path]);
+      }
+      throw err;
+    }
   }
 
   static async delete(id) {

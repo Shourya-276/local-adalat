@@ -268,7 +268,7 @@ export function logoutAdmin(reason = 'User logged out') {
  * @param {File} file 
  * @returns {{ valid: boolean, error?: string }}
  */
-export function validateMediaFile(file) {
+export function validateMediaFile(file, isVideoHint = false) {
   if (!file) {
     return { valid: false, error: 'No file selected.' };
   }
@@ -277,15 +277,19 @@ export function validateMediaFile(file) {
   const fileSize = file.size || 0;
   const fileType = file.type || '';
 
-  // 1. File Size Check
-  if (fileSize > MAX_FILE_SIZE_BYTES) {
+  // 1. File Size Check (250MB for videos, 15MB for images/media)
+  const isVideo = isVideoHint || fileType.startsWith('video/') || /\.(mp4|webm|ogg|mov|avi|mkv|m4v|3gp|flv|wmv|ts)$/i.test(fileName);
+  const maxAllowed = isVideo ? 250 * 1024 * 1024 : MAX_FILE_SIZE_BYTES;
+
+  if (fileSize > maxAllowed) {
+    const limitMb = isVideo ? 250 : 15;
     logAuditEvent({
       event: 'FILE_REJECTED',
       resource: 'MEDIA',
       status: 'REJECTED',
-      details: `File ${fileName} exceeded max allowed size of 15MB (${(fileSize / (1024 * 1024)).toFixed(1)}MB)`
+      details: `File ${fileName} exceeded max allowed size of ${limitMb}MB (${(fileSize / (1024 * 1024)).toFixed(1)}MB)`
     });
-    return { valid: false, error: `File size (${(fileSize / (1024 * 1024)).toFixed(1)}MB) exceeds maximum allowed limit of 15MB.` };
+    return { valid: false, error: `File size (${(fileSize / (1024 * 1024)).toFixed(1)}MB) exceeds maximum allowed limit of ${limitMb}MB.` };
   }
 
   // 2. Disallowed Executable Extensions Check
