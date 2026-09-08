@@ -2916,12 +2916,16 @@ button, input {
     margin-bottom: 14px !important;
   }
 
+  #top-stories-sec .section-subtitle {
+    display: none !important;
+  }
+
   .mobile-top-stories-slider {
     display: block !important;
     position: relative;
     width: 100%;
     max-width: 440px;
-    height: 560px;
+    height: 430px;
     margin: 0 auto;
     margin-top: 12px;
     overflow: visible;
@@ -3026,15 +3030,7 @@ button, input {
   }
 
   .mobile-card-excerpt {
-    font-size: 13px !important;
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.45;
-    margin-top: 4px;
-    display: -webkit-box;
-    -webkit-line-clamp: 3 !important;
-    line-clamp: 3 !important;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    display: none !important;
   }
 
   .mobile-slider-dots {
@@ -3716,6 +3712,7 @@ button, input {
     inset: 0;
     background: linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.35) 45%, rgba(0, 0, 0, 0.45) 100%);
     z-index: 1;
+    pointer-events: none;
   }
 
   .reel-top-progress-bar {
@@ -4269,9 +4266,9 @@ button, input {
     width: 100% !important;
     max-width: 440px !important;
     margin: -16px auto 0 auto !important;
-    height: calc(100vh - 58px) !important;
-    height: calc(100dvh - 58px) !important;
-    max-height: 820px !important;
+    height: calc(100vh - 60px) !important;
+    height: calc(100dvh - 60px) !important;
+    max-height: 780px !important;
     position: relative;
     overflow: hidden;
     padding: 0 6px 4px 6px;

@@ -133,12 +133,36 @@ function notifySubscribers() {
 }
 
 /**
+ * Helper to identify fallback/default demo videos.
+ * @param {Object} v 
+ * @returns {boolean}
+ */
+export function isFallbackVideo(v) {
+  if (!v) return false;
+  if (v.isDefault === true) return true;
+  if (v.isDefault === false) return false;
+  const defaultIds = new Set([301, 302, 303, 304, 305, 306, 307, 308, 309]);
+  if (defaultIds.has(v.id) || defaultIds.has(Number(v.id))) return true;
+  return false;
+}
+
+/**
  * Gets a collection array from appState.
+ * If collectionName is 'videos', and there is at least 1 custom/admin-uploaded video,
+ * returns ONLY custom/admin-uploaded videos (hiding fallback videos).
+ * If no custom videos have been uploaded, returns default fallback videos.
  * @param {string} collectionName 
  * @returns {Array}
  */
 export function getCollection(collectionName) {
-  return appState[collectionName] || [];
+  const collection = appState[collectionName] || [];
+  if (collectionName === 'videos') {
+    const adminVideos = collection.filter(v => !isFallbackVideo(v));
+    if (adminVideos.length > 0) {
+      return adminVideos;
+    }
+  }
+  return collection;
 }
 
 /**
@@ -200,12 +224,12 @@ export async function createItem(collectionName, itemData) {
  * @param {Object} updates 
  */
 export async function updateItem(collectionName, id, updates) {
-  const collection = getCollection(collectionName);
-  const index = collection.findIndex(item => String(item.id) === String(id));
+  const masterCollection = appState[collectionName] || [];
+  const index = masterCollection.findIndex(item => String(item.id) === String(id));
   if (index === -1) return null;
 
   const updatedItem = {
-    ...collection[index],
+    ...masterCollection[index],
     ...updates,
     updatedAt: Date.now()
   };
@@ -221,7 +245,7 @@ export async function updateItem(collectionName, id, updates) {
     console.error(`[AdminStorage] Failed to update ${collectionName} in backend:`, err);
   }
 
-  collection[index] = updatedItem;
+  masterCollection[index] = updatedItem;
   saveStorage();
 
   logAuditEvent({
@@ -240,11 +264,11 @@ export async function updateItem(collectionName, id, updates) {
  * @param {string|number} id 
  */
 export async function deleteItem(collectionName, id) {
-  const collection = getCollection(collectionName);
-  const index = collection.findIndex(item => String(item.id) === String(id));
+  const masterCollection = appState[collectionName] || [];
+  const index = masterCollection.findIndex(item => String(item.id) === String(id));
   if (index === -1) return false;
 
-  const deletedTitle = collection[index].name || collection[index].title || id;
+  const deletedTitle = masterCollection[index].name || masterCollection[index].title || id;
 
   // Persist to MySQL Backend first (source of truth)
   try {
@@ -259,7 +283,7 @@ export async function deleteItem(collectionName, id) {
     console.error(`[AdminStorage] Failed to delete ${collectionName} from backend:`, err);
   }
 
-  collection.splice(index, 1);
+  masterCollection.splice(index, 1);
   saveStorage();
 
   logAuditEvent({

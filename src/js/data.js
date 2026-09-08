@@ -177,6 +177,7 @@ export const defaultLatestNews = [
 export const defaultVideos = [
   {
     id: 301,
+    isDefault: true,
     title: 'Delhi HC Directs Government to File Response on Electoral Bonds Case',
     court: 'HIGH COURT',
     thumbnail: demoImages.courtroomFront,
@@ -186,6 +187,7 @@ export const defaultVideos = [
   },
   {
     id: 302,
+    isDefault: true,
     title: 'Delhi HC Directs Government to File Response on Electoral Bonds Case',
     court: 'HIGH COURT',
     thumbnail: demoImages.courtLawn,
@@ -195,6 +197,7 @@ export const defaultVideos = [
   },
   {
     id: 303,
+    isDefault: true,
     title: 'Delhi HC Directs Government to File Response on Electoral Bonds Case',
     court: 'SUPREME COURT',
     thumbnail: demoImages.courtGarden,
@@ -204,6 +207,7 @@ export const defaultVideos = [
   },
   {
     id: 304,
+    isDefault: true,
     title: 'Delhi HC Directs Government to File Response on Electoral Bonds Case',
     court: 'HIGH COURT',
     thumbnail: demoImages.courtroomWood,
@@ -213,6 +217,7 @@ export const defaultVideos = [
   },
   {
     id: 305,
+    isDefault: true,
     title: 'Delhi HC Directs Government to File Response on Electoral Bonds Case',
     court: 'SUPREME COURT',
     thumbnail: demoImages.scalesGavel,
@@ -222,6 +227,7 @@ export const defaultVideos = [
   },
   {
     id: 306,
+    isDefault: true,
     title: 'Delhi HC Directs Government to File Response on Electoral Bonds Case',
     court: 'HIGH COURT',
     thumbnail: demoImages.scalesBrass,
@@ -231,6 +237,7 @@ export const defaultVideos = [
   },
   {
     id: 307,
+    isDefault: true,
     title: 'Delhi HC Directs Government to File Response on Electoral Bonds Case',
     court: 'SUPREME COURT',
     thumbnail: demoImages.supremeCourtDome,
@@ -240,6 +247,7 @@ export const defaultVideos = [
   },
   {
     id: 308,
+    isDefault: true,
     title: 'Delhi HC Directs Government to File Response on Electoral Bonds Case',
     court: 'HIGH COURT',
     thumbnail: demoImages.scalesBrass,
@@ -249,6 +257,7 @@ export const defaultVideos = [
   },
   {
     id: 309,
+    isDefault: true,
     title: 'Delhi HC Directs Government to File Response on Electoral Bonds Case',
     court: 'SUPREME COURT',
     thumbnail: demoImages.courtLawn,
