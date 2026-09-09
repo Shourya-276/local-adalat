@@ -290,20 +290,30 @@ export function openCategoryView(title = "Supreme Court", subtitle = "The most i
     const publishedArticles = (allArticles || []).filter(a => a.status === 'published');
     
     const filterKey = (title || '').toUpperCase().trim();
-    let filteredList = publishedArticles;
+    let filteredList = [];
     
     if (filterKey.includes('HIGH')) {
       filteredList = publishedArticles.filter(a => (a.court || '').toUpperCase().includes('HIGH'));
+      if (!filteredList || filteredList.length === 0) {
+        filteredList = (categoryArticlesList || []).filter(a => (a.court || '').toUpperCase().includes('HIGH'));
+      }
     } else if (filterKey.includes('SESSIONS')) {
       filteredList = publishedArticles.filter(a => (a.court || '').toUpperCase().includes('SESSIONS'));
+      if (!filteredList || filteredList.length === 0) {
+        filteredList = (categoryArticlesList || []).filter(a => (a.court || '').toUpperCase().includes('SESSIONS'));
+      }
     } else if (filterKey.includes('SUPREME')) {
       filteredList = publishedArticles.filter(a => (a.court || 'SUPREME COURT').toUpperCase().includes('SUPREME'));
+      if (!filteredList || filteredList.length === 0) {
+        filteredList = (categoryArticlesList || []).filter(a => (a.court || 'SUPREME COURT').toUpperCase().includes('SUPREME'));
+      }
     } else if (filterKey.includes('ARTICLE')) {
       filteredList = publishedArticles.filter(a => !a.targetSection || a.targetSection === 'articles-to-read-sec');
-    }
-
-    if (!filteredList || filteredList.length === 0) {
-      filteredList = (categoryArticlesList || []).filter(a => !a.targetSection || a.targetSection === 'articles-to-read-sec');
+      if (!filteredList || filteredList.length === 0) {
+        filteredList = (categoryArticlesList || []).filter(a => !a.targetSection || a.targetSection === 'articles-to-read-sec');
+      }
+    } else {
+      filteredList = publishedArticles;
     }
 
     if (!filteredList || filteredList.length === 0) {

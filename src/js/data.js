@@ -74,9 +74,9 @@ export const defaultTopStories = [
   }
 ];
 
-// Section 2: Latest News (9 Boxes matching reference image layout)
+// Section 2: Latest News (Distinct court-filtered news items)
 export const defaultLatestNews = [
-  // Col 1 (Left Column)
+  // --- SUPREME COURT ARTICLES ---
   {
     id: 201,
     title: 'Supreme Court Clarifies Digital Search and Seizure Rules',
@@ -99,7 +99,7 @@ export const defaultLatestNews = [
   },
   {
     id: 203,
-    title: 'Supreme Court Clarifies Digital Search and Seizure Rules',
+    title: 'Supreme Court Bench Refuses Stay on New Arbitration Guidelines',
     court: 'SUPREME COURT',
     image: demoImages.scalesClose,
     publishDate: '17 July 2025',
@@ -107,11 +107,9 @@ export const defaultLatestNews = [
     targetSection: 'latest-news-sec',
     status: 'published'
   },
-
-  // Col 2 (Middle Column)
   {
     id: 204,
-    title: 'Constitution Bench Hears Data Protection Challenge',
+    title: 'Apex Court Sets Up Special Bench for Environmental Writs',
     court: 'SUPREME COURT',
     image: demoImages.scalesDesk,
     publishDate: '17 July 2025',
@@ -121,7 +119,7 @@ export const defaultLatestNews = [
   },
   {
     id: 205,
-    title: 'Supreme Court Clarifies Digital Search and Seizure Rules',
+    title: 'CJI Remarks on Digital Access and Transparency in Legal System',
     court: 'SUPREME COURT',
     image: demoImages.supremeCourtDome,
     publishDate: '17 July 2025',
@@ -131,7 +129,7 @@ export const defaultLatestNews = [
   },
   {
     id: 206,
-    title: 'Constitution Bench Hears Data Protection Challenge',
+    title: 'Supreme Court Standardises Bail Application Timelines Across States',
     court: 'SUPREME COURT',
     image: demoImages.courtroomWood,
     publishDate: '17 July 2025',
@@ -139,8 +137,6 @@ export const defaultLatestNews = [
     targetSection: 'latest-news-sec',
     status: 'published'
   },
-
-  // Col 3 (Right Column)
   {
     id: 207,
     title: 'CJI Orders Expedited Hearing on Fundamental Rights Petition',
@@ -153,7 +149,7 @@ export const defaultLatestNews = [
   },
   {
     id: 208,
-    title: 'Constitution Bench Hears Data Protection Challenge',
+    title: 'SC Upholds Right to Financial Privacy in Corporate Audit Plea',
     court: 'SUPREME COURT',
     image: demoImages.woodenGavel,
     publishDate: '17 July 2025',
@@ -163,11 +159,195 @@ export const defaultLatestNews = [
   },
   {
     id: 209,
-    title: 'Supreme Court Clarifies Digital Search and Seizure Rules',
+    title: 'Landmark SC Ruling on Section 482 CrPC Inherent Powers',
     court: 'SUPREME COURT',
     image: demoImages.courtGarden,
     publishDate: '17 July 2025',
     readTime: '5 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+
+  // --- HIGH COURT ARTICLES ---
+  {
+    id: 210,
+    title: 'Delhi High Court Directs Response on Electoral Reforms Petition',
+    court: 'HIGH COURT',
+    image: demoImages.courtroomHall,
+    publishDate: '17 July 2025',
+    readTime: '5 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 211,
+    title: 'Bombay High Court Stays Order on Media Broadcasting Norms',
+    court: 'HIGH COURT',
+    image: demoImages.courtroomWood,
+    publishDate: '17 July 2025',
+    readTime: '4 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 212,
+    title: 'Madras High Court Issues Landmark Ruling on Digital Copyright Suits',
+    court: 'HIGH COURT',
+    image: demoImages.scalesDesk,
+    publishDate: '16 July 2025',
+    readTime: '6 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 213,
+    title: 'Karnataka High Court Orders Status Quo in Infrastructure Tender Dispute',
+    court: 'HIGH COURT',
+    image: demoImages.gavelMarble,
+    publishDate: '16 July 2025',
+    readTime: '5 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 214,
+    title: 'Calcutta High Court Quashes Procedural Penalty in Tax Assessment',
+    court: 'HIGH COURT',
+    image: demoImages.legalBriefs,
+    publishDate: '15 July 2025',
+    readTime: '5 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 215,
+    title: 'Allahabad High Court Directs Speedy Disposal of Land Appeals',
+    court: 'HIGH COURT',
+    image: demoImages.scalesClose,
+    publishDate: '15 July 2025',
+    readTime: '4 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 216,
+    title: 'Gujarat High Court Clarifies Jurisdiction Boundaries in GST Seizure Cases',
+    court: 'HIGH COURT',
+    image: demoImages.lawLibrary,
+    publishDate: '14 July 2025',
+    readTime: '5 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 217,
+    title: 'Kerala High Court Mandates Strict Environmental Audits for Coastal Units',
+    court: 'HIGH COURT',
+    image: demoImages.courtGarden,
+    publishDate: '14 July 2025',
+    readTime: '6 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 218,
+    title: 'Punjab & Haryana HC Grants Relief to State Service Applicants',
+    court: 'HIGH COURT',
+    image: demoImages.bookGavel,
+    publishDate: '13 July 2025',
+    readTime: '4 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+
+  // --- SESSIONS COURT ARTICLES ---
+  {
+    id: 219,
+    title: 'Sessions Court Acquits Three in High-Profile Corporate Fraud Trial',
+    court: 'SESSIONS COURT',
+    image: demoImages.supremeCourtDome,
+    publishDate: '17 July 2025',
+    readTime: '4 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 220,
+    title: 'City Sessions Court Grants Bail in Economic Offences Investigation',
+    court: 'SESSIONS COURT',
+    image: demoImages.woodenGavel,
+    publishDate: '17 July 2025',
+    readTime: '5 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 221,
+    title: 'District Sessions Judge Orders Day-to-Day Trial in Commercial Case',
+    court: 'SESSIONS COURT',
+    image: demoImages.gavelMarble,
+    publishDate: '16 July 2025',
+    readTime: '5 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 222,
+    title: 'Sessions Court Rejects Custody Extension Request in Cyber Crime Probe',
+    court: 'SESSIONS COURT',
+    image: demoImages.courtroomWood,
+    publishDate: '16 July 2025',
+    readTime: '4 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 223,
+    title: 'Trial Court Frames Charges in Breach of Financial Trust Suit',
+    court: 'SESSIONS COURT',
+    image: demoImages.scalesDesk,
+    publishDate: '15 July 2025',
+    readTime: '5 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 224,
+    title: 'Sessions Bench Orders Forensic Audit of Electronic Evidence Submissions',
+    court: 'SESSIONS COURT',
+    image: demoImages.scalesClose,
+    publishDate: '15 July 2025',
+    readTime: '5 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 225,
+    title: 'Sessions Judge Upholds Injunction Order in Property Dispute Appeal',
+    court: 'SESSIONS COURT',
+    image: demoImages.legalBriefs,
+    publishDate: '14 July 2025',
+    readTime: '4 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 226,
+    title: 'Sessions Court Summons Key Witnesses in Private Defamation Suit',
+    court: 'SESSIONS COURT',
+    image: demoImages.lawLibrary,
+    publishDate: '14 July 2025',
+    readTime: '5 min',
+    targetSection: 'latest-news-sec',
+    status: 'published'
+  },
+  {
+    id: 227,
+    title: 'Trial Judge Grants Interim Protection in Financial Discrepancy Suit',
+    court: 'SESSIONS COURT',
+    image: demoImages.courtroomHall,
+    publishDate: '13 July 2025',
+    readTime: '4 min',
     targetSection: 'latest-news-sec',
     status: 'published'
   }

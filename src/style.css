@@ -4266,9 +4266,9 @@ button, input {
     width: 100% !important;
     max-width: 440px !important;
     margin: -16px auto 0 auto !important;
-    height: calc(100vh - 60px) !important;
-    height: calc(100dvh - 60px) !important;
-    max-height: 780px !important;
+    height: calc(100vh - 110px) !important;
+    height: calc(100dvh - 110px) !important;
+    max-height: 670px !important;
     position: relative;
     overflow: hidden;
     padding: 0 6px 4px 6px;

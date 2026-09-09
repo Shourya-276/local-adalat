@@ -167,39 +167,54 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   /**
    * Dynamic 3-column renderer for the Latest News section on the Home page.
-   * Merges dynamically published articles (targetSection === 'latest-news-sec') with baseline items.
-   * @param {string} courtFilter - 'all' | 'supreme-court' | 'high-court' | 'sessions-court'
+   * Strictly filters articles based on active court tab ('supreme-court' | 'high-court' | 'sessions-court').
+   * @param {string} courtFilter - 'supreme-court' | 'high-court' | 'sessions-court'
    */
   function renderLatestNewsSection(courtFilter = 'supreme-court') {
     if (!latestNewsGrid) return;
     activeLatestNewsCourtFilter = courtFilter;
 
-    const allArticles = getCollection('articles');
-    const dynamicLatestNews = (allArticles || []).filter(a => 
-      (a.status || 'published') === 'published'
-    );
+    const isMatchingCourt = (itemCourt, filter) => {
+      const c = (itemCourt || '').toUpperCase().trim();
+      if (filter === 'high-court') {
+        return c.includes('HIGH');
+      }
+      if (filter === 'sessions-court') {
+        return c.includes('SESSIONS');
+      }
+      return c.includes('SUPREME') || (!c.includes('HIGH') && !c.includes('SESSIONS'));
+    };
 
-    let filteredDynamic = dynamicLatestNews;
-    if (courtFilter === 'supreme-court') {
-      filteredDynamic = dynamicLatestNews.filter(a => (a.court || 'SUPREME COURT').toUpperCase().includes('SUPREME'));
-    } else if (courtFilter === 'high-court') {
-      filteredDynamic = dynamicLatestNews.filter(a => (a.court || '').toUpperCase().includes('HIGH'));
-    } else if (courtFilter === 'sessions-court') {
-      filteredDynamic = dynamicLatestNews.filter(a => (a.court || '').toUpperCase().includes('SESSIONS'));
-    }
+    const allArticles = getCollection('articles') || [];
+    const publishedArticles = allArticles.filter(a => (a.status || 'published') === 'published');
 
-    if (!filteredDynamic || filteredDynamic.length === 0) {
-      filteredDynamic = defaultLatestNews;
-    } else if (filteredDynamic.length < 9) {
-      const currentIds = new Set(filteredDynamic.map(a => a.id));
-      filteredDynamic = [
-        ...filteredDynamic,
-        ...defaultLatestNews.filter(d => !currentIds.has(d.id))
-      ];
-    }
+    // Filter dynamic articles strictly by active court tab
+    const dynamicFiltered = publishedArticles.filter(a => isMatchingCourt(a.court, courtFilter));
+
+    // Filter default news items strictly by active court tab
+    const defaultFiltered = defaultLatestNews.filter(d => isMatchingCourt(d.court, courtFilter));
+
+    // Combine dynamic published items with default items, avoiding duplicates
+    const dynamicIds = new Set(dynamicFiltered.map(a => String(a.id)));
+    const combinedList = [
+      ...dynamicFiltered,
+      ...defaultFiltered.filter(d => !dynamicIds.has(String(d.id)))
+    ];
+
+    // Final strict filter verification
+    const finalFiltered = combinedList.filter(a => isMatchingCourt(a.court, courtFilter));
 
     // Homepage layout: 9 cards (3 columns x 3 rows)
-    const homepageDynamic = filteredDynamic.slice(0, 9);
+    const homepageDynamic = finalFiltered.slice(0, 9);
+
+    if (homepageDynamic.length === 0) {
+      latestNewsGrid.innerHTML = `
+        <div class="no-articles-placeholder text-center" style="padding: 40px 20px; color: #666;">
+          <p>No published news items available for this court category.</p>
+        </div>
+      `;
+      return;
+    }
 
     const col0 = homepageDynamic.filter((_, i) => i % 3 === 0);
     const col1 = homepageDynamic.filter((_, i) => i % 3 === 1);
