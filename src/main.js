@@ -674,6 +674,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let currentCourtFilter = 'Supreme Court';
     let currentSlideIndex = 0;
+    let currentFeedArticles = [];
     let startY = 0;
     let currentTranslateY = 0;
     let prevTranslateY = 0;
@@ -695,7 +696,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderFeedSlides(courtName) {
       currentCourtFilter = courtName || 'Supreme Court';
-      const articles = getFilteredArticles(currentCourtFilter);
+      currentFeedArticles = getFilteredArticles(currentCourtFilter);
+      const articles = currentFeedArticles;
 
       // Render cards + Footer slide as last item
       const cardsHTML = articles.map((item, idx) => {
@@ -707,7 +709,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             : 'tag-supreme-court';
 
         return `
-          <div class="mobile-feed-slide ${idx === 0 ? 'active-slide' : ''}" data-index="${idx}">
+          <div class="mobile-feed-slide ${idx === 0 ? 'active-slide' : ''}" data-index="${idx}" data-id="${item.id || ''}">
             <div class="mobile-feed-card blog-click" data-id="${item.id || ''}">
               <div class="mobile-feed-bg-wrap">
                 <img src="${item.image || '/images/supreme-court.jpg'}" alt="${item.title || 'Legal News'}" loading="lazy">
@@ -776,64 +778,185 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
     }
 
-    // Touch & Mouse Drag Listeners for Vertical Drag/Swipe
-    function handleFeedStart(clientY) {
+    // -------------------------------------------------------------
+    // Option A Onboarding & 4-Day Interval Manager
+    // -------------------------------------------------------------
+    const onboardingOverlay = document.getElementById('courtsOnboardingOverlay');
+    const floatingHintBar = document.getElementById('courtsFloatingHintBar');
+    const btnGotIt = document.getElementById('btnCourtsOnboardingGotIt');
+
+    function checkAndShowOnboarding() {
+      const FOUR_DAYS_MS = 4 * 24 * 60 * 60 * 1000;
+      const lastTimestamp = localStorage.getItem('courts_onboarding_last_timestamp');
+      const hasSeenFirst = localStorage.getItem('courts_onboarding_has_seen_first');
+      const now = Date.now();
+
+      if (!hasSeenFirst) {
+        // First Visit (Day 1) -> Full screen onboarding overlay
+        if (onboardingOverlay) onboardingOverlay.classList.add('active');
+      } else if (lastTimestamp && (now - Number(lastTimestamp)) >= FOUR_DAYS_MS) {
+        // Interval Visit (Day 4+) -> Subtle bottom floating hint bar
+        if (floatingHintBar) {
+          floatingHintBar.classList.add('active');
+          setTimeout(() => {
+            floatingHintBar.classList.remove('active');
+          }, 4500);
+        }
+      }
+    }
+
+    function dismissOnboarding() {
+      if (onboardingOverlay) onboardingOverlay.classList.remove('active');
+      if (floatingHintBar) floatingHintBar.classList.remove('active');
+      localStorage.setItem('courts_onboarding_last_timestamp', Date.now().toString());
+      localStorage.setItem('courts_onboarding_has_seen_first', 'true');
+    }
+
+    if (btnGotIt) {
+      btnGotIt.addEventListener('click', dismissOnboarding);
+    }
+    if (onboardingOverlay) {
+      onboardingOverlay.addEventListener('click', (e) => {
+        if (e.target === onboardingOverlay) dismissOnboarding();
+      });
+    }
+
+    // -------------------------------------------------------------
+    // Horizontal & Vertical Touch/Mouse Drag Listeners
+    // -------------------------------------------------------------
+    let startX = 0;
+    let endX = 0;
+    let endY = 0;
+
+    function handleFeedStart(clientX, clientY) {
+      startX = clientX;
       startY = clientY;
+      endX = clientX;
+      endY = clientY;
       isDragging = true;
       feedTrack.style.transition = 'none';
     }
 
-    function handleFeedMove(clientY) {
+    function handleFeedMove(clientX, clientY) {
       if (!isDragging) return;
+      endX = clientX;
+      endY = clientY;
+      const diffX = clientX - startX;
       const diffY = clientY - startY;
-      currentTranslateY = prevTranslateY + diffY;
-      feedTrack.style.transform = `translateY(${currentTranslateY}px)`;
+
+      // Interactive horizontal slide drag when dragging left
+      if (Math.abs(diffX) > Math.abs(diffY) && diffX < 0) {
+        const slides = feedTrack.querySelectorAll('.mobile-feed-slide');
+        const activeSlide = slides[currentSlideIndex];
+        if (activeSlide) {
+          activeSlide.style.transition = 'none';
+          activeSlide.style.transform = `translateX(${diffX}px)`;
+        }
+      } else {
+        // Vertical dragging
+        currentTranslateY = prevTranslateY + diffY;
+        feedTrack.style.transform = `translateY(${currentTranslateY}px)`;
+      }
     }
 
     function handleFeedEnd() {
       if (!isDragging) return;
       isDragging = false;
-      const movedBy = currentTranslateY - prevTranslateY;
+
+      const deltaX = endX - startX;
+      const deltaY = endY - startY;
       const slides = feedTrack.querySelectorAll('.mobile-feed-slide');
+      const activeSlide = slides[currentSlideIndex];
+
+      // Swipe Left Trigger with Slide-Out Animation
+      if (deltaX < -20 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        dismissOnboarding();
+
+        if (activeSlide) {
+          // Smooth horizontal slide-out animation to the left (Slower & Cinematic)
+          activeSlide.style.transition = 'transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1)';
+          activeSlide.style.transform = 'translateX(-100%)';
+
+          setTimeout(() => {
+            // Reset slide transform for next return
+            activeSlide.style.transition = 'none';
+            activeSlide.style.transform = 'translateX(0)';
+            goToFeedSlide(currentSlideIndex, false);
+
+            const readFullBtn = activeSlide.querySelector('.btn-read-full, .blog-click');
+            if (readFullBtn) {
+              readFullBtn.click();
+            } else {
+              let articleId = activeSlide.dataset.id || activeSlide.querySelector('[data-id]')?.dataset?.id;
+              if (!articleId && currentFeedArticles && currentFeedArticles[currentSlideIndex]) {
+                articleId = currentFeedArticles[currentSlideIndex].id;
+              }
+              if (articleId) {
+                if (typeof window.renderArticleDetail === 'function') window.renderArticleDetail(articleId);
+                showView('article', true);
+              }
+            }
+          }, 360);
+        }
+        return;
+      } else if (activeSlide) {
+        // Snap back active slide horizontally if swipe left wasn't completed
+        activeSlide.style.transition = 'transform 0.2s ease-out';
+        activeSlide.style.transform = 'translateX(0)';
+      }
+
+      // Vertical swipe navigation
+      const movedBy = currentTranslateY - prevTranslateY;
       if (movedBy < -50 && currentSlideIndex < slides.length - 1) {
         currentSlideIndex += 1;
+        dismissOnboarding();
       } else if (movedBy > 50 && currentSlideIndex > 0) {
         currentSlideIndex -= 1;
+        dismissOnboarding();
       }
       goToFeedSlide(currentSlideIndex, true);
     }
 
-    verticalFeedContainer.addEventListener('touchstart', (e) => {
-      handleFeedStart(e.touches[0].clientY);
+    const mobileCategoryWrapper = document.getElementById('mobileCategoryWrapper');
+    const swipeTargetContainer = mobileCategoryWrapper || verticalFeedContainer;
+
+    swipeTargetContainer.addEventListener('touchstart', (e) => {
+      if (e.target.closest('.mobile-cat-filter-bar')) return;
+      handleFeedStart(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
 
-    verticalFeedContainer.addEventListener('touchmove', (e) => {
+    swipeTargetContainer.addEventListener('touchmove', (e) => {
       if (isDragging) {
         if (e.cancelable) e.preventDefault();
-        handleFeedMove(e.touches[0].clientY);
+        handleFeedMove(e.touches[0].clientX, e.touches[0].clientY);
       }
     }, { passive: false });
 
-    verticalFeedContainer.addEventListener('touchend', () => {
+    swipeTargetContainer.addEventListener('touchend', () => {
       handleFeedEnd();
     });
 
-    verticalFeedContainer.addEventListener('mousedown', (e) => {
-      handleFeedStart(e.clientY);
+    swipeTargetContainer.addEventListener('mousedown', (e) => {
+      if (e.target.closest('.mobile-cat-filter-bar')) return;
+      // Support both Left Click (0) and Right Click (2) for dragging/swiping from anywhere
+      if (e.button === 0 || e.button === 2) {
+        handleFeedStart(e.clientX, e.clientY);
+      }
     });
 
     window.addEventListener('mousemove', (e) => {
       if (isDragging) {
         e.preventDefault();
-        handleFeedMove(e.clientY);
+        handleFeedMove(e.clientX, e.clientY);
       }
     });
 
-    window.addEventListener('mouseup', () => {
+    window.addEventListener('mouseup', (e) => {
       if (isDragging) handleFeedEnd();
     });
 
-    verticalFeedContainer.addEventListener('contextmenu', (e) => {
+    // Suppress right-click context menu so user can freely right-click drag swipe up/left anywhere
+    swipeTargetContainer.addEventListener('contextmenu', (e) => {
       e.preventDefault();
     });
 
@@ -868,10 +991,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Expose global render function for router integration
     window.renderMobileCategoryFeed = (courtName) => {
       renderFeedSlides(courtName || 'Supreme Court');
+      checkAndShowOnboarding();
     };
 
     // Initial render
     renderFeedSlides('Supreme Court');
+    checkAndShowOnboarding();
   }
 
   function initMobileBottomNav() {
@@ -1287,7 +1412,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     reelsContainer.addEventListener('mousedown', (e) => {
-      handleReelStart(e.clientY);
+      // Support both Left Click (0) and Right Click (2) for dragging/swiping
+      if (e.button === 0 || e.button === 2) {
+        handleReelStart(e.clientY);
+      }
     });
 
     window.addEventListener('mousemove', (e) => {
@@ -1301,6 +1429,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (isDragging) handleReelEnd();
     });
 
+    // Suppress right-click context menu so user can freely right-click drag swipe up/down
     reelsContainer.addEventListener('contextmenu', (e) => {
       e.preventDefault();
     });

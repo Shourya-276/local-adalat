@@ -42,6 +42,23 @@
   stroke: currentColor;
 }
 
+/* SPA Page View Transitions (Cinematic Fade-In for Incoming Pages) */
+.page-view {
+  animation: pageViewFadeIn 0.45s cubic-bezier(0.2, 0.9, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+@keyframes pageViewFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Reset & Base Styles */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -4266,9 +4283,9 @@ button, input {
     width: 100% !important;
     max-width: 440px !important;
     margin: -16px auto 0 auto !important;
-    height: calc(100vh - 110px) !important;
-    height: calc(100dvh - 110px) !important;
-    max-height: 670px !important;
+    height: calc(100vh - 115px) !important;
+    height: calc(100dvh - 115px) !important;
+    max-height: 665px !important;
     position: relative;
     overflow: hidden;
     padding: 0 6px 4px 6px;
@@ -4434,10 +4451,179 @@ button, input {
   }
 
   .mobile-feed-card-footer {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin-top: 10px !important;
+    gap: 12px !important;
+  }
+
+  /* Option A Onboarding Overlay (Day 1 First Visit) */
+  .courts-onboarding-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 50;
+    background: rgba(0, 0, 0, 0.82);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
+    justify-content: center;
+    padding: 20px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+    border-radius: 24px;
+  }
+
+  .courts-onboarding-overlay.active {
+    opacity: 1;
+    pointer-events: none;
+  }
+
+  .courts-onboarding-card {
+    pointer-events: auto;
+    background: linear-gradient(145deg, rgba(30, 30, 30, 0.95), rgba(15, 15, 15, 0.98));
+    border: 1px solid rgba(201, 136, 6, 0.4);
+    border-radius: 22px;
+    padding: 24px 20px;
+    text-align: center;
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+    max-width: 340px;
+    width: 100%;
+    color: #FFFFFF;
+  }
+
+  .onboarding-gestures-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 12px;
+  }
+
+  .gesture-demo-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .gesture-divider-v {
+    width: 1px;
+    height: 60px;
+    background: rgba(255, 255, 255, 0.15);
+  }
+
+  .gesture-anim-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(201, 136, 6, 0.15);
+    border: 1.5px solid #C98806;
+    color: #C98806;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 0 16px rgba(201, 136, 6, 0.25);
+  }
+
+  /* Micro-animations for gestures */
+  @keyframes gestureSwipeUp {
+    0% { transform: translateY(6px); opacity: 0.5; }
+    50% { transform: translateY(-6px); opacity: 1; }
+    100% { transform: translateY(6px); opacity: 0.5; }
+  }
+
+  @keyframes gestureSwipeLeft {
+    0% { transform: translateX(6px); opacity: 0.5; }
+    50% { transform: translateX(-6px); opacity: 1; }
+    100% { transform: translateX(6px); opacity: 0.5; }
+  }
+
+  .swipe-up-anim svg {
+    animation: gestureSwipeUp 1.8s infinite ease-in-out;
+  }
+
+  .swipe-left-anim svg {
+    animation: gestureSwipeLeft 1.8s infinite ease-in-out;
+  }
+
+  .gesture-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #FFFFFF;
+  }
+
+  .gesture-desc {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+
+  .onboarding-tip-text {
+    font-size: 12.5px;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.45;
+    margin-bottom: 20px;
+  }
+
+  .btn-onboarding-gotit {
+    background: #C98806;
+    color: #FFFFFF;
+    border: none;
+    padding: 10px 28px;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(201, 136, 6, 0.4);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+  }
+
+  .btn-onboarding-gotit:active {
+    transform: scale(0.95);
+  }
+
+  /* Option A Floating Bottom Toast Hint (Day 4+ Interval) */
+  .courts-floating-hint-bar {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%) translateY(30px);
+    z-index: 40;
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.4s ease;
+    width: max-content;
+    max-width: 90%;
+  }
+
+  .courts-floating-hint-bar.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .hint-bar-content {
+    background: rgba(18, 18, 18, 0.92);
+    border: 1px solid rgba(201, 136, 6, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    color: #FFFFFF;
+    padding: 8px 16px;
+    border-radius: 9999px;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+  }
+
+  .hint-bar-content strong {
+    color: #C98806;
   }
 
   /* Mobile Category Footer Slide (Image 3 match) */
