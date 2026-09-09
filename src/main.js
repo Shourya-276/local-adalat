@@ -844,8 +844,8 @@ document.addEventListener('DOMContentLoaded', async () => {
       const diffX = clientX - startX;
       const diffY = clientY - startY;
 
-      // Interactive horizontal slide drag when dragging left
-      if (Math.abs(diffX) > Math.abs(diffY) && diffX < 0) {
+      // Interactive horizontal slide drag when dragging left or right
+      if (Math.abs(diffX) > Math.abs(diffY)) {
         const slides = feedTrack.querySelectorAll('.mobile-feed-slide');
         const activeSlide = slides[currentSlideIndex];
         if (activeSlide) {
@@ -868,14 +868,15 @@ document.addEventListener('DOMContentLoaded', async () => {
       const slides = feedTrack.querySelectorAll('.mobile-feed-slide');
       const activeSlide = slides[currentSlideIndex];
 
-      // Swipe Left Trigger with Slide-Out Animation
-      if (deltaX < -20 && Math.abs(deltaX) > Math.abs(deltaY)) {
+      // Swipe Left or Right Trigger with Slide-Out Animation
+      if (Math.abs(deltaX) > 20 && Math.abs(deltaX) > Math.abs(deltaY)) {
         dismissOnboarding();
 
         if (activeSlide) {
-          // Smooth horizontal slide-out animation to the left (Slower & Cinematic)
+          const targetTranslateX = deltaX < 0 ? '-100%' : '100%';
+          // Smooth horizontal slide-out animation (Slower & Cinematic)
           activeSlide.style.transition = 'transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1)';
-          activeSlide.style.transform = 'translateX(-100%)';
+          activeSlide.style.transform = `translateX(${targetTranslateX})`;
 
           setTimeout(() => {
             // Reset slide transform for next return
@@ -900,7 +901,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
         return;
       } else if (activeSlide) {
-        // Snap back active slide horizontally if swipe left wasn't completed
+        // Snap back active slide horizontally if swipe wasn't completed
         activeSlide.style.transition = 'transform 0.2s ease-out';
         activeSlide.style.transform = 'translateX(0)';
       }

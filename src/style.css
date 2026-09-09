@@ -4283,9 +4283,9 @@ button, input {
     width: 100% !important;
     max-width: 440px !important;
     margin: -16px auto 0 auto !important;
-    height: calc(100vh - 115px) !important;
-    height: calc(100dvh - 115px) !important;
-    max-height: 665px !important;
+    height: calc(100vh - 120px) !important;
+    height: calc(100dvh - 120px) !important;
+    max-height: 660px !important;
     position: relative;
     overflow: hidden;
     padding: 0 6px 4px 6px;
@@ -4398,18 +4398,7 @@ button, input {
   }
 
   .mobile-feed-card .court-tag {
-    position: absolute;
-    top: 18px;
-    left: 18px;
-    right: auto;
-    z-index: 3;
-    background-color: #C98806;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.6px;
-    padding: 5px 12px;
-    border-radius: 9999px;
-    color: #FFFFFF;
+    display: none !important;
   }
 
   .mobile-feed-card-content {
@@ -4465,9 +4454,9 @@ button, input {
     position: absolute;
     inset: 0;
     z-index: 50;
-    background: rgba(0, 0, 0, 0.82);
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -4483,108 +4472,123 @@ button, input {
     pointer-events: none;
   }
 
-  .courts-onboarding-card {
+  .courts-onboarding-card.gesture-demo-card {
     pointer-events: auto;
-    background: linear-gradient(145deg, rgba(30, 30, 30, 0.95), rgba(15, 15, 15, 0.98));
-    border: 1px solid rgba(201, 136, 6, 0.4);
-    border-radius: 22px;
-    padding: 24px 20px;
+    background: linear-gradient(145deg, rgba(25, 25, 28, 0.96), rgba(12, 12, 14, 0.98));
+    border: 1px solid rgba(201, 136, 6, 0.45);
+    border-radius: 26px;
+    padding: 30px 24px 24px 24px;
     text-align: center;
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
-    max-width: 340px;
-    width: 100%;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75), 0 0 20px rgba(201, 136, 6, 0.15);
+    max-width: 310px;
+    width: 90%;
     color: #FFFFFF;
-  }
-
-  .onboarding-gestures-row {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-bottom: 20px;
-    gap: 12px;
-  }
-
-  .gesture-demo-item {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
-    flex: 1;
+    justify-content: center;
   }
 
-  .gesture-divider-v {
-    width: 1px;
-    height: 60px;
-    background: rgba(255, 255, 255, 0.15);
+  .gesture-demo-single {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 22px;
   }
 
-  .gesture-anim-icon {
-    width: 52px;
-    height: 52px;
+  .gesture-hero-graphic {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    height: 64px;
+    margin-bottom: 16px;
+    animation: gestureSwipeLeftDemo 1.8s infinite cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .gesture-arrow-badge {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
-    background: rgba(201, 136, 6, 0.15);
-    border: 1.5px solid #C98806;
-    color: #C98806;
+    background: linear-gradient(135deg, #D49B1A, #C98806);
+    border: 2px solid rgba(255, 255, 255, 0.9);
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 16px rgba(201, 136, 6, 0.25);
+    box-shadow: 0 4px 14px rgba(201, 136, 6, 0.5);
+    flex-shrink: 0;
   }
 
-  /* Micro-animations for gestures */
-  @keyframes gestureSwipeUp {
-    0% { transform: translateY(6px); opacity: 0.5; }
-    50% { transform: translateY(-6px); opacity: 1; }
-    100% { transform: translateY(6px); opacity: 0.5; }
-  }
-
-  @keyframes gestureSwipeLeft {
-    0% { transform: translateX(6px); opacity: 0.5; }
-    50% { transform: translateX(-6px); opacity: 1; }
-    100% { transform: translateX(6px); opacity: 0.5; }
-  }
-
-  .swipe-up-anim svg {
-    animation: gestureSwipeUp 1.8s infinite ease-in-out;
-  }
-
-  .swipe-left-anim svg {
-    animation: gestureSwipeLeft 1.8s infinite ease-in-out;
-  }
-
-  .gesture-label {
-    font-size: 13px;
-    font-weight: 700;
+  .gesture-hand-icon {
+    position: relative;
+    z-index: 1;
     color: #FFFFFF;
+    filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.5));
+    flex-shrink: 0;
   }
 
-  .gesture-desc {
-    font-size: 11px;
-    color: rgba(255, 255, 255, 0.7);
+  @keyframes gestureSwipeLeftDemo {
+    0% {
+      transform: translateX(12px);
+      opacity: 0.6;
+    }
+    50% {
+      transform: translateX(-12px);
+      opacity: 1;
+    }
+    100% {
+      transform: translateX(12px);
+      opacity: 0.6;
+    }
   }
 
-  .onboarding-tip-text {
-    font-size: 12.5px;
-    color: rgba(255, 255, 255, 0.85);
-    line-height: 1.45;
-    margin-bottom: 20px;
+  .gesture-hero-title {
+    font-size: 26px;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0 0 6px 0;
+    letter-spacing: -0.5px;
+    line-height: 1.2;
+  }
+
+  .gesture-hero-subtitle {
+    font-size: 14px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.75);
+    margin: 0;
+    letter-spacing: 0.2px;
   }
 
   .btn-onboarding-gotit {
     background: #C98806;
     color: #FFFFFF;
     border: none;
-    padding: 10px 28px;
+    padding: 11px 36px;
     border-radius: 9999px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
+    letter-spacing: 0.3px;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(201, 136, 6, 0.4);
-    transition: transform 0.2s ease, background-color 0.2s ease;
+    box-shadow: 0 6px 20px rgba(201, 136, 6, 0.35);
+    transition: all 0.2s ease;
+    width: 100%;
+    max-width: 200px;
+  }
+
+  .btn-onboarding-gotit:hover {
+    background: #db9608;
+    transform: translateY(-1px);
+    box-shadow: 0 8px 24px rgba(201, 136, 6, 0.45);
   }
 
   .btn-onboarding-gotit:active {
-    transform: scale(0.95);
+    transform: translateY(0) scale(0.96);
   }
 
   /* Option A Floating Bottom Toast Hint (Day 4+ Interval) */
