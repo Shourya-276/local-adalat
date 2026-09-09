@@ -4398,7 +4398,8 @@ button, input {
     z-index: 1;
   }
 
-  .mobile-feed-card .court-tag {
+  .mobile-feed-card .court-tag,
+  .nav-arrow {
     display: none !important;
   }
 

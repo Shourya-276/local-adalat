@@ -2327,8 +2327,68 @@ document.addEventListener('DOMContentLoaded', async () => {
     scrollProgressBar.style.width = `${clampedProgress}%`;
   }
 
-  window.addEventListener('scroll', updateReadingProgress, { passive: true });
-  window.addEventListener('resize', updateReadingProgress);
+  // -------------------------------------------------------------
+  // Mobile Article Detail View Swipe-Right to Go Back Gesture
+  // -------------------------------------------------------------
+  const articleViewElem = document.getElementById('articleView');
+  if (articleViewElem) {
+    let artStartX = 0;
+    let artStartY = 0;
+    let artEndX = 0;
+    let artEndY = 0;
+    let artIsDragging = false;
+
+    articleViewElem.addEventListener('touchstart', (e) => {
+      if (window.innerWidth > 768) return;
+      artStartX = e.touches[0].clientX;
+      artStartY = e.touches[0].clientY;
+      artEndX = artStartX;
+      artEndY = artStartY;
+      artIsDragging = true;
+    }, { passive: true });
+
+    articleViewElem.addEventListener('touchmove', (e) => {
+      if (!artIsDragging || window.innerWidth > 768) return;
+      artEndX = e.touches[0].clientX;
+      artEndY = e.touches[0].clientY;
+      const diffX = artEndX - artStartX;
+      const diffY = artEndY - artStartY;
+
+      // Track rightward swipe drag
+      if (diffX > 0 && Math.abs(diffX) > Math.abs(diffY)) {
+        articleViewElem.style.transition = 'none';
+        articleViewElem.style.transform = `translateX(${diffX}px)`;
+      }
+    }, { passive: true });
+
+    articleViewElem.addEventListener('touchend', () => {
+      if (!artIsDragging || window.innerWidth > 768) return;
+      artIsDragging = false;
+      const deltaX = artEndX - artStartX;
+      const deltaY = artEndY - artStartY;
+
+      if (deltaX > 40 && Math.abs(deltaX) > Math.abs(deltaY)) {
+        // Smooth slide-out animation to the right (Identical to Courts page swipe)
+        articleViewElem.style.transition = 'transform 0.35s cubic-bezier(0.2, 0.9, 0.3, 1)';
+        articleViewElem.style.transform = 'translateX(100%)';
+
+        setTimeout(() => {
+          articleViewElem.style.transition = 'none';
+          articleViewElem.style.transform = 'translateX(0)';
+          if (typeof showView === 'function') {
+            showView('category', true);
+          } else {
+            const backBtn = document.getElementById('backToHomeBtn');
+            if (backBtn) backBtn.click();
+          }
+        }, 320);
+      } else {
+        // Snap back cleanly if threshold was not reached
+        articleViewElem.style.transition = 'transform 0.2s ease-out';
+        articleViewElem.style.transform = 'translateX(0)';
+      }
+    });
+  }
 
   window.renderArticleDetail = renderArticleDetail;
   window.openVideoListingView = openVideoListingView;
