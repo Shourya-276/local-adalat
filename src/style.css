@@ -4290,6 +4290,7 @@ button, input {
     overflow: hidden;
     padding: 0 6px 4px 6px;
     box-sizing: border-box;
+    touch-action: pan-y;
   }
 
   .mobile-cat-filter-bar {

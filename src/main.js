@@ -675,7 +675,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentCourtFilter = 'Supreme Court';
     let currentSlideIndex = 0;
     let currentFeedArticles = [];
+    let startX = 0;
     let startY = 0;
+    let endX = 0;
+    let endY = 0;
+    let dragAxis = null;
     let currentTranslateY = 0;
     let prevTranslateY = 0;
     let isDragging = false;
@@ -824,16 +828,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // -------------------------------------------------------------
     // Horizontal & Vertical Touch/Mouse Drag Listeners
     // -------------------------------------------------------------
-    let startX = 0;
-    let endX = 0;
-    let endY = 0;
-
     function handleFeedStart(clientX, clientY) {
       startX = clientX;
       startY = clientY;
       endX = clientX;
       endY = clientY;
       isDragging = true;
+      dragAxis = null;
       feedTrack.style.transition = 'none';
     }
 
@@ -844,15 +845,28 @@ document.addEventListener('DOMContentLoaded', async () => {
       const diffX = clientX - startX;
       const diffY = clientY - startY;
 
-      // Interactive horizontal slide drag when dragging left or right
-      if (Math.abs(diffX) > Math.abs(diffY)) {
+      // Lock axis after initial movement (> 6px)
+      if (!dragAxis) {
+        const totalDist = Math.hypot(diffX, diffY);
+        if (totalDist > 6) {
+          if (Math.abs(diffX) >= Math.abs(diffY)) {
+            dragAxis = 'horizontal';
+          } else {
+            dragAxis = 'vertical';
+          }
+        } else {
+          return;
+        }
+      }
+
+      if (dragAxis === 'horizontal') {
         const slides = feedTrack.querySelectorAll('.mobile-feed-slide');
         const activeSlide = slides[currentSlideIndex];
         if (activeSlide) {
           activeSlide.style.transition = 'none';
           activeSlide.style.transform = `translateX(${diffX}px)`;
         }
-      } else {
+      } else if (dragAxis === 'vertical') {
         // Vertical dragging
         currentTranslateY = prevTranslateY + diffY;
         feedTrack.style.transform = `translateY(${currentTranslateY}px)`;
@@ -867,43 +881,47 @@ document.addEventListener('DOMContentLoaded', async () => {
       const deltaY = endY - startY;
       const slides = feedTrack.querySelectorAll('.mobile-feed-slide');
       const activeSlide = slides[currentSlideIndex];
+      const currentAxis = dragAxis;
+      dragAxis = null;
 
       // Swipe Left or Right Trigger with Slide-Out Animation
-      if (Math.abs(deltaX) > 20 && Math.abs(deltaX) > Math.abs(deltaY)) {
-        dismissOnboarding();
+      if (currentAxis === 'horizontal' || Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (Math.abs(deltaX) > 25) {
+          dismissOnboarding();
 
-        if (activeSlide) {
-          const targetTranslateX = deltaX < 0 ? '-100%' : '100%';
-          // Smooth horizontal slide-out animation (Slower & Cinematic)
-          activeSlide.style.transition = 'transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1)';
-          activeSlide.style.transform = `translateX(${targetTranslateX})`;
+          if (activeSlide) {
+            const targetTranslateX = deltaX < 0 ? '-100%' : '100%';
+            // Smooth horizontal slide-out animation (Slower & Cinematic)
+            activeSlide.style.transition = 'transform 0.45s cubic-bezier(0.2, 0.9, 0.3, 1)';
+            activeSlide.style.transform = `translateX(${targetTranslateX})`;
 
-          setTimeout(() => {
-            // Reset slide transform for next return
-            activeSlide.style.transition = 'none';
-            activeSlide.style.transform = 'translateX(0)';
-            goToFeedSlide(currentSlideIndex, false);
+            setTimeout(() => {
+              // Reset slide transform for next return
+              activeSlide.style.transition = 'none';
+              activeSlide.style.transform = 'translateX(0)';
+              goToFeedSlide(currentSlideIndex, false);
 
-            const readFullBtn = activeSlide.querySelector('.btn-read-full, .blog-click');
-            if (readFullBtn) {
-              readFullBtn.click();
-            } else {
-              let articleId = activeSlide.dataset.id || activeSlide.querySelector('[data-id]')?.dataset?.id;
-              if (!articleId && currentFeedArticles && currentFeedArticles[currentSlideIndex]) {
-                articleId = currentFeedArticles[currentSlideIndex].id;
+              const readFullBtn = activeSlide.querySelector('.btn-read-full, .blog-click');
+              if (readFullBtn) {
+                readFullBtn.click();
+              } else {
+                let articleId = activeSlide.dataset.id || activeSlide.querySelector('[data-id]')?.dataset?.id;
+                if (!articleId && currentFeedArticles && currentFeedArticles[currentSlideIndex]) {
+                  articleId = currentFeedArticles[currentSlideIndex].id;
+                }
+                if (articleId) {
+                  if (typeof window.renderArticleDetail === 'function') window.renderArticleDetail(articleId);
+                  showView('article', true);
+                }
               }
-              if (articleId) {
-                if (typeof window.renderArticleDetail === 'function') window.renderArticleDetail(articleId);
-                showView('article', true);
-              }
-            }
-          }, 360);
+            }, 360);
+          }
+          return;
+        } else if (activeSlide) {
+          // Snap back active slide horizontally if swipe wasn't completed
+          activeSlide.style.transition = 'transform 0.2s ease-out';
+          activeSlide.style.transform = 'translateX(0)';
         }
-        return;
-      } else if (activeSlide) {
-        // Snap back active slide horizontally if swipe wasn't completed
-        activeSlide.style.transition = 'transform 0.2s ease-out';
-        activeSlide.style.transform = 'translateX(0)';
       }
 
       // Vertical swipe navigation
