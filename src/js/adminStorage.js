@@ -18,6 +18,7 @@ let appState = {
   topStories: [...topStories],
   latestNews: [...categoryArticlesList],
   mediaLibrary: [],
+  subscribers: [],
   categories: ['Supreme Court', 'High Court', 'Sessions Court', 'Commercial Law', 'Constitutional Law'],
   tags: ['Electoral Bonds', 'Privacy Rights', 'Arbitration', 'Insolvency', 'CSR', 'Bail', 'IT Rules'],
   settings: {
@@ -91,6 +92,15 @@ export async function initAdminStorage() {
       const backendMedia = await ApiClient.getMediaLibrary();
       if (backendMedia && backendMedia.success && Array.isArray(backendMedia.data)) {
         appState.mediaLibrary = backendMedia.data;
+      }
+    } catch (apiErr) {}
+
+    try {
+      const backendSubscribers = await ApiClient.getSubscribers();
+      if (backendSubscribers && backendSubscribers.success && Array.isArray(backendSubscribers.data)) {
+        const backendEmails = new Set(backendSubscribers.data.map(s => s.email.toLowerCase()));
+        const localOnly = (appState.subscribers || []).filter(s => s.email && !backendEmails.has(s.email.toLowerCase()));
+        appState.subscribers = [...backendSubscribers.data, ...localOnly];
       }
     } catch (apiErr) {}
 
@@ -466,4 +476,59 @@ export function resetToDefaults(notify = true) {
       details: 'Restored baseline data models from initial seed dataset'
     });
   }
+}
+
+/**
+ * Adds a new newsletter subscriber to state and syncs to backend DB.
+ * @param {string} email 
+ * @param {string} source 
+ */
+export async function addSubscriber(email, source = 'Website Form') {
+  if (!email) return { success: false, message: 'Email is required' };
+  const cleanEmail = email.trim().toLowerCase();
+
+  if (!appState.subscribers) {
+    appState.subscribers = [];
+  }
+
+  const existing = appState.subscribers.find(s => s.email && s.email.toLowerCase() === cleanEmail);
+  if (existing) {
+    return { success: true, isExisting: true, data: existing };
+  }
+
+  const newSub = {
+    id: `sub_${Date.now()}_${Math.random().toString(36).substr(2, 5)}`,
+    email: cleanEmail,
+    source: source || 'Website Form',
+    created_at: new Date().toISOString()
+  };
+
+  appState.subscribers.unshift(newSub);
+  saveStorage();
+
+  try {
+    const res = await ApiClient.subscribeNewsletter(cleanEmail, source);
+    if (res && res.success && res.data && res.data.id) {
+      newSub.id = res.data.id;
+      saveStorage();
+    }
+  } catch (e) {}
+
+  return { success: true, isExisting: false, data: newSub };
+}
+
+/**
+ * Removes a subscriber by ID.
+ * @param {string} id 
+ */
+export async function deleteSubscriber(id) {
+  if (!appState.subscribers) appState.subscribers = [];
+  appState.subscribers = appState.subscribers.filter(s => String(s.id) !== String(id));
+  saveStorage();
+
+  try {
+    await ApiClient.deleteSubscriber(id);
+  } catch (e) {}
+
+  return { success: true };
 }

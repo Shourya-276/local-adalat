@@ -19,6 +19,7 @@ import newsRoutes from './routes/newsRoutes.js';
 import mediaRoutes from './routes/mediaRoutes.js';
 import auditRoutes from './routes/auditRoutes.js';
 import settingsRoutes from './routes/settingsRoutes.js';
+import subscriberRoutes from './routes/subscriberRoutes.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -44,6 +45,7 @@ app.use('/api/news', newsRoutes);
 app.use('/api/media', mediaRoutes);
 app.use('/api/audit-logs', auditRoutes);
 app.use('/api/settings', settingsRoutes);
+app.use('/api/subscribers', subscriberRoutes);
 
 // Enhanced Production Health Check Endpoint
 app.get('/api/health', async (req, res, next) => {

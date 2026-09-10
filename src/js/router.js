@@ -222,6 +222,8 @@ export function showView(viewName = 'home', pushState = true) {
   } catch(e) {}
 
   // Toggle active view states on body
+  document.body.classList.toggle('view-home-active', viewName === 'home');
+  document.body.classList.toggle('view-article-active', viewName === 'article');
   document.body.classList.toggle('view-category-active', viewName === 'category');
   document.body.classList.toggle('view-reels-active', viewName === 'videoReels');
   document.body.classList.toggle('view-mobile-articles-active', viewName === 'mobileArticles');

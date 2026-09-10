@@ -6,7 +6,7 @@
 import { authenticateAdmin, checkLockoutStatus, isSessionValid, logoutAdmin, getAuditLogs, clearAuditLogs, validateMediaFile, escapeHTML, sanitizeInput } from './security.js';
 
 const sanitizeHTML = (str) => escapeHTML(str || '');
-import { getCollection, createItem, updateItem, deleteItem, duplicateItem, backupAppState, restoreAppState, resetToDefaults, subscribeDataChange } from './adminStorage.js';
+import { getCollection, createItem, updateItem, deleteItem, duplicateItem, backupAppState, restoreAppState, resetToDefaults, subscribeDataChange, deleteSubscriber } from './adminStorage.js';
 import { showToast, showConfirmModal } from './toast.js';
 import { showView } from './router.js';
 import { ApiClient, formatMediaUrl } from './apiClient.js';
@@ -37,6 +37,7 @@ export function initAdminUI() {
   setupMediaLibrary();
   setupAuditLogsUI();
   setupSettingsUI();
+  setupSubscribersUI();
 
   // Attach global click event delegation for robust modal triggers
   document.addEventListener('click', (e) => {
@@ -87,6 +88,7 @@ export function refreshCurrentTab() {
   else if (activeTab === 'videos') renderVideosTable();
   else if (activeTab === 'news') renderNewsManager();
   else if (activeTab === 'audit') renderAuditLogsTable();
+  else if (activeTab === 'subscribers') renderSubscribersTable();
 }
 
 /* ==========================================================================
@@ -206,11 +208,15 @@ function renderDashboardKPIs() {
   const totalNews = news.length;
   const failedLogins = logs.filter(l => l.event === 'LOGIN_FAILURE' || l.event === 'LOCKOUT_TRIGGERED').length;
 
+  const subscribers = getCollection('subscribers') || [];
+  const totalSubscribers = subscribers.length;
+
   const elemTotal = document.getElementById('kpiTotalArticles');
   const elemPub = document.getElementById('kpiPublishedArticles');
   const elemDraft = document.getElementById('kpiDraftArticles');
   const elemVideos = document.getElementById('kpiActiveVideos');
   const elemNews = document.getElementById('kpiBreakingNews');
+  const elemSubscribers = document.getElementById('kpiTotalSubscribers');
   const elemSecurity = document.getElementById('kpiSecurityStatus');
 
   if (elemTotal) elemTotal.textContent = totalArticles;
@@ -218,6 +224,7 @@ function renderDashboardKPIs() {
   if (elemDraft) elemDraft.textContent = draftArticles;
   if (elemVideos) elemVideos.textContent = activeVideos;
   if (elemNews) elemNews.textContent = totalNews;
+  if (elemSubscribers) elemSubscribers.textContent = totalSubscribers;
   if (elemSecurity) {
     if (failedLogins > 3) {
       elemSecurity.textContent = 'WARNING';
@@ -1332,4 +1339,100 @@ function setupSettingsUI() {
       });
     });
   }
+}
+
+/* ==========================================================================
+   10. NEWSLETTER SUBSCRIBERS UI
+   ========================================================================== */
+let subscriberSearchQuery = '';
+
+function setupSubscribersUI() {
+  const searchInput = document.getElementById('subscriberSearchInput');
+  const btnExport = document.getElementById('btnExportSubscribersCsv');
+
+  if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+      subscriberSearchQuery = (e.target.value || '').toLowerCase().trim();
+      renderSubscribersTable();
+    });
+  }
+
+  if (btnExport) {
+    btnExport.addEventListener('click', () => {
+      const subscribers = getCollection('subscribers') || [];
+      if (!subscribers.length) {
+        showToast('No subscriber email leads to export.', 'info');
+        return;
+      }
+
+      const csvHeader = 'ID,Email Address,Subscribed Date\n';
+      const csvRows = subscribers.map((s, idx) => 
+        `"${idx + 1}","${(s.email || '').replace(/"/g, '""')}","${s.created_at ? new Date(s.created_at).toLocaleString() : ''}"`
+      ).join('\n');
+
+      const blob = new Blob([csvHeader + csvRows], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `lokal_adalat_subscribers_${Date.now()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Exported subscriber emails to CSV successfully!', 'success');
+    });
+  }
+
+  document.addEventListener('click', (e) => {
+    const deleteBtn = e.target.closest('.btn-delete-subscriber');
+    if (deleteBtn) {
+      e.preventDefault();
+      const subId = deleteBtn.dataset.id;
+      const subEmail = deleteBtn.dataset.email;
+      showConfirmModal({
+        title: 'Remove Newsletter Subscriber',
+        message: `Are you sure you want to delete ${subEmail} from newsletter subscribers?`,
+        confirmText: 'Delete',
+        onConfirm: async () => {
+          await deleteSubscriber(subId);
+          showToast(`Subscriber ${subEmail} removed.`, 'success');
+        }
+      });
+    }
+  });
+}
+
+function renderSubscribersTable() {
+  const tableBody = document.getElementById('subscribersTableBody');
+  const countText = document.getElementById('subscriberCountText');
+  if (!tableBody) return;
+
+  const subscribers = getCollection('subscribers') || [];
+  
+  let filtered = subscribers;
+  if (subscriberSearchQuery) {
+    filtered = subscribers.filter(s => 
+      s.email && s.email.toLowerCase().includes(subscriberSearchQuery)
+    );
+  }
+
+  if (countText) {
+    countText.textContent = `Total Captured Leads: ${subscribers.length} email(s).`;
+  }
+
+  if (!filtered.length) {
+    tableBody.innerHTML = `<tr><td colspan="4" class="text-center py-4 text-muted">No newsletter subscribers found.</td></tr>`;
+    return;
+  }
+
+  tableBody.innerHTML = filtered.map((sub, idx) => `
+    <tr>
+      <td><strong>${idx + 1}</strong></td>
+      <td><strong style="color: #0F172A;">${escapeHTML(sub.email)}</strong></td>
+      <td class="text-nowrap" style="color: #64748B; font-size: 13px;">${sub.created_at ? new Date(sub.created_at).toLocaleString() : 'N/A'}</td>
+      <td class="text-right">
+        <button class="btn-action btn-delete-subscriber text-danger" data-id="${sub.id}" data-email="${escapeHTML(sub.email)}" title="Remove Subscriber">
+          ${deleteIcon}
+        </button>
+      </td>
+    </tr>
+  `).join('');
 }

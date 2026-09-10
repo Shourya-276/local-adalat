@@ -252,5 +252,23 @@ export const ApiClient = {
       method: 'PUT',
       body: JSON.stringify(settingsData)
     });
+  },
+
+  // Newsletter Subscribers API
+  async getSubscribers() {
+    return await request('/subscribers');
+  },
+
+  async subscribeNewsletter(email, source = 'Website Form') {
+    return await request('/subscribers', {
+      method: 'POST',
+      body: JSON.stringify({ email, source })
+    });
+  },
+
+  async deleteSubscriber(id) {
+    return await request(`/subscribers/${id}`, {
+      method: 'DELETE'
+    });
   }
 };

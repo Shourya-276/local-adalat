@@ -9,9 +9,10 @@ import { initRouter, openCategoryView, openVideoListingView, openVideoReelsView,
 import { initDrawer } from './js/drawer.js';
 import { initSearch } from './js/search.js';
 
-import { initAdminStorage, subscribeDataChange, getCollection } from './js/adminStorage.js';
+import { initAdminStorage, subscribeDataChange, getCollection, addSubscriber } from './js/adminStorage.js';
 import { initAdminUI } from './js/adminUI.js';
 import { formatMediaUrl } from './js/apiClient.js';
+import { showToast } from './js/toast.js';
 
 document.addEventListener('DOMContentLoaded', async () => {
   // ==========================================================================
@@ -320,12 +321,22 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Newsletter Form Submissions
   newsletterForms.forEach(form => {
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const input = form.querySelector('input[type="email"]');
       if (input && input.value) {
-        const email = input.value;
-        alert(`Thank you for subscribing to Lokal Adalat! Legal briefings will be sent to ${email}.`);
+        const email = input.value.trim();
+        const source = form.closest('.drawer-newsletter-card') ? 'Drawer Widget' 
+                     : form.closest('.sidebar-newsletter-box') ? 'Article Sidebar'
+                     : form.closest('.category-newsletter') ? 'Category Page'
+                     : 'Homepage Form';
+
+        const res = await addSubscriber(email, source);
+        if (res && res.isExisting) {
+          showToast(`You are already subscribed to Lokal Adalat with ${email}!`, 'info', 4000);
+        } else {
+          showToast(`🎉 Thank you for subscribing! Daily legal briefings will be sent to ${email}.`, 'success', 4000);
+        }
         input.value = '';
       }
     });
@@ -1158,7 +1169,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             <!-- Header Overlay -->
             <div class="reel-header-overlay">
               <div class="reel-logo">
-                <span class="hindi-logo">लोक अदालत</span> <span class="english-logo">LOKAL ADALAT</span>
+                <img src="/images/reels.png" alt="Lokal Adalat Reels" class="reel-logo-img">
               </div>
               <button class="reel-audio-btn" aria-label="Toggle Audio">
                 <svg class="icon-unmuted" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1179,22 +1190,17 @@ document.addEventListener('DOMContentLoaded', async () => {
               </svg>
             </button>
 
-            <!-- Right Side Progress Indicators -->
-            <div class="reel-side-indicators">
-              <span class="reel-dash active"></span>
-              <span class="reel-dash"></span>
-              <span class="reel-dash"></span>
-            </div>
-
             <!-- Bottom Information Overlay -->
             <div class="reel-bottom-content">
               <h3 class="reel-title">${item.title}</h3>
               <p class="reel-excerpt collapsed">${item.excerpt || ''}</p>
               <button class="reel-toggle-more">View More ˅</button>
-              <div class="reel-swipe-hint">
-                Swipe up for next briefing ˅
-              </div>
             </div>
+
+            ${idx === 0 ? `
+            <div class="reel-swipe-hint">
+              Swipe up for next briefing ˅
+            </div>` : ''}
 
             <!-- Right Action Bar -->
             <div class="reel-right-actions">
@@ -1558,18 +1564,21 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     if (!videoSection || !featuredCard || !videoElem) return;
 
-    let isClosedManually = false;
-    let isFloating = false;
+    if (closeBtn) {
+      closeBtn.style.display = 'none';
+    }
+
+    let isUserPaused = false;
 
     // Toggle Play / Pause
-    function togglePlay() {
+    function togglePlay(forcePlay) {
       const ytEmbed = featuredCard.dataset.ytEmbed;
       let iframe = featuredCard.querySelector('.yt-iframe-player');
       const isPlaying = featuredCard.classList.contains('is-playing');
+      const shouldPlay = typeof forcePlay === 'boolean' ? forcePlay : !isPlaying;
 
       if (ytEmbed) {
-        if (isPlaying) {
-          // Pause YouTube playback — kill the iframe entirely
+        if (!shouldPlay) {
           if (iframe) {
             try {
               iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
@@ -1579,7 +1588,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
           updatePlayBtnIcon(false);
         } else {
-          // Stop ALL other media before starting YouTube
           pauseAllMedia();
           if (!iframe) {
             iframe = document.createElement('iframe');
@@ -1589,7 +1597,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             iframe.allowFullscreen = true;
             featuredCard.appendChild(iframe);
           }
-          const embedWithAutoplay = ytEmbed + (ytEmbed.includes('?') ? '&' : '?') + 'autoplay=1&enablejsapi=1';
+          const embedWithAutoplay = ytEmbed + (ytEmbed.includes('?') ? '&' : '?') + 'autoplay=1&mute=1&enablejsapi=1';
           iframe.src = embedWithAutoplay;
           iframe.style.display = 'block';
           updatePlayBtnIcon(true);
@@ -1598,19 +1606,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
 
       // Native HTML5 Video
-      if (videoElem.paused) {
-        // Stop ALL other media before starting this video
-        pauseAllMedia();
-        videoElem.muted = false;
-        videoElem.volume = 1.0;
-        videoElem.play().then(() => {
-          updatePlayBtnIcon(true);
-        }).catch(err => {
-          console.log('Playback blocked by browser policy:', err);
-        });
+      if (shouldPlay) {
+        pauseAllMedia(videoElem);
+        const playPromise = videoElem.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            updatePlayBtnIcon(true);
+          }).catch(err => {
+            // Autoplay policy fallback: mute and play
+            videoElem.muted = true;
+            videoElem.play().then(() => {
+              updatePlayBtnIcon(true);
+            }).catch(e => console.log('Autoplay blocked by browser policy:', e));
+          });
+        }
       } else {
         videoElem.pause();
-        videoElem.muted = true;
         updatePlayBtnIcon(false);
       }
     }
@@ -1649,74 +1660,43 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (playBtn) {
       playBtn.addEventListener('click', (e) => {
         e.stopPropagation();
-        togglePlay();
+        if (featuredCard.classList.contains('is-playing')) {
+          isUserPaused = true;
+          togglePlay(false);
+        } else {
+          isUserPaused = false;
+          togglePlay(true);
+        }
       });
     }
 
     if (featuredCard) {
-      featuredCard.addEventListener('click', (e) => {
-        if (e.target.closest('#floatingVideoCloseBtn')) return;
-        togglePlay();
+      featuredCard.addEventListener('click', () => {
+        if (featuredCard.classList.contains('is-playing')) {
+          isUserPaused = true;
+          togglePlay(false);
+        } else {
+          isUserPaused = false;
+          togglePlay(true);
+        }
       });
     }
 
-    // Close Floating Video
-    if (closeBtn) {
-      closeBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        isClosedManually = true;
-        // Stop ALL media
-        pauseAllMedia();
-        videoElem.pause();
-        videoElem.muted = true;
-        const iframe = featuredCard.querySelector('.yt-iframe-player');
-        if (iframe) {
-          try {
-            iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
-          } catch(e) {}
-          iframe.src = 'about:blank';
-          iframe.style.display = 'none';
-        }
-        updatePlayBtnIcon(false);
-        featuredCard.classList.remove('is-floating');
-        isFloating = false;
-      });
-    }
-
-    let transitionTimer = null;
-    function setFloatingState(shouldFloat) {
-      clearTimeout(transitionTimer);
-      transitionTimer = setTimeout(() => {
-        if (shouldFloat && !isFloating) {
-          featuredCard.classList.add('is-floating');
-          isFloating = true;
-        } else if (!shouldFloat && isFloating) {
-          featuredCard.classList.remove('is-floating');
-          isFloating = false;
-        }
-      }, 60);
-    }
-
-    // IntersectionObserver to detect when video-corner-sec enters/leaves viewport
+    // Viewport IntersectionObserver to trigger Autoplay when video section enters view
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.45) {
-          if (isClosedManually) isClosedManually = false;
-          setFloatingState(false);
-        } else if (!entry.isIntersecting || entry.intersectionRatio < 0.45) {
-          const rect = videoSection.getBoundingClientRect();
-          const isBelowSection = rect.bottom < (window.innerHeight * 0.5);
-          const isPlaying = featuredCard.classList.contains('is-playing');
+        if (videoSection.offsetParent === null) return;
 
-          if (isBelowSection && isPlaying && !isClosedManually) {
-            setFloatingState(true);
-          } else if (!isBelowSection) {
-            setFloatingState(false);
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.35) {
+          const isPlaying = featuredCard.classList.contains('is-playing') || (!videoElem.paused && videoElem.currentTime > 0);
+          if (!isPlaying && !isUserPaused) {
+            videoElem.muted = true;
+            togglePlay(true);
           }
         }
       });
     }, {
-      threshold: [0.1, 0.45, 0.6]
+      threshold: [0.1, 0.35, 0.6]
     });
 
     observer.observe(videoSection);
@@ -2392,4 +2372,35 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   window.renderArticleDetail = renderArticleDetail;
   window.openVideoListingView = openVideoListingView;
+
+  // Mobile Smart Header: Reveal sticky header when scrolling UP, hide when scrolling DOWN
+  function initMobileSmartHeaderScroll() {
+    let lastScrollTop = 0;
+    const stickyContainer = document.getElementById('stickyTopContainer');
+    if (!stickyContainer) return;
+
+    window.addEventListener('scroll', () => {
+      if (window.innerWidth > 768) return;
+      const isHomeOrArticle = document.body.classList.contains('view-home-active') || document.body.classList.contains('view-article-active');
+      if (!isHomeOrArticle) return;
+
+      const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      if (currentScrollTop <= 60) {
+        stickyContainer.classList.remove('header-sticky-up', 'header-scroll-down-hide');
+      } else if (currentScrollTop > lastScrollTop + 6) {
+        // Scrolling DOWN: hide header
+        stickyContainer.classList.remove('header-sticky-up');
+        stickyContainer.classList.add('header-scroll-down-hide');
+      } else if (currentScrollTop < lastScrollTop - 6) {
+        // Scrolling UP: reveal sticky header at top!
+        stickyContainer.classList.remove('header-scroll-down-hide');
+        stickyContainer.classList.add('header-sticky-up');
+      }
+
+      lastScrollTop = Math.max(0, currentScrollTop);
+    }, { passive: true });
+  }
+
+  initMobileSmartHeaderScroll();
 });
