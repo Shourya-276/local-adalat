@@ -2381,8 +2381,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     window.addEventListener('scroll', () => {
       if (window.innerWidth > 768) return;
-      const isHomeOrArticle = document.body.classList.contains('view-home-active') || document.body.classList.contains('view-article-active');
-      if (!isHomeOrArticle) return;
+      const isHeaderPage = document.body.classList.contains('view-home-active') || 
+                           document.body.classList.contains('view-article-active') || 
+                           document.body.classList.contains('view-mobile-articles-active') || 
+                           document.body.classList.contains('view-category-active');
+      if (!isHeaderPage) return;
 
       const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
 

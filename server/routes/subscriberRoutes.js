@@ -5,7 +5,7 @@
 
 import express from 'express';
 import { executeQuery } from '../config/database.js';
-import { verifyAuthToken } from '../middleware/authMiddleware.js';
+import { requireAdminAuth } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 

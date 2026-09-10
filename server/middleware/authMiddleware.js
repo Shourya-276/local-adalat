@@ -21,3 +21,5 @@ export function requireAdminAuth(req, res, next) {
   req.user = decoded;
   next();
 }
+
+export const verifyAuthToken = requireAdminAuth;
